@@ -4,10 +4,6 @@
         {
             "src": "public/index.php",
             "use": "vercel-php@0.7.2"
-        },
-        {
-            "src": "resources/css/app.css",
-            "use": "@vercel/nft"
         }
     ],
     "routes": [

@@ -16,4 +16,11 @@ class Business extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+    /**
+     * Relación: Un negocio tiene muchos horarios de atención (uno por cada día de la semana).
+     */
+    public function hours()
+    {
+        return $this->hasMany(BusinessHour::class);
+    }
 }

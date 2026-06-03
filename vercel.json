@@ -3,20 +3,17 @@
     "builds": [
         {
             "src": "public/index.php",
-            "use": "vercel-php@0.7.2",
-            "config": {
-                "includeFiles": [
-                    "config/**",
-                    "bootstrap/**",
-                    "storage/framework/views/**"
-                ]
-            }
+            "use": "vercel-php@0.7.2"
         }
     ],
     "routes": [
         {
             "src": "/build/(.*)",
             "dest": "/public/build/$1"
+        },
+        {
+            "src": "/(css|js|images|favicon.ico|favicon.png)(.*)",
+            "dest": "/public/$1$2"
         },
         {
             "src": "/(.*)",
@@ -28,7 +25,7 @@
         "APP_DEBUG": "true",
         "LOG_CHANNEL": "stderr",
         "VIEW_COMPILED_PATH": "/tmp",
-        "CACHE_DRIVER": "array",
+        "CACHE_STORE": "array",
         "SESSION_DRIVER": "cookie"
     }
 }

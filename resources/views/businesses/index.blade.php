@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookIt - Catálogo de Negocios</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ secure_asset('build/assets/app.css') }}">
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans antialiased">

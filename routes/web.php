@@ -1,10 +1,20 @@
 <?php
 
-use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Vista del catálogo principal (Sprint 1)
-Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-// TAREA 1.2: Ruta dinámica para capturar el negocio seleccionado
-Route::get('/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

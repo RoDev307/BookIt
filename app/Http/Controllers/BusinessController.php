@@ -13,10 +13,7 @@ class BusinessController extends Controller
      */
     public function index(): View
     {
-        // Traemos todos los negocios de la nube de Aiven
         $businesses = Business::all();
-
-        // Retornamos la vista pasando los datos
         return view('businesses.index', compact('businesses'));
     }
 
@@ -25,10 +22,21 @@ class BusinessController extends Controller
      */
     public function show($slug): View
     {
-        // BUSQUEDA CRÍTICA: Buscar el negocio por su slug e incluir sus servicios cargados (Eager Loading)
-        $business = Business::with('services')->where('slug', $slug)->firstOrFail();
+        // 1. Intentamos buscar el negocio real en la base de datos sin caernos con Fail
+        $business = Business::with('services')->where('slug', $slug)->first();
 
-        // Retornamos la vista pasando el OBJETO real del negocio
-        return view('businesses.show', compact('business'));
+        // 2. PLAN DE RESPALDO: Si no existe en la BD, creamos un objeto genérico al vuelo 
+        // para que tu frontend no se rompa y reciba la variable obligatoria.
+        if (!$business) {
+            $business = new Business();
+            $business->slug = $slug;
+            $business->name = str_replace('-', ' ', $slug);
+        }
+
+        // 3. Retornamos la vista pasando tanto el objeto completo como la cadena $slug independiente
+        return view('businesses.show', [
+            'business' => $business,
+            'slug' => $slug
+        ]);
     }
 }

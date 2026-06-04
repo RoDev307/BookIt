@@ -10,7 +10,6 @@
 
 <body class="bg-slate-50 font-sans antialiased">
 
-    <!-- Navegación -->
     <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -23,21 +22,17 @@
 
     <div class="max-w-7xl mx-auto px-4 py-10">
 
-        <!-- Botón Volver -->
-        <a href="/negocios" class="inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors mb-6 group">
+        <a href="{{ route('businesses.index') }}" class="inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors mb-6 group">
             <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Volver al catálogo de comercios
         </a>
 
-        <!-- Contenedor Principal en Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <!-- COLUMNA IZQUIERDA: Info del Comercio y Lista de Servicios (Ocupa 2 columnas) -->
             <div class="lg:col-span-2 space-y-6">
 
-                <!-- Banner Informativo del Comercio -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-indigo-600"></div>
                     <div>
@@ -46,7 +41,6 @@
                     </div>
                 </div>
 
-                <!-- Lista de Servicios Disponibles -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                     <div class="p-6 border-b border-slate-200 bg-slate-50/70">
                         <h2 class="text-lg font-bold text-slate-900 tracking-tight">Portafolio de Servicios Disponibles</h2>
@@ -54,7 +48,6 @@
 
                     <div class="divide-y divide-slate-200">
                         @if(str_contains($slug, 'barberia'))
-                        <!-- Servicio Barbería 1 -->
                         <div class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                             <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
                                 <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400" alt="Corte" class="w-full h-full object-cover">
@@ -70,7 +63,6 @@
                             </div>
                         </div>
 
-                        <!-- Servicio Barbería 2 -->
                         <div class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                             <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
                                 <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400" alt="Barba" class="w-full h-full object-cover">
@@ -87,7 +79,6 @@
                         </div>
 
                         @elseif(str_contains($slug, 'clinica'))
-                        <!-- Servicio Clínica -->
                         <div class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                             <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
                                 <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=400" alt="Consulta" class="w-full h-full object-cover">
@@ -104,7 +95,6 @@
                         </div>
 
                         @else
-                        <!-- Servicio por Defecto (Taller / Automotriz) -->
                         <div class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                             <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
                                 <img src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?w=400" alt="Aceite" class="w-full h-full object-cover">
@@ -126,7 +116,6 @@
                 <p class="text-center text-xs text-slate-400 pt-6">BookIt Empresarial © 2026. Todos los derechos reservados.</p>
             </div>
 
-            <!-- COLUMNA DERECHA: Panel Dinámico de Agenda de Reserva (Ocupa 1 columna) -->
             <div>
                 <div id="panel-reserva" class="hidden sticky top-24">
                     <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
@@ -141,19 +130,16 @@
                         <form action="{{ route('appointments.store') }}" method="POST" class="mt-6 space-y-4">
                             @csrf
 
-                            <!-- Inputs Ocultos Requeridos por el Formulario -->
                             <input type="hidden" name="servicio_nombre" id="input-servicio-nombre" required>
                             <input type="hidden" name="servicio_precio" id="input-servicio-precio" required>
                             <input type="hidden" name="business_slug" value="{{ $slug }}">
 
-                            <!-- Fecha de la Cita -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Selecciona el Día</label>
                                 <input type="date" name="fecha_cita" required min="{{ date('Y-m-d') }}"
                                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                             </div>
 
-                            <!-- Horarios Disponibles -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">2. Selecciona la Hora</label>
                                 <div class="grid grid-cols-2 gap-2">
@@ -176,7 +162,6 @@
                                 </div>
                             </div>
 
-                            <!-- Botón de Envío -->
                             <div class="pt-2">
                                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-xl shadow-sm transition-all text-center block">
                                     Confirmar y Agendar
@@ -187,31 +172,22 @@
                 </div>
             </div>
 
-        </div> <!-- Cierre del Grid Principal -->
-    </div> <!-- Cierre del Contenedor -->
+        </div>
+    </div>
 
-    <!-- Lógica de Frontend en JavaScript -->
     <script>
         function seleccionarServicio(nombre, precio) {
-            // Muestra el panel lateral de reserva
             document.getElementById('panel-reserva').classList.remove('hidden');
-
-            // Renderiza los datos en la interfaz del ticket de previsualización
             document.getElementById('resumen-servicio').innerText = nombre;
             document.getElementById('resumen-precio').innerText = precio;
-
-            // Inserta los valores correspondientes en los inputs nativos del formulario
             document.getElementById('input-servicio-nombre').value = nombre;
             document.getElementById('input-servicio-precio').value = precio.replace('$', '');
-
-            // Realiza scroll suave hacia el panel en pantallas móviles
             document.getElementById('panel-reserva').scrollIntoView({
                 behavior: 'smooth'
             });
         }
     </script>
 
-    <!-- Estilos Personalizados para los Radio Buttons con Tailwind -->
     <style>
         input[type="radio"]:checked+span {
             color: #4f46e5 !important;

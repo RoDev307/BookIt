@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 // Vista del catálogo principal (Sprint 1)
 Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
 
-// TAREA 1.2: Ruta dinámica para capturar el negocio seleccionado
 //Route::get('/negocio/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
 
 //----------------- CRUD DE SERVICE CONTROLLER-------------------------
@@ -26,8 +25,6 @@ Route::get('/services/{id}/edit',[ServiceController::class,'edit'])->name('servi
 Route::put('/services/{id}',[ServiceController::class,'update'])->name('services.update');
 //DELETE
 Route::delete('/services/{id}',[ServiceController::class,'destroy'])->name('services.destroy');
-Route::get('/admin/prueba', function () {
-    return view('admin.prueba');
-});
+// TAREA 1.2: Ruta dinámica para capturar el negocio seleccionado
 Route::get('/negocio/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
 

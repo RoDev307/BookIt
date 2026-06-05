@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
 
 // TAREA 1.2: Ruta dinámica para capturar el negocio seleccionado
-Route::get('/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
+//Route::get('/negocio/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
 
 //----------------- CRUD DE SERVICE CONTROLLER-------------------------
 //ahi le cambian los nombres de la ruta y el name si fuera necesario o a conveniencia
@@ -25,6 +25,9 @@ Route::get('/services/{id}/edit',[ServiceController::class,'edit'])->name('servi
 //UPDATE
 Route::put('/services/{id}',[ServiceController::class,'update'])->name('services.update');
 //DELETE
-Route::delete('/services',[ServiceController::class,'destroy'])->name('services.destroy');
-
+Route::delete('/services/{id}',[ServiceController::class,'destroy'])->name('services.destroy');
+Route::get('/admin/prueba', function () {
+    return view('admin.prueba');
+});
+Route::get('/negocio/{slug}', [BusinessController::class, 'show'])->name('businesses.show');
 

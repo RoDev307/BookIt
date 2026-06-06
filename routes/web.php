@@ -73,7 +73,6 @@ Route::middleware('auth')->group(function () {
 // 🛠️ PANEL ADMINISTRATIVO INTERNO: CRUD DE SERVICIOS (ALEXANDER)
 // =========================================================================
 
-// Filtro por roles y prefijo de administración para aislamiento del backoffice
 Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
 
     // Ruta de testeo de permisos administrativos
@@ -81,8 +80,16 @@ Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(funct
         return 'Solo administradores';
     });
 
-    // CRUD Completo del Gestor de Servicios
-    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    // Cambiamos el GET de /services para forzar el modo Debug dentro de las rutas
+    Route::get('/services', function () {
+        // Obliga a Laravel a pintar el error real en Vercel en vez de dejar la pantalla en blanco
+        config(['app.debug' => true]);
+
+        // Ejecuta el controlador normalmente
+        return app(\App\Http\Controllers\ServiceController::class)->index();
+    })->name('services.index');
+
+    // El resto de rutas del CRUD se mantienen igual bajo el middleware
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
     Route::get('/services/{id}', [ServiceController::class, 'show'])->name('services.show');

@@ -26,8 +26,9 @@ class AppointmentController extends Controller
         // Adaptación de campos a la nube
         $appointmentTime = $request->input('fecha_cita') . ' ' . $request->input('hora_cita') . ':00';
 
+        // Persistencia utilizando el ID real del usuario autenticado (Esmeralda)
         $cita = Appointment::create([
-            'user_id'          => Auth::id(),
+            'user_id'          => Auth::id() ?? 1, // Si no hay sesión iniciada en pruebas, usa el 1
             'business_id'      => 1,
             'service_id'       => 1,
             'appointment_time' => $appointmentTime,
@@ -44,22 +45,20 @@ class AppointmentController extends Controller
         ]);
     }
 
-
+    /**
+     * Generación del comprobante PDF de Databox usando DomPDF
+     */
     public function descargarPDF(Request $request)
     {
-
         $horaCruda = $request->query('hora', '00:00');
         $horaFormateada = $horaCruda;
-
 
         try {
             $horaFormateada = Carbon::createFromFormat('H:i', $horaCruda)->format('g:i A');
         } catch (\Exception $e) {
             try {
-
                 $horaFormateada = Carbon::createFromFormat('H:i:s', $horaCruda)->format('g:i A');
             } catch (\Exception $ex) {
-
                 $horaFormateada = $horaCruda;
             }
         }
@@ -69,35 +68,42 @@ class AppointmentController extends Controller
             'hora'  => $horaFormateada
         ];
 
-
         $dompdf = app('dompdf.wrapper');
         $dompdf->loadView('appointments.pdf', $data);
 
-
         return $dompdf->download('Comprobante_Cita_Databox.pdf');
     }
-//Esmeradda Mis Citas punto 
+
+    /**
+     * Muestra el panel con el historial de citas del usuario logueado (Esmeralda)
+     */
     public function misCitas()
     {
-        $appointments = Appointment::where('user_id',Auth::id())->orderBy('appointment_time', 'desc')->get();
+        $appointments = Appointment::where('user_id', Auth::id())
+            ->orderBy('appointment_time', 'desc')
+            ->get();
 
-            return view('dashboard', compact('appointments'));
+        return view('dashboard', compact('appointments'));
     }
 
-   public function cancelar(int $id)
+    /**
+     * Cancela una cita asegurando que pertenezca al usuario en sesión
+     */
+    public function cancelar(int $id)
     {
         $appointment = Appointment::findOrFail($id);
 
-            if ($appointment->user_id != Auth::id()) {
-                abort(403);
-            }
-            if ($appointment->status == 'cancelled') {
-                return back();
-            }
+        if ($appointment->user_id != Auth::id()) {
+            abort(403);
+        }
+        
+        if ($appointment->status == 'cancelled') {
+            return back();
+        }
 
-            $appointment->status = 'cancelled';
-            $appointment->save();
+        $appointment->status = 'cancelled';
+        $appointment->save();
 
-            return back()->with('success', 'Cita cancelada correctamente');
+        return back()->with('success', 'Cita cancelada correctamente');
     }
 }

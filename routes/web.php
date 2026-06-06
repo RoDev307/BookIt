@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Route;
 // =========================================================================
 
 // Página principal (Landing base)
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
 
 // Rutas automáticas de autenticación de Breeze (Login, registro, etc.)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Panel base del usuario autenticado e historial de citas
 Route::get('/dashboard', [AppointmentController::class, 'misCitas'])
@@ -65,7 +63,7 @@ Route::middleware('auth')->group(function () {
     // Historial y Cancelaciones del Cliente (Esmeralda)
     Route::get('/mis-citas', [AppointmentController::class, 'misCitas'])
         ->name('appointments.mis-citas');
-        
+
     Route::patch('/citas/{id}/cancelar', [AppointmentController::class, 'cancelar'])
         ->name('appointments.cancel');
 });
@@ -77,10 +75,10 @@ Route::middleware('auth')->group(function () {
 
 // Filtro por roles y prefijo de administración para aislamiento del backoffice
 Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
-    
+
     // Ruta de testeo de permisos administrativos
-    Route::get('/admin-test', function () { 
-        return 'Solo administradores'; 
+    Route::get('/admin-test', function () {
+        return 'Solo administradores';
     });
 
     // CRUD Completo del Gestor de Servicios

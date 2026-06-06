@@ -1,71 +1,88 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Mis Citas') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('header', 'Mis Citas')
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+@section('content')
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-6 border-b border-slate-200 bg-slate-50/70">
+            <h3 class="text-lg font-bold text-slate-900 tracking-tight">Historial de Citas Registradas</h3>
+            <p class="text-xs text-slate-500 mt-1">Controla tus estados de reserva y cancelaciones en tiempo real con la nube
+                de Aiven.</p>
+        </div>
 
-                    <h3 class="text-lg font-bold mb-4">
-                        Mis citas registradas
-                    </h3>
+        <div class="p-6">
+            @if (isset($appointments))
 
-                    @if(isset($appointments))
+                <div class="space-y-4">
+                    @forelse($appointments as $appointment)
+                        <div
+                            class="border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center hover:bg-slate-50/40 transition-colors gap-4">
 
-                        @forelse($appointments as $appointment)
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Reserva
+                                        #{{ $appointment->id }}</span>
 
-                            <div class="border rounded p-4 mb-3">
+                                    @if ($appointment->status === 'confirmed')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">✓
+                                            Confirmada</span>
+                                    @elseif($appointment->status === 'cancelled')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">✕
+                                            Cancelada</span>
+                                    @elseif($appointment->status === 'completed')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">🏁
+                                            Finalizada</span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">⏳
+                                            Pendiente</span>
+                                    @endif
+                                </div>
 
-                                <p>
-                                    <strong>Fecha y hora:</strong>
-                                    {{ $appointment->appointment_time }}
+                                <p class="text-slate-800 font-semibold text-base flex items-center gap-2">
+                                    📅 <span
+                                        class="text-slate-900">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d/m/Y - g:i A') }}</span>
                                 </p>
 
-                                <p>
-                                    <strong>Estado:</strong>
-                                    {{ $appointment->status }}
-                                </p>
-
-                                <p>
-                                    <strong>Notas:</strong>
-                                    {{ $appointment->notes }}
-                                </p>
-
-                    @if($appointment->status != 'cancelled')
-
-                        <form action="{{ route('appointments.cancel', $appointment->id) }}" method="POST">
-                     @csrf
-                     @method('PATCH')
-
-                             <button type="submit" style="background:red;color:white;padding:8px 12px;border:none;border-radius:5px;">
-                                  Cancelar cita
-                            </button>
-                        </form>
-
-@endif
-
+                                @if ($appointment->notes)
+                                    <p
+                                        class="text-xs text-slate-600 bg-slate-100 p-2.5 rounded-xl border border-slate-200 max-w-xl">
+                                        <strong class="text-slate-700 block mb-0.5">Notas dejadas:</strong>
+                                        {{ $appointment->notes }}
+                                    </p>
+                                @endif
                             </div>
 
-                        @empty
+                            <div class="flex sm:flex-col items-stretch gap-2 w-full sm:w-auto">
+                                @if ($appointment->status !== 'cancelled')
+                                    <form action="{{ route('appointments.cancel', $appointment->id) }}" method="POST"
+                                        onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita de forma definitiva?')">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="w-full text-center bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-colors cursor-pointer">
+                                            Cancelar Cita
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
 
-                            <p>No tienes citas registradas.</p>
-
-                        @endforelse
-
-                    @else
-
-                        <p>No se encontraron citas.</p>
-
-                    @endif
-
+                        </div>
+                    @empty
+                        <div class="text-center py-12 border border-dashed border-slate-300 rounded-2xl">
+                            <p class="text-slate-400 font-medium">No tienes citas agendadas actualmente en el sistema.</p>
+                            <a href="{{ route('businesses.index') }}"
+                                class="inline-block mt-4 text-sm font-bold text-indigo-600 hover:underline">Explorar
+                                comercios para agendar →</a>
+                        </div>
+                    @endforelse
                 </div>
-            </div>
-
+            @else
+                <p class="text-slate-400 text-center py-6 font-medium">No se encontraron registros de citas vinculados.</p>
+            @endif
         </div>
     </div>
-</x-app-layout>
+@endsection

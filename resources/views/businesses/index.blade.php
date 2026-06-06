@@ -20,35 +20,27 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            @forelse($businesses as $business)
-                <div
-                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
-                    <div>
-                        <div class="h-48 w-full overflow-hidden bg-slate-200 relative">
-                            <img src="{{ $business->image_url ?? 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=600&auto=format&fit=crop' }}"
-                                alt="{{ $business->name }}"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-slate-900">{{ $business->name }}</h3>
-                            <p class="mt-2 text-slate-600 text-sm leading-relaxed">
-                                {{ $business->description ?? 'Sin descripción disponible actualmente.' }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="p-6 bg-slate-50 border-t border-slate-100">
-                        <a href="{{ route('businesses.show', $business->slug) }}"
-                            class="w-full text-center inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-sm">
-                            Ver Servicios disponibles
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
-                    <p class="text-slate-400 font-medium">No se encontraron comercios registrados.</p>
-                </div>
-            @endforelse
+        <div class="h-48 w-full overflow-hidden bg-slate-200 relative">
+            @if ($business->image_url)
+                <img src="{{ $business->image_url }}" alt="{{ $business->name }}"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            @else
+                @if (str_contains($business->slug, 'barberia') || str_contains($business->slug, 'olympus'))
+                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=600&auto=format&fit=crop"
+                        alt="Barbería"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                @elseif(str_contains($business->slug, 'clinica') ||
+                        str_contains($business->slug, 'sonrisas') ||
+                        str_contains($business->slug, 'dental'))
+                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=600&auto=format&fit=crop"
+                        alt="Clínica Dental"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                @else
+                    <img src="https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=600&auto=format&fit=crop"
+                        alt="Taller Mecánico"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                @endif
+            @endif
         </div>
     </div>
 @endsection

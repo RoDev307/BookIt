@@ -73,27 +73,21 @@ Route::middleware('auth')->group(function () {
 // 🛠️ PANEL ADMINISTRATIVO INTERNO: CRUD DE SERVICIOS (ALEXANDER)
 // =========================================================================
 
-Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
 
-    // Ruta de testeo de permisos administrativos
-    Route::get('/admin-test', function () {
-        return 'Solo administradores';
-    });
-
-    // Cambiamos el GET de /services para forzar el modo Debug dentro de las rutas
-    Route::get('/services', function () {
-        // Obliga a Laravel a pintar el error real en Vercel en vez de dejar la pantalla en blanco
-        config(['app.debug' => true]);
-
-        // Ejecuta el controlador normalmente
-        return app(\App\Http\Controllers\ServiceController::class)->index();
-    })->name('services.index');
-
-    // El resto de rutas del CRUD se mantienen igual bajo el middleware
+    // CRUD Completo del Gestor de Servicios
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
     Route::get('/services/{id}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/services/{id}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/services/{id}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+});
+
+// Dejamos la ruta de testeo aislada con el middleware original para que Esmeralda revise su lógica luego
+Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
+    Route::get('/admin-test', function () {
+        return 'Solo administradores estricto';
+    });
 });

@@ -16,22 +16,24 @@
         <div class="p-5">
             <h1 class="text-2xl font-bold tracking-wider text-indigo-400 mb-8">BookIt Admin</h1>
             <nav class="space-y-2">
-                <a href="{{ route('dashboard') }}"
-                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                    📊 Dashboard
-                </a>
                 <a href="{{ route('services.index') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     🛠️ Gestionar Servicios
                 </a>
-                <a href="{{ route('appointments.mis-citas') }}"
-                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('appointments.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                    📅 Gestionar Citas
-                </a>
             </nav>
         </div>
-        <div class="p-5 border-t border-slate-700 text-sm text-slate-400 flex justify-between items-center">
-            <span>👤 {{ Auth::user()->name ?? 'Admin Global' }}</span>
+
+        <div class="p-5 border-t border-slate-700 text-sm text-slate-400 flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <span>👤 {{ Auth::user()->name ?? 'Admin Global' }}</span>
+            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full text-left font-semibold text-rose-400 hover:text-rose-300 transition-colors cursor-pointer">
+                    🚪 Cerrar Sesión
+                </button>
+            </form>
         </div>
     </aside>
 
@@ -80,7 +82,6 @@
             sidebar.classList.toggle('flex');
         });
 
-        // Cerrar menú si se da clic fuera de él en dispositivos móviles
         document.addEventListener('click', (e) => {
             if (window.innerWidth < 768 && !sidebar.classList.contains('hidden') && !sidebar.contains(e.target) && e
                 .target !== menuBtn) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -11,7 +12,12 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        // 1. Forzamos la obtención de los datos. Si la tabla está vacía, devolverá una colección vacía, no null.
+        $services = Service::all();
+
+        // 2. RETORNO CRÍTICO: Asegúrate de que no haya ningún "return;" vacío arriba de esta línea.
+        // Debe apuntar exactamente a la vista unificada que acabamos de crear.
+        return view('admin.services.index', compact('services'));
     }
 
     /**

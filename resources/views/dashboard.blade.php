@@ -35,16 +35,19 @@
                                     <strong>Notas:</strong>
                                     {{ $appointment->notes }}
                                 </p>
-                            <form action="{{ route('appointments.cancel', $appointment->id) }}"method="POST">
 
-                                @csrf
-                                @method('PATCH')
+                    @if($appointment->status != 'cancelled')
 
-                                 <button type="submit"class="bg-red-500 text-white px-3 py-1 rounded">
-                                    Cancelar cita
-                                 </button>
+                        <form action="{{ route('appointments.cancel', $appointment->id) }}" method="POST">
+                     @csrf
+                     @method('PATCH')
 
-                            </form>
+                             <button type="submit" style="background:red;color:white;padding:8px 12px;border:none;border-radius:5px;">
+                                  Cancelar cita
+                            </button>
+                        </form>
+
+@endif
 
                             </div>
 

@@ -27,7 +27,7 @@ class AppointmentController extends Controller
         $appointmentTime = $request->input('fecha_cita') . ' ' . $request->input('hora_cita') . ':00';
 
         $cita = Appointment::create([
-            'user_id'          => 1,
+            'user_id'          => Auth::id(),
             'business_id'      => 1,
             'service_id'       => 1,
             'appointment_time' => $appointmentTime,
@@ -76,7 +76,7 @@ class AppointmentController extends Controller
 
         return $dompdf->download('Comprobante_Cita_Databox.pdf');
     }
-
+//Esmeradda Mis Citas punto 
     public function misCitas()
     {
         $appointments = Appointment::where('user_id',Auth::id())->orderBy('appointment_time', 'desc')->get();
@@ -90,6 +90,9 @@ class AppointmentController extends Controller
 
             if ($appointment->user_id != Auth::id()) {
                 abort(403);
+            }
+            if ($appointment->status == 'cancelled') {
+                return back();
             }
 
             $appointment->status = 'cancelled';

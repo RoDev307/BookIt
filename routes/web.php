@@ -54,3 +54,6 @@ Route::get('/descargar-ticket', [AppointmentController::class, 'descargarPDF'])
 Route::get('/mis-citas',[AppointmentController::class, 'misCitas'])->middleware('auth')->name('appointments.mis-citas');
 //Cancelar citas
 Route::patch('/citas/{id}/cancelar',[AppointmentController::class, 'cancelar'])->middleware('auth')->name('appointments.cancel');
+//Autenticacion de usuario 
+Route::get('/admin-test', function () {return 'Solo administradores';})->middleware(['auth', 'role:admin_business']);
+

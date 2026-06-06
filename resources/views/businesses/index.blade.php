@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="p-6 bg-slate-50 border-t border-slate-100">
-                    <a href="/comercio/barberia-central"
+                    <a href="/negocios/barberia-central"
                         class="w-full text-center inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-sm">
                         Ver Servicios disponibles
                     </a>
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="p-6 bg-slate-50 border-t border-slate-100">
-                    <a href="/comercio/clinica-medica-integral"
+                    <a href="/negocios/clinica-medica-integral"
                         class="w-full text-center inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-sm">
                         Ver Servicios disponibles
                     </a>
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div class="p-6 bg-slate-50 border-t border-slate-100">
-                    <a href="/comercio/taller-autofix"
+                    <a href="/negocios/taller-autofix"
                         class="w-full text-center inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors shadow-sm">
                         Ver Servicios disponibles
                     </a>

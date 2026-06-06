@@ -49,3 +49,8 @@ Route::get('/reserva-confirmada', function () {
 // Descargar PDF
 Route::get('/descargar-ticket', [AppointmentController::class, 'descargarPDF'])
     ->name('appointments.pdf');
+
+//Mostrar citas
+Route::get('/mis-citas',[AppointmentController::class, 'misCitas'])->middleware('auth')->name('appointments.mis-citas');
+//Cancelar citas
+Route::patch('/citas/{id}/cancelar',[AppointmentController::class, 'cancelar'])->middleware('auth')->name('appointments.cancel');

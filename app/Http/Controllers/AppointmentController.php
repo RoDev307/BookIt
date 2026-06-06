@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -74,5 +75,26 @@ class AppointmentController extends Controller
 
 
         return $dompdf->download('Comprobante_Cita_Databox.pdf');
+    }
+
+    public function misCitas()
+    {
+        $appointments = Appointment::where('user_id',Auth::id())->orderBy('appointment_time', 'desc')->get();
+
+            return view('dashboard', compact('appointments'));
+    }
+
+   public function cancelar(int $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+
+            if ($appointment->user_id != Auth::id()) {
+                abort(403);
+            }
+
+            $appointment->status = 'cancelled';
+            $appointment->save();
+
+            return back()->with('success', 'Cita cancelada correctamente');
     }
 }

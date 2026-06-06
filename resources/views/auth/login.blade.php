@@ -30,16 +30,29 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4 gap-4">
-            @if (Route::has('password.request'))
-                <a class="text-sm text-slate-600 hover:text-indigo-600 underline rounded-md focus:outline-none"
-                    href="{{ route('password.request') }}">
-                    ¿Olvidaste tu contraseña?
-                </a>
-            @endif
+        <div class="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4 border-t border-slate-100 pt-4">
+
+            <div class="flex flex-col gap-1 text-center sm:text-left">
+                @if (Route::has('register'))
+                    <p class="text-sm text-slate-500">
+                        ¿No tienes una cuenta?
+                        <a class="font-semibold text-indigo-600 hover:text-indigo-700 underline rounded-md focus:outline-none"
+                            href="{{ route('register') }}">
+                            Regístrate aquí
+                        </a>
+                    </p>
+                @endif
+
+                @if (Route::has('password.request'))
+                    <a class="text-xs text-slate-400 hover:text-indigo-600 underline rounded-md focus:outline-none"
+                        href="{{ route('password.request') }}">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                @endif
+            </div>
 
             <button type="submit"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-sm transition-colors cursor-pointer">
+                class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-colors cursor-pointer text-center">
                 Iniciar Sesión
             </button>
         </div>

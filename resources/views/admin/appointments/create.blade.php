@@ -43,13 +43,78 @@
                     @endforeach
                 </select>
             </div>
-
-            <!-- Fecha y Hora -->
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Fecha y Hora de la
-                    Reserva</label>
-                <input type="datetime-local" name="appointment_time" value="{{ old('appointment_time') }}" required
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">¿Quién atiende?
+                    (Especialista / Empleado)</label>
+                <input type="text" name="staff_name" value="{{ old('staff_name') }}" required
+                    placeholder="Ej. Dr. Armando Mendoza o Mca. Carlos"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+            </div>
+            <!-- Fecha y Hora -->
+            <!-- SECCIÓN CRONOLÓGICA DIVIDIDA -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- 1. Selección del Día -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Selecciona la
+                        Fecha</label>
+                    <input type="date" name="fecha_cita" value="{{ old('fecha_cita') }}" required
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                </div>
+
+                <!-- 2. Bloques Horarios Disponibles -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">2. Selecciona la
+                        Hora</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <!-- Bloque 08:00 AM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="08:00" class="sr-only peer" required
+                                {{ old('hora_cita') == '08:00' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">08:00 AM</span>
+                        </label>
+
+                        <!-- Bloque 09:30 AM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="09:30" class="sr-only peer"
+                                {{ old('hora_cita') == '09:30' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">09:30 AM</span>
+                        </label>
+
+                        <!-- Bloque 11:00 AM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="11:00" class="sr-only peer"
+                                {{ old('hora_cita') == '11:00' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">11:00 AM</span>
+                        </label>
+
+                        <!-- Bloque 01:00 PM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="13:00" class="sr-only peer"
+                                {{ old('hora_cita') == '13:00' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">01:00 PM</span>
+                        </label>
+
+                        <!-- Bloque 02:30 PM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="14:30" class="sr-only peer"
+                                {{ old('hora_cita') == '14:30' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">02:30 PM</span>
+                        </label>
+
+                        <!-- Bloque 04:00 PM -->
+                        <label
+                            class="border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:bg-slate-50 transition-all block has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-500">
+                            <input type="radio" name="hora_cita" value="16:00" class="sr-only peer"
+                                {{ old('hora_cita') == '16:00' ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-700 peer-checked:text-indigo-600">04:00 PM</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <!-- Observaciones / Comentarios -->

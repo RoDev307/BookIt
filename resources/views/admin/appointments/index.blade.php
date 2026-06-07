@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+fecha@extends('admin.layouts.app')
 
 @section('content')
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -15,6 +15,7 @@
                         class="border-b border-slate-200 text-xs font-bold text-slate-400 uppercase tracking-wider bg-slate-50">
                         <th class="p-4">ID Reserva</th>
                         <th class="p-4">Cliente</th>
+                        <th class="p-4">Especialista</th>
                         <th class="p-4">Fecha y Hora</th>
                         <th class="p-4">Estado</th>
                         <th class="p-4">Notas</th>
@@ -27,6 +28,9 @@
                             <td class="p-4 font-bold text-slate-400">#{{ $appointment->id }}</td>
                             <td class="p-4 font-semibold text-slate-900">
                                 {{ $appointment->user->name ?? 'Cliente Registrado' }}</td>
+                            <td class="p-4 text-slate-700 font-medium"><span
+                                    class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-md border border-indigo-100">👤
+                                    {{ $appointment->staff_name ?? 'Sin asignar' }}</span></td>
                             <td class="p-4 text-slate-600 font-medium">
                                 📅 {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d/m/Y - g:i A') }}
                             </td>

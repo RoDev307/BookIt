@@ -83,6 +83,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/services/{id}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/services/{id}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::get('/appointments/create', [AppointmentController::class, 'createAdmin'])->name('admin.appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'storeAdmin'])->name('admin.appointments.store');
 });
 
 // Dejamos la ruta de testeo aislada con el middleware original para que Esmeralda revise su lógica luego

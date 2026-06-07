@@ -16,11 +16,18 @@
         <div class="p-5">
             <h1 class="text-2xl font-bold tracking-wider text-indigo-400 mb-8">BookIt Admin</h1>
             <nav class="space-y-2">
+                <!-- NUEVO BOTÓN: Agendado Manual para Recepción/Staff -->
+                <a href="{{ route('admin.appointments.create') }}"
+                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    ⚡ Agendar Cita (Interno)
+                </a>
+                <!-- Gestión de Servicios (Alexander) -->
                 <a href="{{ route('services.index') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     🛠️ Gestionar Servicios
                 </a>
 
+                <!-- Gestión de Citas Recibidas -->
                 <a href="{{ route('dashboard') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     📅 Gestionar Citas

@@ -83,4 +83,46 @@ class AppointmentController extends Controller
 
         return redirect()->back()->with('success', 'La cita ha sido cancelada correctamente.');
     }
+    public function createAdmin()
+    {
+        $user = Auth::user();
+
+        // Recupera ÚNICAMENTE los servicios que vende este comercio específico (Aislamiento SaaS)
+        $services = Service::where('business_id', $user->business_id)->get();
+
+        return view('admin.appointments.create', compact('services'));
+    }
+
+    /**
+     * Procesa y guarda la reserva generada de forma manual por el comercio.
+     */
+    public function storeAdmin(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'service_id'       => 'required|exists:services,id',
+            'appointment_time' => 'required|date|after:now',
+            'client_name'      => 'required|string|max:255', // Nombre del cliente que llamó o vino en físico
+            'notes'            => 'nullable|string|max:500',
+        ]);
+
+        // Aseguramos que el servicio realmente le pertenezca a este negocio por seguridad
+        $service = Service::where('id', $validated['service_id'])
+            ->where('business_id', $user->business_id)
+            ->firstOrFail();
+
+        // Guardamos la cita. El user_id será el del administrador que la digita,
+        // pero guardamos el nombre del cliente real en las notas/comentarios para la recepción.
+        Appointment::create([
+            'user_id'          => $user->id,
+            'business_id'      => $user->business_id,
+            'service_id'       => $service->id,
+            'appointment_time' => $validated['appointment_time'],
+            'status'           => 'confirmed',
+            'notes'            => "Cliente Externo: " . $validated['client_name'] . " | " . $validated['notes'],
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'La cita externa ha sido agendada e introducida al sistema correctamente.');
+    }
 }

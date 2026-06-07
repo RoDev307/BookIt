@@ -29,6 +29,22 @@
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     📅 Gestionar Citas
                 </a>
+
+                {{-- BLOQUE EXCLUSIVO: Acceso al Panel Maestro solo para el Super Administrador --}}
+                @if (Auth::check() && Auth::user()->role === 'super_admin')
+                    <div class="mt-6 pt-4 border-t border-slate-700">
+                        <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SaaS Global
+                        </p>
+                        <a href="{{ route('master.businesses.index') }}"
+                            class="flex items-center justify-between py-2.5 px-4 rounded transition font-bold {{ request()->routeIs('master.businesses.*') ? 'bg-indigo-900 text-white' : 'text-indigo-300 hover:bg-slate-700 hover:text-indigo-200' }}">
+                            <span>🌐 Controlar Comercios</span>
+                            <span
+                                class="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-wider">
+                                Root
+                            </span>
+                        </a>
+                    </div>
+                @endif
             </nav>
         </div>
 

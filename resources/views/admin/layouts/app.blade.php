@@ -104,16 +104,33 @@
                     e.preventDefault();
 
                     Swal.fire({
-                        title: "¿Estás seguro?",
-                        text: "¡Esta acción no se puede deshacer y removerá el registro del sistema!",
+                        title: "Confirmación de Seguridad",
+                        text: "Esta acción es destructiva y eliminará las citas vinculadas. Por favor, ingresa tu contraseña de administrador para continuar:",
                         icon: "warning",
+                        input: "password",
+                        inputAttributes: {
+                            autocapitalize: "off",
+                            autocorrect: "off",
+                            placeholder: "Contraseña de seguridad"
+                        },
                         showCancelButton: true,
-                        confirmButtonColor: "#4f46e5", // Indigo unificado
-                        cancelButtonColor: "#f43f5e", // Rose
-                        confirmButtonText: "Sí, eliminar",
-                        cancelButtonText: "Cancelar"
+                        confirmButtonColor: "#f43f5e",
+                        cancelButtonColor: "#64748b",
+                        confirmButtonText: "Confirmar y Eliminar",
+                        cancelButtonText: "Cancelar",
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return "¡Es obligatorio ingresar tu contraseña para autorizar la eliminación!";
+                            }
+                        }
                     }).then((result) => {
-                        if (result.isConfirmed) {
+                        if (result.isConfirmed && result.value) {
+                            const inputPassword = document.createElement('input');
+                            inputPassword.type = 'hidden';
+                            inputPassword.name = 'admin_password';
+                            inputPassword.value = result.value;
+
+                            this.appendChild(inputPassword);
                             this.submit();
                         }
                     });

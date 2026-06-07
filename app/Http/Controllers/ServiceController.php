@@ -6,6 +6,7 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class ServiceController extends Controller
 {
     /**
@@ -81,14 +82,30 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Ficha de servicio actualizada.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
+        // 1. Validamos que la contraseña haya llegado en la petición
+        $request->validate([
+            'admin_password' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        // 2. CORREGIDO: Namespace exacto de Illuminate\Support\Facades\Hash para evitar el error de tipo indefinido
+        if (!\Illuminate\Support\Facades\Hash::check($request->admin_password, $user->password)) {
+            // Si falla, regresamos inmediatamente con un mensaje de error tipo banner
+            return redirect()->back()->with('error', 'La contraseña de seguridad ingresada es incorrecta. No se pudo eliminar el servicio.');
+        }
+
+        // 3. Aislamiento SaaS: Buscamos el servicio asegurando que pertenezca al negocio actual
         $service = Service::where('id', $id)
-            ->where('business_id', Auth::user()->business_id)
+            ->where('business_id', $user->business_id)
             ->firstOrFail();
 
+        // 4. Ejecutamos la eliminación física (esto borrará en cascada si está configurado en la migración)
         $service->delete();
 
-        return redirect()->route('services.index')->with('success', 'Servicio removido de tu catálogo.');
+        // 5. Retornamos el éxito que disparará el SweetAlert animado que ya configuramos
+        return redirect()->route('services.index')->with('success', 'El servicio y sus dependencias han sido eliminados correctamente.');
     }
 }

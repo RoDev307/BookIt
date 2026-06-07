@@ -30,8 +30,8 @@
                     📅 Gestionar Citas
                 </a>
 
-                {{-- CORREGIDO: Bypass por correo electrónico para garantizar acceso Root --}}
-                @if (Auth::check() && Auth::user()->email === 'admin@bookit.com')
+                {{-- BLOQUE EXCLUSIVO: Acceso al Panel Maestro solo para el Super Administrador --}}
+                @if (Auth::check() && Auth::user()->role === 'super_admin')
                     <div class="mt-6 pt-4 border-t border-slate-700">
                         <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SaaS Global
                         </p>

@@ -34,7 +34,7 @@ class AppointmentController extends Controller
             ->get();
 
         // Retorna la vista del cliente común (El dashboard de "Mis Reservas")
-        return view('dashboard', compact('appointments'));
+        return view('admin.dashboard', compact('appointments'));
     }
 
     private function validarCitaSaaS($businessId, $appointmentTime, $staffName = null)

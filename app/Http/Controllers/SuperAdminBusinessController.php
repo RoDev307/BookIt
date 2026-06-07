@@ -69,7 +69,7 @@ class SuperAdminBusinessController extends Controller
      */
     public function edit($id)
     {
-        $business = Business::findOrFail($id);
+        $business = Business::with('owner')->findOrFail($id);
         return view('admin.master.businesses.edit', compact('business'));
     }
 
@@ -81,20 +81,30 @@ class SuperAdminBusinessController extends Controller
         $business = Business::findOrFail($id);
 
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'image_url' => ['nullable', 'url', 'max:255'],
+            'image_url'   => ['nullable', 'url', 'max:255'],
+            'admin_name'  => ['required', 'string', 'max:255'],
         ]);
 
         $oldName = $business->name;
 
+        // 1. Actualizar datos físicos del comercio
         $business->update([
-            'name' => $request->name,
+            'name'        => $request->name,
             'description' => $request->description,
-            'image_url' => $request->image_url,
-            'slug' => $oldName !== $request->name ? Str::slug($request->name) . '-' . time() : $business->slug,
+            'image_url'   => $request->image_url,
+            'slug'        => $oldName !== $request->name ? Str::slug($request->name) . '-' . time() : $business->slug,
         ]);
 
-        return redirect()->route('master.businesses.index')->with('success', "¡El comercio '{$business->name}' fue actualizado con éxito desde la consola maestra!");
+        // 2. Actualizar dinámicamente el nombre del usuario administrador vinculado
+        if ($business->owner) {
+            $business->owner->update([
+                'name' => $request->admin_name
+            ]);
+        }
+
+        return redirect()->route('master.businesses.index')
+            ->with('success', "¡El comercio '{$business->name}' y la firma de su administrador fueron actualizados con éxito!");
     }
 }

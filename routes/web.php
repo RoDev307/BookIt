@@ -8,7 +8,7 @@ use App\Http\Controllers\SuperAdminBusinessController;
 use Illuminate\Support\Facades\Route;
 
 // =========================================================================
-// 🔐 AUTENTICACIÓN Y PERFIL DE USUARIO (BREEZE / ESMERALDA)
+// AUTENTICACIÓN Y PERFIL DE USUARIO (BREEZE / ESMERALDA)
 // =========================================================================
 
 // Página principal (Landing base)
@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
 
 // =========================================================================
-// 🛒 CATÁLOGO PÚBLICO (OMAR & BACKEND)
+// CATÁLOGO PÚBLICO (OMAR & BACKEND)
 // =========================================================================
 
 // Catálogo de negocios
@@ -44,7 +44,7 @@ Route::get('/negocios/{slug}', [BusinessController::class, 'show'])
 
 
 // =========================================================================
-// 📅 MOTOR DE CITAS Y RESERVAS (RODRIGO - SPRINT 2)
+// MOTOR DE CITAS Y RESERVAS (RODRIGO - SPRINT 2)
 // =========================================================================
 
 Route::middleware('auth')->group(function () {
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 
 
 // =========================================================================
-// 🛠️ PANEL ADMINISTRATIVO INTERNO: CRUD DE SERVICIOS (ALEXANDER)
+// PANEL ADMINISTRATIVO INTERNO: CRUD DE SERVICIOS (ALEXANDER)
 // =========================================================================
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
@@ -87,9 +87,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Agendamiento manual interno
     Route::get('/appointments/create', [AppointmentController::class, 'createAdmin'])->name('admin.appointments.create');
     Route::post('/appointments', [AppointmentController::class, 'storeAdmin'])->name('admin.appointments.store');
+    Route::get('/appointments/{id}/edit', [AppointmentController::class, 'editAdmin'])->name('admin.appointments.edit');
+    Route::put('/appointments/{id}', [AppointmentController::class, 'updateAdmin'])->name('admin.appointments.update');
 });
 
-// Ruta de testeo aislada con el middleware original para que Esmeralda revise su lógica luego
+
 Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
     Route::get('/admin-test', function () {
         return 'Solo administradores estricto';
@@ -98,7 +100,7 @@ Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(funct
 
 
 // =========================================================================
-// 👑 CONSOLA MAESTRA INDEPENDIENTE: CONTROL DE INQUILINOS (ROOT GLOBAL)
+// CONSOLA MAESTRA INDEPENDIENTE: CONTROL DE INQUILINOS (ROOT GLOBAL)
 // =========================================================================
 
 Route::middleware(['auth', 'verified'])->prefix('admin/master')->group(function () {

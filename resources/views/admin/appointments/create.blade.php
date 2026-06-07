@@ -26,7 +26,7 @@
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Nombre del
                     Cliente</label>
                 <input type="text" name="client_name" value="{{ old('client_name') }}" required
-                    placeholder="Ej. Juan Pérez (Vía WhatsApp)"
+                    placeholder="Ej. Juan Pérez"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
             </div>
 

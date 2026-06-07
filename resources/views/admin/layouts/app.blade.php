@@ -17,20 +17,27 @@
         <div class="p-5">
             <h1 class="text-2xl font-bold tracking-wider text-indigo-400 mb-8">BookIt Admin</h1>
             <nav class="space-y-2">
-                <a href="{{ route('services.index') }}"
-                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                    🛠️ Gestionar Servicios
-                </a>
-                <a href="{{ route('admin.appointments.create') }}"
-                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                    ⚡ Agendar Cita (Interno)
-                </a>
-                <a href="{{ route('dashboard') }}"
-                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                    📅 Gestionar Citas
-                </a>
+                @if (!is_null(Auth::user()->business_id))
+                    <a href="{{ route('dashboard') }}"
+                        class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                        📅 Gestionar Citas
+                    </a>
+                    <a href="{{ route('admin.appointments.create') }}"
+                        class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                        ⚡ Agendar Cita (Interno)
+                    </a>
+                    <a href="{{ route('services.index') }}"
+                        class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                        🛠️ Gestionar Servicios
+                    </a>
+                @else
+                    <a href="{{ route('dashboard') }}"
+                        class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                        📊 Métrica Global SaaS
+                    </a>
+                @endif
 
-                {{-- BLOQUE EXCLUSIVO: Acceso al Panel Maestro solo para el Super Administrador --}}
+
                 @if (Auth::user()->email === 'admin@bookit.com')
                     <div class="mt-6 pt-4 border-t border-slate-700">
                         <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SaaS Global
@@ -157,7 +164,6 @@
         });
     </script>
 
-    {{-- 🚨 SECCIÓN CORREGIDA: Renderizado sin escapar {!! !!} para SweetAlert --}}
     @if (session('success'))
         <script>
             Swal.fire({

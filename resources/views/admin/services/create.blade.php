@@ -9,7 +9,6 @@
                 reservas de forma automática.</p>
         </div>
 
-        <!-- Mapeo de errores de validación de Laravel -->
         @if ($errors->any())
             <div class="mb-4 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl">
                 <strong class="font-bold block mb-1">Por favor corrige los siguientes campos:</strong>
@@ -21,7 +20,7 @@
             </div>
         @endif
 
-        <!-- Formulario de Inserción (Margen de error eliminado de raíz) -->
+        <!-- Formulario de Inserción -->
         <form action="{{ route('services.store') }}" method="POST" class="space-y-4">
             @csrf
 
@@ -29,15 +28,13 @@
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Nombre del
                     Servicio</label>
                 <input type="text" name="name" value="{{ old('name') }}" required
-                    placeholder="Ej. Limpieza Dental Ultrasónica o Endodoncia"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Descripción del
                     Servicio</label>
-                <textarea name="description" rows="3"
-                    placeholder="Detalla qué incluye el tratamiento médico o estético para orientación del paciente..."
+                <textarea name="description" rows="3" placeholder="Detalla qué incluye el servicio..."
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">{{ old('description') }}</textarea>
             </div>
 

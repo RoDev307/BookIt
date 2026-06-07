@@ -8,7 +8,6 @@
                 actualizarán instantáneamente en el motor de citas.</p>
         </div>
 
-        <!-- Mapeo de errores de validación de Laravel -->
         @if ($errors->any())
             <div class="mb-4 p-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl">
                 <strong class="font-bold block mb-1">Por favor corrige los siguientes campos:</strong>

@@ -4,15 +4,14 @@
     <div class="max-w-6xl mx-auto py-8 px-4">
         <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-black text-slate-900 tracking-tight">Panel Maestro: Control de Inquilinos</h1>
+                <h1 class="text-2xl font-black text-slate-900 tracking-tight">Panel Maestro: Control de negocios</h1>
                 <p class="text-xs text-slate-500 mt-1">Monitoreo, edición y control global de todos los comercios e
                     instancias activas en BookIt.</p>
             </div>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                {{-- 🚀 BOTÓN AGREGADO: Permite al Administrador Maestro dar de alta nuevas instancias comerciales --}}
                 <a href="{{ route('master.businesses.create') }}"
                     class="inline-flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer">
-                    ➕ Registrar Inquilino
+                    ➕ Registrar nuevo negocio
                 </a>
 
                 <span
@@ -49,7 +48,7 @@
                             <td class="p-4 text-right">
                                 <a href="{{ route('master.businesses.edit', $b->id) }}"
                                     class="text-xs bg-slate-900 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors">
-                                    ⚙️ Controlar
+                                    ⚙️ Modificar
                                 </a>
                             </td>
                         </tr>

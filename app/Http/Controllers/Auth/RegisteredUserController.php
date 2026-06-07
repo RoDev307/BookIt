@@ -54,7 +54,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'admin_business', // Rol administrativo asignado de forma mandatoria
-            'business_id' => $business->id, // 👈 Se vincula dinámicamente al ID recién generado
+            'business_id' => $business->id, // Se vincula dinámicamente al ID recién generado
         ]);
 
         event(new \Illuminate\Auth\Events\Registered($user));

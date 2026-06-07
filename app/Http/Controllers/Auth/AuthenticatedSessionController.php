@@ -28,15 +28,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // REDIRECCIÓN SAAS DINÁMICA POST-LOGIN:
         $user = Auth::user();
 
-        // Si es administrador de un negocio, mándalo directo a su panel administrativo
-        if ($user->role === 'admin_business' || $user->business_id !== null) {
-            return redirect()->route('services.index');
+        // Escenario Root: Administrador Maestro va a la consola global de citas/métricas SaaS
+        if (is_null($user->business_id) && ($user->role === 'admin_business' || $user->email === 'admin@bookit.com')) {
+            return redirect()->route('dashboard');
         }
 
-        // Si es un cliente común o cualquier otro usuario, mándalo al dashboard tradicional
+        // 🚨 CORREGIDO: Los comercios locales (admin_business) ahora van DIRECTO a su panel de métricas de negocio
+        if ($user->role === 'admin_business' || $user->business_id !== null) {
+            return redirect()->route('dashboard');
+        }
+
+        // Escenario Cliente
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

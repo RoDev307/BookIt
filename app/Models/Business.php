@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Business extends Model
 {
-    /**
-     * Atributos asignables de forma masiva.
-     * 🚨 SOLUCIÓN: Agregamos 'description' e 'image_url' para que el controlador maestro pueda guardarlos.
-     */
     protected $fillable = [
         'name',
         'slug',
@@ -41,5 +37,10 @@ class Business extends Model
     public function hours(): HasMany
     {
         return $this->hasMany(BusinessHour::class);
+    }
+
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'business_id')->where('role', 'admin_business');
     }
 }

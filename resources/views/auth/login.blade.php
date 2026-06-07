@@ -70,9 +70,6 @@
                         ¿Olvidaste tus datos de suscripción?
                     </a>
                 @endif
-                <a class="text-xs text-indigo-600 font-bold hover:underline" href="{{ route('register') }}">
-                    ¿Tu negocio no está registrado? Regístrate aquí
-                </a>
             </div>
         </form>
     </div>

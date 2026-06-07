@@ -157,10 +157,11 @@
         });
     </script>
 
+    {{-- 🚨 SECCIÓN CORREGIDA: Renderizado sin escapar {!! !!} para SweetAlert --}}
     @if (session('success'))
         <script>
             Swal.fire({
-                text: "{{ session('success') }}",
+                text: "{!! session('success') !!}",
                 icon: "success",
                 draggable: true,
                 confirmButtonColor: "#4f46e5"

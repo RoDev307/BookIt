@@ -54,10 +54,9 @@
                     </div>
                 @else
                     <a href="{{ route('login') }}"
-                        class="text-sm font-semibold text-slate-700 hover:text-indigo-600 px-3 py-1.5 transition-colors">Iniciar
-                        Sesión</a>
-                    <a href="{{ route('register') }}"
-                        class="text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-colors shadow-sm">Registrarse</a>
+                        class="text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-colors shadow-sm">
+                        Iniciar Sesión
+                    </a>
                 @endauth
             </div>
         </div>

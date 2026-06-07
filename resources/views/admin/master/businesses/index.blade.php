@@ -8,9 +8,15 @@
                 <p class="text-xs text-slate-500 mt-1">Monitoreo, edición y control global de todos los comercios e
                     instancias activas en BookIt.</p>
             </div>
-            <div>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                {{-- 🚀 BOTÓN AGREGADO: Permite al Administrador Maestro dar de alta nuevas instancias comerciales --}}
+                <a href="{{ route('master.businesses.create') }}"
+                    class="inline-flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer">
+                    ➕ Registrar Inquilino
+                </a>
+
                 <span
-                    class="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-700 shadow-sm">
+                    class="inline-flex items-center justify-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-700 shadow-sm">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Conexión Segura: Aiven Cluster
                 </span>

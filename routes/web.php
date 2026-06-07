@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 // Página principal (Landing base)
 Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
 
-// Rutas automáticas de autenticación de Breeze (Login, registro, etc.)
+// Rutas automáticas de autenticación de Breeze (Login, etc. - Registro inhabilitado)
 require __DIR__ . '/auth.php';
 
 // Panel base del usuario autenticado e historial de citas
@@ -75,7 +75,6 @@ Route::middleware('auth')->group(function () {
 // =========================================================================
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
-
     // CRUD Completo del Gestor de Servicios
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
@@ -84,20 +83,31 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/services/{id}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/services/{id}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Agendamiento manual interno
     Route::get('/appointments/create', [AppointmentController::class, 'createAdmin'])->name('admin.appointments.create');
     Route::post('/appointments', [AppointmentController::class, 'storeAdmin'])->name('admin.appointments.store');
 });
 
-// Dejamos la ruta de testeo aislada con el middleware original para que Esmeralda revise su lógica luego
+// Ruta de testeo aislada con el middleware original para que Esmeralda revise su lógica luego
 Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
     Route::get('/admin-test', function () {
         return 'Solo administradores estricto';
     });
+});
 
 
-    Route::middleware(['auth', 'role:super_admin'])->group(function () {
-        Route::get('/master/businesses', [SuperAdminBusinessController::class, 'index'])->name('master.businesses.index');
-        Route::get('/master/businesses/{id}/edit', [SuperAdminBusinessController::class, 'edit'])->name('master.businesses.edit');
-        Route::put('/master/businesses/{id}', [SuperAdminBusinessController::class, 'update'])->name('master.businesses.update');
-    });
+// =========================================================================
+// 👑 CONSOLA MAESTRA INDEPENDIENTE: CONTROL DE INQUILINOS (ROOT GLOBAL)
+// =========================================================================
+
+Route::middleware(['auth', 'verified'])->prefix('admin/master')->group(function () {
+    // Listado, edición y persistencia de comercios existentes
+    Route::get('/businesses', [SuperAdminBusinessController::class, 'index'])->name('master.businesses.index');
+    Route::get('/businesses/{id}/edit', [SuperAdminBusinessController::class, 'edit'])->name('master.businesses.edit');
+    Route::put('/businesses/{id}', [SuperAdminBusinessController::class, 'update'])->name('master.businesses.update');
+
+    // 🚨 CORREGIDO: Alta centralizada de nuevas instancias comerciales (Formulario + Guardar)
+    Route::get('/businesses/create', [SuperAdminBusinessController::class, 'create'])->name('master.businesses.create');
+    Route::post('/businesses', [SuperAdminBusinessController::class, 'store'])->name('master.businesses.store');
 });

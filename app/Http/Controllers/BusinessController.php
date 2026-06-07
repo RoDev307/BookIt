@@ -37,7 +37,10 @@ class BusinessController extends Controller
      */
     public function show($slug)
     {
-        $business = Business::where('slug', $slug)->firstOrFail();
+        // Buscamos el comercio por su slug o lanzamos un error 404 si no existe
+        $business = \App\Models\Business::where('slug', $slug)->firstOrFail();
+
+        // Enviamos el objeto compactado a la vista
         return view('businesses.show', compact('business'));
     }
 }

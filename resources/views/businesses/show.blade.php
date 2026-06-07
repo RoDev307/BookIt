@@ -27,10 +27,13 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-indigo-600"></div>
                     <div>
-                        <h1 class="text-3xl font-black text-slate-900 capitalize tracking-tight">
-                            {{ str_replace('-', ' ', $slug) }}</h1>
-                        <p class="mt-2 text-slate-600 text-sm">Selecciona uno de nuestros servicios profesionales
-                            especializados y agenda tu espacio.</p>
+                        <h1 class="text-text-3xl font-black text-slate-900 capitalize tracking-tight">
+                            {{ $business->name }}
+                        </h1>
+                        <p class="mt-2 text-slate-600 text-sm">
+                            Selecciona uno de nuestros servicios profesionales especializados y agenda tu espacio en
+                            {{ $business->name }}.
+                        </p>
                     </div>
                 </div>
 

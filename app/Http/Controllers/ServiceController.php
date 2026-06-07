@@ -8,63 +8,87 @@ use Illuminate\Http\Request;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra la tabla con todos los servicios.
      */
     public function index()
     {
-        // 1. Forzamos la obtención de los datos. Si la tabla está vacía, devolverá una colección vacía, no null.
         $services = Service::all();
-
-        // 2. RETORNO CRÍTICO: Asegúrate de que no haya ningún "return;" vacío arriba de esta línea.
-        // Debe apuntar exactamente a la vista unificada que acabamos de crear.
         return view('admin.services.index', compact('services'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario para crear un nuevo servicio.
      */
     public function create()
     {
-        //
+        // Renderiza el formulario de creación que estructuramos antes
+        return view('admin.services.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda el nuevo servicio en la base de datos de Aiven.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'business_id'      => 'required|integer',
+            'title'            => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'price'            => 'required|numeric|min:0',
+            'duration_minutes' => 'required|integer|min:1',
+        ]);
+
+        Service::create($validated);
+
+        return redirect()->route('services.index')->with('success', 'Servicio creado exitosamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra un servicio específico (No requerido si usas el index, pero se mapea por seguridad).
      */
     public function show(string $id)
     {
-        //
+        $service = Service::findOrFail($id);
+        return view('admin.services.show', compact('service'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Muestra el formulario para editar un servicio existente.
      */
     public function edit(string $id)
     {
-        //
+        $service = Service::findOrFail($id);
+        return view('admin.services.edit', compact('service'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza los datos del servicio en la nube.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $service = Service::findOrFail($id);
+
+        $validated = $request->validate([
+            'business_id'      => 'required|integer',
+            'title'            => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'price'            => 'required|numeric|min:0',
+            'duration_minutes' => 'required|integer|min:1',
+        ]);
+
+        $service->update($validated);
+
+        return redirect()->route('services.index')->with('success', 'Servicio actualizado correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el servicio de forma definitiva.
      */
     public function destroy(string $id)
     {
-        //
+        $service = Service::findOrFail($id);
+        $service->delete();
+
+        return redirect()->route('services.index')->with('success', 'Servicio eliminado del catálogo de forma definitiva.');
     }
 }

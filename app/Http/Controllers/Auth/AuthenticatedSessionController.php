@@ -22,21 +22,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-   public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-    if (Auth::user()->role === 'admin_business') {
-        return redirect('/dashboard');
+        // REDIRECCIÓN SAAS DINÁMICA POST-LOGIN:
+        $user = Auth::user();
+
+        // Si es administrador de un negocio, mándalo directo a su panel administrativo
+        if ($user->role === 'admin_business' || $user->business_id !== null) {
+            return redirect()->route('services.index');
         }
 
-    if (Auth::user()->role === 'client') {
-        return redirect('/mis-citas');
-        }
-
-    return redirect('/');
+        // Si es un cliente común o cualquier otro usuario, mándalo al dashboard tradicional
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

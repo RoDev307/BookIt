@@ -20,6 +20,11 @@
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     🛠️ Gestionar Servicios
                 </a>
+
+                <a href="{{ route('dashboard') }}"
+                    class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                    📅 Gestionar Citas
+                </a>
             </nav>
         </div>
 

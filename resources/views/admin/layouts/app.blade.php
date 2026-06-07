@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Panel de Administración - BookIt</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-gray-100 font-sans flex h-screen overflow-hidden">
@@ -16,17 +17,14 @@
         <div class="p-5">
             <h1 class="text-2xl font-bold tracking-wider text-indigo-400 mb-8">BookIt Admin</h1>
             <nav class="space-y-2">
-                <!-- Gestión de Servicios (Alexander) -->
                 <a href="{{ route('services.index') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     🛠️ Gestionar Servicios
                 </a>
-                <!-- NUEVO BOTÓN: Agendado Manual para Recepción/Staff -->
                 <a href="{{ route('admin.appointments.create') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     ⚡ Agendar Cita (Interno)
                 </a>
-                <!-- Gestión de Citas Recibidas -->
                 <a href="{{ route('dashboard') }}"
                     class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                     📅 Gestionar Citas
@@ -67,11 +65,6 @@
             </div>
         </header>
 
-        @if (session('success'))
-            <div class="mx-6 mt-4 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg shadow-sm">
-                {{ session('success') }}
-            </div>
-        @endif
         @if (session('error'))
             <div class="mx-6 mt-4 p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg shadow-sm">
                 {{ session('error') }}
@@ -84,6 +77,7 @@
     </div>
 
     <script>
+        // 1. Control del Sidebar Responsive
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
 
@@ -100,7 +94,44 @@
                 sidebar.classList.remove('flex');
             }
         });
+
+        // 2. Interceptor global para formularios de eliminación con la clase .form-eliminar
+        document.addEventListener('DOMContentLoaded', function() {
+            const formularios = document.querySelectorAll('.form-eliminar');
+
+            formularios.forEach(formulario => {
+                formulario.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        title: "¿Estás seguro?",
+                        text: "¡Esta acción no se puede deshacer y removerá el registro del sistema!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#4f46e5", // Indigo unificado
+                        cancelButtonColor: "#f43f5e", // Rose
+                        confirmButtonText: "Sí, eliminar",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+                });
+            });
+        });
     </script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                text: "{{ session('success') }}",
+                icon: "success",
+                draggable: true,
+                confirmButtonColor: "#4f46e5"
+            });
+        </script>
+    @endif
 </body>
 
 </html>

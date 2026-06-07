@@ -1,4 +1,4 @@
-fecha@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">

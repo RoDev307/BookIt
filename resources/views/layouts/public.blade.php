@@ -20,7 +20,7 @@
                         class="text-indigo-600 border-b-2 border-indigo-600 px-1 py-5">Inicio</a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Mis Reservas</a>
-                        @if (Auth::user()->role === 'admin_business')
+                        @if (Auth::user()->role === 'admin_business' or Auth::user()->role === 'super_admin')
                             <a href="{{ route('services.index') }}"
                                 class="text-indigo-500 font-semibold hover:text-indigo-700 transition-colors">Panel
                                 Admin</a>

@@ -154,7 +154,7 @@
 
                             <input type="hidden" name="servicio_nombre" id="input-servicio-nombre" required>
                             <input type="hidden" name="servicio_precio" id="input-servicio-precio" required>
-                            <input type="hidden" name="business_slug" value="{{ $slug }}">
+                            <input type="hidden" name="business_slug" value="{{ $business->slug }}">
 
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1.

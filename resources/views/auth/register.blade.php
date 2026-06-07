@@ -1,7 +1,15 @@
 @extends('layouts.guest')
 
 @section('content')
-    <div class="w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+    <div class="w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-200 relative">
+
+        <!-- Botón para Regresar al Inicio Público -->
+        <div class="mb-5 text-left">
+            <a href="{{ route('businesses.index') }}"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors group">
+                <span class="transform group-hover:-translate-x-0.5 transition-transform">←</span> Regresar al Inicio
+            </a>
+        </div>
 
         <!-- Encabezado del Embudo de Conversión B2B -->
         <div class="mb-6 text-center">
@@ -15,8 +23,8 @@
 
             <!-- Name (Representante) -->
             <div>
-                <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre del
-                    Representante</label>
+                <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre
+                    del Representante</label>
                 <x-text-input id="name"
                     class="block mt-1 w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 text-sm" type="text"
                     name="name" :value="old('name')" required autofocus autocomplete="name"
@@ -24,7 +32,7 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2 text-xs text-rose-600" />
             </div>
 
-            <!-- Email Address (Corporativo) -->
+            <!-- Email Address -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico
                     Comercial</label>

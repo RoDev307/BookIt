@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SuperAdminBusinessController;
 use Illuminate\Support\Facades\Route;
 
 // =========================================================================
@@ -91,5 +92,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 Route::middleware(['auth', 'role:admin_business'])->prefix('admin')->group(function () {
     Route::get('/admin-test', function () {
         return 'Solo administradores estricto';
+    });
+
+
+    Route::middleware(['auth', 'role:super_admin'])->group(function () {
+        Route::get('/master/businesses', [SuperAdminBusinessController::class, 'index'])->name('master.businesses.index');
+        Route::get('/master/businesses/{id}/edit', [SuperAdminBusinessController::class, 'edit'])->name('master.businesses.edit');
+        Route::put('/master/businesses/{id}', [SuperAdminBusinessController::class, 'update'])->name('master.businesses.update');
     });
 });

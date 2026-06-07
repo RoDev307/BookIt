@@ -43,7 +43,8 @@
                     </div>
 
                     <div class="divide-y divide-slate-200">
-                        @if (str_contains($slug, 'barberia'))
+                        {{-- SOLUCIÓN: Cambiado $slug por $business->slug --}}
+                        @if (str_contains($business->slug, 'barberia'))
                             <div
                                 class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                                 <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
@@ -85,7 +86,8 @@
                                         class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm transition-colors w-full cursor-pointer">Reservar</button>
                                 </div>
                             </div>
-                        @elseif(str_contains($slug, 'clinica'))
+                            {{-- SOLUCIÓN: Cambiado $slug por $business->slug --}}
+                        @elseif(str_contains($business->slug, 'clinica'))
                             <div
                                 class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-slate-50/50 transition-colors items-center">
                                 <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">

@@ -1,54 +1,74 @@
 @extends('layouts.guest')
 
 @section('content')
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+    <div class="w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <!-- Encabezado del Embudo de Conversión B2B -->
+        <div class="mb-6 text-center">
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Contratar Ecosistema BookIt</h2>
+            <p class="text-xs text-slate-500 mt-1">Da de alta tu empresa y activa tu instancia administrativa para comenzar a
+                gestionar servicios.</p>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <form method="POST" action="{{ route('register') }}" class="space-y-4">
+            @csrf
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <!-- Name (Representante) -->
+            <div>
+                <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre del
+                    Representante</label>
+                <x-text-input id="name"
+                    class="block mt-1 w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 text-sm" type="text"
+                    name="name" :value="old('name')" required autofocus autocomplete="name"
+                    placeholder="Ej. Lic. Alejandro Sosa" />
+                <x-input-error :messages="$errors->get('name')" class="mt-2 text-xs text-rose-600" />
+            </div>
 
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="new-password" />
+            <!-- Email Address (Corporativo) -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico
+                    Comercial</label>
+                <x-text-input id="email"
+                    class="block mt-1 w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 text-sm" type="email"
+                    name="email" :value="old('email')" required autocomplete="username" placeholder="ejemplo@empresa.com" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2 text-xs text-rose-600" />
+            </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <!-- Password -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Contraseña de
+                    Seguridad</label>
+                <x-text-input id="password"
+                    class="block mt-1 w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 text-sm" type="password"
+                    name="password" required autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2 text-xs text-rose-600" />
+            </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <!-- Confirm Password -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Confirmar Contraseña de
+                    Seguridad</label>
+                <x-text-input id="password_confirmation"
+                    class="block mt-1 w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 text-sm" type="password"
+                    name="password_confirmation" required autocomplete="new-password" placeholder="Repite tu contraseña" />
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-xs text-rose-600" />
+            </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation"
-                required autocomplete="new-password" />
+            <!-- Botón de Suscripción / Contratación -->
+            <div class="pt-2">
+                <button type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-sm transition-colors cursor-pointer text-center block">
+                    🚀 Activar Licencia e Iniciar Instancia
+                </button>
+            </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+            <div class="text-center pt-4 border-t border-slate-100 mt-4 flex flex-col gap-1">
+                <a class="text-xs text-slate-500 hover:text-indigo-600 transition-colors font-medium"
+                    href="{{ route('login') }}">
+                    ¿Ya posees una suscripción activa? <span class="text-indigo-600 font-bold underline">Inicia sesión
+                        aquí</span>
+                </a>
+            </div>
+        </form>
+    </div>
 @endsection

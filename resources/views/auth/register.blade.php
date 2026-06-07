@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 
 @section('content')
-    <div class="w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-200 relative">
+    <div>
 
         <!-- Botón para Regresar al Inicio Público -->
         <div class="mb-5 text-left">

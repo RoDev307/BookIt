@@ -20,7 +20,7 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Nombre del
                     Servicio</label>
-                <input type="text" name="title" value="{{ $service->title }}" required
+                <input type="text" name="name" value="{{ $service->name }}" required
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
             </div>
             <div>

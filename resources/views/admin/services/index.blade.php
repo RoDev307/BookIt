@@ -30,7 +30,7 @@
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                     @forelse($services as $service)
                         <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="p-4 font-semibold text-slate-900">{{ $service->title }}</td>
+                            <td class="p-4 font-semibold text-slate-900">{{ $service->name }}</td>
                             <td class="p-4"><span
                                     class="bg-indigo-50 text-indigo-700 text-xs font-medium px-2 py-1 rounded-md">ID:
                                     {{ $service->business_id }}</span></td>

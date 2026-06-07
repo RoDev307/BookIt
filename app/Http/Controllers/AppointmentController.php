@@ -2,108 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Appointment;
-use Carbon\Carbon;
+use App\Models\Service;
+use App\Models\Business;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AppointmentController extends Controller
 {
     /**
-     * Procesa la reserva y redirige a la pantalla de éxito.
-     */
-    public function store(Request $request)
-    {
-        // Validamos los datos que vienen del formulario Frontend
-        $request->validate([
-            'servicio_nombre' => 'required|string',
-            'servicio_precio' => 'required|numeric',
-            'business_slug'   => 'required|string',
-            'fecha_cita'      => 'required|date|after_or_equal:today',
-            'hora_cita'       => 'required|string',
-        ]);
-
-        // Adaptación de campos a la nube
-        $appointmentTime = $request->input('fecha_cita') . ' ' . $request->input('hora_cita') . ':00';
-
-        // Persistencia utilizando el ID real del usuario autenticado (Esmeralda)
-        $cita = Appointment::create([
-            'user_id'          => Auth::id() ?? 1, // Si no hay sesión iniciada en pruebas, usa el 1
-            'business_id'      => 1,
-            'service_id'       => 1,
-            'appointment_time' => $appointmentTime,
-            'status'           => 'pending',
-            'notes'            => 'Creado desde el formulario dinámico del cliente',
-        ]);
-
-        // Pasamos los datos reales para que la pantalla muestre lo que el usuario eligió
-        return redirect()->route('appointments.success')->with([
-            'success'  => '¡Tu cita ha sido agendada con éxito!',
-            'servicio' => $request->input('servicio_nombre'),
-            'fecha'    => $request->input('fecha_cita'),
-            'hora'     => $request->input('hora_cita')
-        ]);
-    }
-
-    /**
-     * Generación del comprobante PDF de Databox usando DomPDF
-     */
-    public function descargarPDF(Request $request)
-    {
-        $horaCruda = $request->query('hora', '00:00');
-        $horaFormateada = $horaCruda;
-
-        try {
-            $horaFormateada = Carbon::createFromFormat('H:i', $horaCruda)->format('g:i A');
-        } catch (\Exception $e) {
-            try {
-                $horaFormateada = Carbon::createFromFormat('H:i:s', $horaCruda)->format('g:i A');
-            } catch (\Exception $ex) {
-                $horaFormateada = $horaCruda;
-            }
-        }
-
-        $data = [
-            'fecha' => $request->query('fecha', date('Y-m-d')),
-            'hora'  => $horaFormateada
-        ];
-
-        $dompdf = app('dompdf.wrapper');
-        $dompdf->loadView('appointments.pdf', $data);
-
-        return $dompdf->download('Comprobante_Cita_Databox.pdf');
-    }
-
-    /**
-     * Muestra el panel con el historial de citas del usuario logueado (Esmeralda)
+     * MULTI-TENANT: Filtra el historial dependiendo de quién consulte.
+     * Si es Admin, ve las citas de SU comercio. Si es Cliente, ve SUS propias reservas.
      */
     public function misCitas()
     {
-        $appointments = Appointment::where('user_id', Auth::id())
+        $user = Auth::user();
+
+        // Escenario A: Si el usuario es Administrador de un Comercio (Alexander)
+        if ($user->role === 'admin_business' || $user->business_id !== null) {
+            $appointments = Appointment::where('business_id', $user->business_id)
+                ->orderBy('appointment_time', 'asc')
+                ->get();
+
+            // Retorna la vista del panel administrativo interno que gestiona el comercio
+            return view('admin.appointments.index', compact('appointments'));
+        }
+
+        // Escenario B: Si es un Cliente común (Esmeralda)
+        $appointments = Appointment::where('user_id', $user->id)
             ->orderBy('appointment_time', 'desc')
             ->get();
 
+        // Retorna la vista del cliente común (El dashboard de "Mis Reservas")
         return view('dashboard', compact('appointments'));
     }
 
     /**
-     * Cancela una cita asegurando que pertenezca al usuario en sesión
+     * Agenda la cita amarrándola de forma dinámica al comercio correspondiente.
      */
-    public function cancelar(int $id)
+    public function store(Request $request)
     {
-        $appointment = Appointment::findOrFail($id);
+        $validated = $request->validate([
+            'service_id'       => 'required|exists:services,id',
+            'appointment_time' => 'required|date|after:now',
+            'notes'            => 'nullable|string|max:500',
+        ]);
 
-        if ($appointment->user_id != Auth::id()) {
-            abort(403);
-        }
-        
-        if ($appointment->status == 'cancelled') {
-            return back();
-        }
+        // Recuperamos el servicio para saber a qué comercio (Tenant) le pertenece
+        $service = Service::findOrFail($validated['service_id']);
 
-        $appointment->status = 'cancelled';
-        $appointment->save();
+        // Creamos la cita vinculando al cliente y al negocio automáticamente
+        $appointment = Appointment::create([
+            'user_id'          => Auth::id(),
+            'business_id'      => $service->business_id, // 👈 Amarra la cita al comercio dueño del servicio
+            'service_id'       => $validated['service_id'],
+            'appointment_time' => $validated['appointment_time'],
+            'status'           => 'confirmed',
+            'notes'            => $validated['notes'],
+        ]);
 
-        return back()->with('success', 'Cita cancelada correctamente');
+        return redirect()->route('appointments.success')->with('success', 'Tu reserva ha sido procesada.');
+    }
+
+    /**
+     * Cancela la cita de forma segura evaluando la pertenencia.
+     */
+    public function cancelar($id)
+    {
+        $user = Auth::user();
+
+        // El admin de un comercio o el dueño de la cita pueden cancelarla
+        $appointment = Appointment::where('id', $id)
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('business_id', $user->business_id);
+            })->firstOrFail();
+
+        $appointment->update(['status' => 'cancelled']);
+
+        return redirect()->back()->with('success', 'La cita ha sido cancelada correctamente.');
     }
 }

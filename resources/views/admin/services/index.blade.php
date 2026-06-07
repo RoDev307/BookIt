@@ -40,10 +40,13 @@
                                 <a href="{{ route('services.edit', $service->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs">Editar</a>
                                 <form action="{{ route('services.destroy', $service->id) }}" method="POST"
-                                    onsubmit="return confirm('¿Eliminar este servicio del catálogo?')">
-                                    @csrf @method('DELETE')
+                                    class="form-eliminar inline-block">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit"
-                                        class="text-rose-600 hover:text-rose-900 font-semibold text-xs cursor-pointer">Eliminar</button>
+                                        class="text-rose-600 hover:text-rose-900 font-bold text-xs cursor-pointer ml-2 bg-transparent border-none p-0">
+                                        Eliminar
+                                    </button>
                                 </form>
                             </td>
                         </tr>

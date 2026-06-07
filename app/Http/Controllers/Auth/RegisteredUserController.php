@@ -28,24 +28,40 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
+        // 1. Validaciones básicas de credenciales
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        // 2. CREACIÓN AUTOMÁTICA DEL COMERCIO (Inquilino SaaS)
+        // Usamos el nombre del representante para fundar su empresa por defecto
+        $businessName = "Servicios Comerciales de " . $request->name;
+        $businessSlug = \Illuminate\Support\Str::slug($businessName) . '-' . time(); // Evita colisiones de nombres
+
+        $business = \App\Models\Business::create([
+            'name' => $businessName,
+            'slug' => $businessSlug,
+            'description' => 'Espacio de gestión creado automáticamente. Edita tu información desde el panel de control.',
+        ]);
+
+        // 3. CREACIÓN DEL USUARIO ADMINISTRADOR VINCULADO AL NUEVO COMERCIO
+        $user = \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'admin_business', // Rol administrativo asignado de forma mandatoria
+            'business_id' => $business->id, // 👈 Se vincula dinámicamente al ID recién generado
         ]);
 
-        event(new Registered($user));
+        event(new \Illuminate\Auth\Events\Registered($user));
 
-        Auth::login($user);
+        \Illuminate\Support\Facades\Auth::login($user);
 
+        // Redirección directa a su nueva consola limpia
         return redirect(route('dashboard', absolute: false));
     }
 }

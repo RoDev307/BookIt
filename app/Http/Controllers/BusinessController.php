@@ -5,38 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class BusinessController extends Controller
 {
     /**
      * Muestra el catálogo de todos los negocios disponibles.
      */
-    public function index(): View
+    public function index()
     {
+        // 1. Si hay un usuario logueado, verificamos su rol multi-tenant
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Si es administrador de un negocio y tiene un comercio asignado
+            if ($user->role === 'admin_business' && $user->business_id !== null) {
+                // REDIRECCIÓN INTELIGENTE: Lo mandamos directo a gestionar sus propios servicios
+                return redirect()->route('services.index');
+            }
+        }
+
+        // 2. Si es un visitante anónimo o un cliente común (Esmeralda/Omar), muestra el catálogo normal
         $businesses = Business::all();
+
+        // Retorna tu vista pública actual (ajusta el nombre si es 'index' o 'businesses.index')
         return view('businesses.index', compact('businesses'));
     }
 
     /**
-     * Muestra el detalle de un negocio específico junto con sus servicios.
+     * Muestra el detalle de un negocio específico (Catálogo para reservar).
      */
-    public function show($slug): View
+    public function show($slug)
     {
-        // 1. Intentamos buscar el negocio real en la base de datos sin caernos con Fail
-        $business = Business::with('services')->where('slug', $slug)->first();
-
-        // 2. PLAN DE RESPALDO: Si no existe en la BD, creamos un objeto genérico al vuelo 
-        // para que tu frontend no se rompa y reciba la variable obligatoria.
-        if (!$business) {
-            $business = new Business();
-            $business->slug = $slug;
-            $business->name = str_replace('-', ' ', $slug);
-        }
-
-        // 3. Retornamos la vista pasando tanto el objeto completo como la cadena $slug independiente
-        return view('businesses.show', [
-            'business' => $business,
-            'slug' => $slug
-        ]);
+        $business = Business::where('slug', $slug)->firstOrFail();
+        return view('businesses.show', compact('business'));
     }
 }

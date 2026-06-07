@@ -74,10 +74,12 @@
 
             <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-600 font-medium hidden sm:inline">Administrador</span>
-                <a href="{{ route('businesses.index') }}"
-                    class="text-sm bg-indigo-600 text-white font-medium px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm">
-                    Ver Sitio Público →
-                </a>
+                @if (is_null(Auth::user()->business_id))
+                    <a href="{{ route('businesses.index') }}"
+                        class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
+                        Ver Sitio Público →
+                    </a>
+                @endif
             </div>
         </header>
 

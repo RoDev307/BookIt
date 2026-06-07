@@ -3,23 +3,42 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Business extends Model
 {
-    protected $fillable = ['name', 'slug', 'email'];
-    public function services()
+    /**
+     * Atributos asignables de forma masiva.
+     * 🚨 SOLUCIÓN: Agregamos 'description' e 'image_url' para que el controlador maestro pueda guardarlos.
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'email',
+        'description',
+        'image_url'
+    ];
+
+    /**
+     * Relación: Un negocio posee un catálogo de muchos servicios.
+     */
+    public function services(): HasMany
     {
         return $this->hasMany(Service::class);
     }
 
-    public function appointments()
+    /**
+     * Relación: Un negocio administra un historial de citas recibidas.
+     */
+    public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
+
     /**
-     * Relación: Un negocio tiene muchos horarios de atención (uno por cada día de la semana).
+     * Relación: Un negocio tiene muchos horarios de atención parametrizados.
      */
-    public function hours()
+    public function hours(): HasMany
     {
         return $this->hasMany(BusinessHour::class);
     }

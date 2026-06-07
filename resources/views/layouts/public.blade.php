@@ -19,11 +19,20 @@
                     <a href="{{ route('businesses.index') }}"
                         class="text-indigo-600 border-b-2 border-indigo-600 px-1 py-5">Inicio</a>
                     @auth
-                        <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Mis Reservas</a>
-                        @if (Auth::user()->role === 'admin_business' or Auth::user()->role === 'super_admin')
-                            <a href="{{ route('services.index') }}"
-                                class="text-indigo-500 font-semibold hover:text-indigo-700 transition-colors">Panel
-                                Admin</a>
+                        {{-- CORREGIDO: "Mis Reservas" solo se muestra a los clientes que de verdad agendan citas --}}
+                        @if (Auth::user()->role === 'client')
+                            <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Mis
+                                Reservas</a>
+                        @endif
+
+                        {{-- Panel Admin unificado apunta al dashboard de control --}}
+                        @if (Auth::user()->role === 'admin_business' ||
+                                Auth::user()->role === 'super_admin' ||
+                                Auth::user()->email === 'admin@bookit.com')
+                            <a href="{{ route('dashboard') }}"
+                                class="text-indigo-500 font-semibold hover:text-indigo-700 transition-colors">
+                                Panel Admin
+                            </a>
                         @endif
                     @endauth
                 </div>

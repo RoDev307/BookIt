@@ -18,7 +18,7 @@ Route::get('/', [BusinessController::class, 'index'])->name('businesses.index');
 require __DIR__ . '/auth.php';
 
 // Panel base del usuario autenticado e historial de citas
-Route::get('/dashboard', [AppointmentController::class, 'misCitas'])
+Route::get('/admin/dashboard', [AppointmentController::class, 'misCitas'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 

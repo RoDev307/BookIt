@@ -38,15 +38,17 @@
     </tr>
     <tr>
         <td style="padding: 10px; border: 1px solid #e2e8f0;">Base de Datos</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">PostgreSQL</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">MySQL</td>
     </tr>
 </table>
 
 <h2>👥 Equipo de Desarrollo</h2>
 <p>Proyecto desarrollado como ejercicio académico de Ingeniería de Software:</p>
 <ul style="list-style-type: none; padding: 0;">
-    <li>👨‍💻 <b>Rodrigo Alejandro Avelar Mejia</b> - Arquitectura y Desarrollo Backend/Frontend</li>
-    <li>⚙️ <b>Omar Daniel Alexander Garcia Mejia</b> - Configuración de Entorno e Infraestructura</li>
+    <li>👨‍💻 <b>Rodrigo Alejandro Avelar Mejia</b>
+    <li>👨‍💻 <b>Daniel Alexander Garcia Mejia</b>
+    <li>👨‍💻 <b>Dina Esmeralda Escobar Caceres</b>
+    <li>👨‍💻 <b>Omar Isaac Zuniga Gochez</b>
 </ul>
 
 <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">

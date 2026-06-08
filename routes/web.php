@@ -6,6 +6,8 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SuperAdminBusinessController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\File;
 
 // =========================================================================
 // AUTENTICACIÓN Y PERFIL DE USUARIO (BREEZE / ESMERALDA)
@@ -114,4 +116,32 @@ Route::middleware(['auth', 'verified'])->prefix('admin/master')->group(function 
     Route::put('/businesses/{id}', [SuperAdminBusinessController::class, 'update'])->name('master.businesses.update');
     Route::get('/businesses/create', [SuperAdminBusinessController::class, 'create'])->name('master.businesses.create');
     Route::post('/businesses', [SuperAdminBusinessController::class, 'store'])->name('master.businesses.store');
+});
+
+// =========================================================================
+// Ruta para los iconos
+// =========================================================================
+
+Route::get('/favicon.ico', function () {
+    $path = public_path('favicon.ico');
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    return Response::file($path, ['Content-Type' => 'image/x-icon']);
+});
+
+Route::get('/favicon-16x16.png', function () {
+    return Response::file(public_path('favicon-16x16.png'), ['Content-Type' => 'image/png']);
+});
+
+Route::get('/favicon-32x32.png', function () {
+    return Response::file(public_path('favicon-32x32.png'), ['Content-Type' => 'image/png']);
+});
+
+Route::get('/apple-touch-icon.png', function () {
+    return Response::file(public_path('apple-touch-icon.png'), ['Content-Type' => 'image/png']);
+});
+
+Route::get('/site.webmanifest', function () {
+    return Response::file(public_path('site.webmanifest'), ['Content-Type' => 'application/json']);
 });

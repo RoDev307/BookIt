@@ -15,7 +15,7 @@ class AppointmentController extends Controller
         $user = Auth::user();
 
         // ESCENARIO 1: ADMINISTRADOR MAESTRO (SIN NEGOCIO) -> MÉTRICAS GLOBALES SAAS
-        if (is_null($user->business_id) && ($user->role === 'super_admin' || $user->email === 'admin@bookit.com')) {
+        if (is_null($user->business_id) && ($user->role === 'admin_business' || $user->email === 'admin@bookit.com')) {
             $totalComercios   = \App\Models\Business::count();
             $totalCitas       = \App\Models\Appointment::count();
             $citasConfirmadas = \App\Models\Appointment::where('status', 'confirmed')->count();
@@ -43,8 +43,7 @@ class AppointmentController extends Controller
 
             $appointments = Appointment::with('user')
                 ->where('business_id', $user->business_id)
-                ->orderBy('appointment_time', 'asc')
-                ->take(5)
+                ->orderBy('appointment_time', 'desc')
                 ->get();
 
             return view('admin.dashboard', compact(
@@ -124,7 +123,6 @@ class AppointmentController extends Controller
             'business_id'      => $service->business_id,
             'service_id'       => $service->id,
             'staff_name'       => 'Asignado por Recepción',
-            'client_name'      => Auth::user()->name, // 🚨 ASIGNADO: Guarda el nombre del usuario logueado
             'appointment_time' => $validated['appointment_time'],
             'status'           => 'confirmed',
             'notes'            => $validated['notes'],
@@ -186,16 +184,19 @@ class AppointmentController extends Controller
             return redirect()->back()->withInput()->withErrors(['fecha_cita' => $error]);
         }
 
-        // 🚨 PERSISTENCIA CORREGIDA: Guarda client_name en su celda física de la BD de Aiven
+        $structuredNotes = 'Cliente Externo: ' . trim($validated['client_name']);
+        if (!empty($validated['notes'])) {
+            $structuredNotes .= ' | ' . trim($validated['notes']);
+        }
+
         Appointment::create([
             'user_id'          => $user->id,
             'business_id'      => $user->business_id,
             'service_id'       => $service->id,
             'staff_name'       => $validated['staff_name'],
-            'client_name'      => $validated['client_name'], // Guardado limpiamente
             'appointment_time' => $appointmentTime,
             'status'           => 'confirmed',
-            'notes'            => $validated['notes'],
+            'notes'            => $structuredNotes,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'La cita ha sido agendada e introducida al sistema correctamente.');
@@ -204,6 +205,24 @@ class AppointmentController extends Controller
     public function editAdmin($id)
     {
         $appointment = Appointment::where('business_id', Auth::user()->business_id)->findOrFail($id);
+
+        $rawNotes = $appointment->notes ?? '';
+        $clientNameResult = '';
+        $cleanNotesResult = '';
+
+        if (str_contains($rawNotes, 'Cliente Externo:')) {
+            $parts = explode('|', str_replace('Cliente Externo:', '', $rawNotes));
+            $clientNameResult = trim($parts[0] ?? '');
+            $cleanNotesResult = isset($parts[1]) ? trim($parts[1]) : '';
+        } else {
+            // Si no tiene la estructura, el input del nombre inicia vacío para ser rellenado correctamente
+            $clientNameResult = '';
+            $cleanNotesResult = $rawNotes;
+        }
+
+        $appointment->extracted_client_name = $clientNameResult;
+        $appointment->extracted_notes       = $cleanNotesResult;
+
         return view('admin.appointments.edit', compact('appointment'));
     }
 
@@ -213,17 +232,78 @@ class AppointmentController extends Controller
 
         $request->validate([
             'client_name'      => ['required', 'string', 'max:255'],
-            'appointment_time' => ['required', 'date', 'after:now'],
+            'appointment_time' => ['required', 'date', 'after_or_equal:today'],
             'notes'            => ['nullable', 'string', 'max:500'],
         ]);
+        $incomingNotes = $request->input('notes') ?? '';
 
-        // 🚨 Reconstruimos la cadena estructurada exactamente igual que en storeAdmin
-        $appointment->update([
-            'appointment_time' => $request->appointment_time,
-            'notes'            => "Cliente Externo: " . $request->client_name . " | " . $request->notes,
-        ]);
+        if (str_contains($incomingNotes, 'Cliente Externo:')) {
+            $parts = explode('|', str_replace('Cliente Externo:', '', $incomingNotes));
+            $incomingNotes = isset($parts[1]) ? trim($parts[1]) : '';
+        }
+
+        // Armamos el nuevo empaquetado limpio sin acumulaciones redundantes
+        $structuredNotes = 'Cliente Externo: ' . trim($request->input('client_name'));
+        if (!empty($incomingNotes)) {
+            $structuredNotes .= ' | ' . $incomingNotes;
+        }
+
+        $appointment->appointment_time = $request->input('appointment_time');
+        $appointment->notes            = $structuredNotes;
+
+        $appointment->save();
 
         return redirect()->route('dashboard')
             ->with('success', "¡La reserva #{$appointment->id} fue reprogramada con éxito!");
+    }
+
+    public function calendarioAdmin()
+    {
+        return view('admin.appointments.calendar');
+    }
+
+    public function apiAppointments(Request $request)
+    {
+        $user = Auth::user();
+
+        $appointments = Appointment::where('business_id', $user->business_id)
+            ->where('status', 'confirmed')
+            ->get();
+
+        $events = [];
+
+        foreach ($appointments as $app) {
+            $rawNotes = $app->notes ?? '';
+            $clientName = 'Cliente Externo';
+            $cleanNotes = '';
+
+            if (str_contains($rawNotes, 'Cliente Externo:')) {
+                $parts = explode('|', str_replace('Cliente Externo:', '', $rawNotes));
+                $clientName = trim($parts[0] ?? 'Cliente Externo');
+                $cleanNotes = isset($parts[1]) ? trim($parts[1]) : '';
+            } else {
+                $clientName = $app->user->name ?? 'Cliente Externo';
+                $cleanNotes = $rawNotes;
+            }
+            $start = Carbon::parse($app->appointment_time, 'America/El_Salvador');
+            $end = (clone $start)->addMinutes(45);
+
+            // Pasamos el string ISO 8601 explícito incluyendo el desfase (-06:00) para FullCalendar
+            $events[] = [
+                'id' => $app->id,
+                'title' => $clientName . " (" . ($app->staff_name ?? 'Recepción') . ")",
+                'start' => $start->toIso8601String(),
+                'end' => $end->toIso8601String(),
+                'backgroundColor' => '#4f46e5',
+                'borderColor' => '#4338ca',
+                'textColor' => '#ffffff',
+                'extendedProps' => [
+                    'notes' => $cleanNotes,
+                    'staff' => $app->staff_name ?? 'No asignado'
+                ]
+            ];
+        }
+
+        return response()->json($events);
     }
 }

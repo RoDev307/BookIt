@@ -5,12 +5,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'BookIt - Sistema de Citas')</title>
+
+    {{-- 🌙 Detección e inyección estricta antes de renderizar el DOM --}}
+    <script>
+        if (!localStorage.getItem('theme')) {
+            localStorage.setItem('theme', 'light');
+        }
+
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+
+    {{-- Script CDN de Tailwind v4 --}}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    {{-- 🚨 BLINDAJE CSS DEFINITIVO Y RESOLUCIÓN DE OPACIDAD (CONTRASTE MEJORADO) --}}
+    <style>
+        /* MODO DÍA (CLARO) FORZADO */
+        :root[data-theme="light"],
+        :root[data-theme="light"] body {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+        }
+
+        :root[data-theme="light"] nav {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        :root[data-theme="light"] nav a {
+            color: #475569 !important;
+        }
+
+        :root[data-theme="light"] nav a.text-indigo-600,
+        :root[data-theme="light"] nav strong {
+            color: #4f46e5 !important;
+        }
+
+        :root[data-theme="light"] .bg-white {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        :root[data-theme="light"] h1,
+        :root[data-theme="light"] h3 {
+            color: #0f172a !important;
+        }
+
+        :root[data-theme="light"] p {
+            color: #334155 !important;
+        }
+
+        :root[data-theme="light"] .bg-slate-50 {
+            background-color: #f8fafc !important;
+            border-color: #f1f5f9 !important;
+        }
+
+        :root[data-theme="light"] footer {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        /* 🚨 Corregir opacidades en Modo Claro */
+        :root[data-theme="light"] .bg-indigo-50 {
+            background-color: #e0e7ff !important;
+            /* Indigo 100 real */
+            border-color: #c7d2fe !important;
+        }
+
+        :root[data-theme="light"] .text-indigo-700 {
+            color: #4338ca !important;
+            /* Indigo 700 nítido */
+        }
+
+        :root[data-theme="light"] .text-indigo-600 {
+            color: #4f46e5 !important;
+            /* Indigo 600 corporativo */
+        }
+
+        /* MODO NOCHE (OSCURO) FORZADO */
+        :root[data-theme="dark"],
+        :root[data-theme="dark"] body {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+
+        :root[data-theme="dark"] nav {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        :root[data-theme="dark"] nav a {
+            color: #cbd5e1 !important;
+        }
+
+        :root[data-theme="dark"] nav a.dark\:text-indigo-400,
+        :root[data-theme="dark"] nav strong {
+            color: #818cf8 !important;
+        }
+
+        :root[data-theme="dark"] .bg-white {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        :root[data-theme="dark"] h1,
+        :root[data-theme="dark"] h3 {
+            color: #ffffff !important;
+        }
+
+        :root[data-theme="dark"] p {
+            color: #94a3b8 !important;
+        }
+
+        :root[data-theme="dark"] .bg-slate-50 {
+            background-color: #1e293b80 !important;
+            border-color: #33415580 !important;
+        }
+
+        :root[data-theme="dark"] footer {
+            background-color: #1e293b80 !important;
+            border-color: #334155 !important;
+        }
+
+        /* Ajuste de opacidades en Modo Oscuro */
+        :root[data-theme="dark"] .bg-indigo-50 {
+            background-color: rgba(30, 27, 75, 0.4) !important;
+            border-color: rgba(67, 56, 202, 0.4) !important;
+        }
+
+        :root[data-theme="dark"] .text-indigo-700 {
+            color: #a5b4fc !important;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-50 font-sans antialiased">
+<body class="bg-slate-50 font-sans antialiased text-slate-800 transition-colors duration-200">
 
-    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-8">
                 <a href="{{ route('businesses.index') }}"
@@ -19,13 +157,11 @@
                     <a href="{{ route('businesses.index') }}"
                         class="text-indigo-600 border-b-2 border-indigo-600 px-1 py-5">Inicio</a>
                     @auth
-                        {{-- CORREGIDO: "Mis Reservas" solo se muestra a los clientes que de verdad agendan citas --}}
                         @if (Auth::user()->role === 'client')
                             <a href="{{ route('dashboard') }}" class="hover:text-slate-900 transition-colors">Mis
                                 Reservas</a>
                         @endif
 
-                        {{-- Panel Admin unificado apunta al dashboard de control --}}
                         @if (Auth::user()->role === 'admin_business' ||
                                 Auth::user()->role === 'super_admin' ||
                                 Auth::user()->email === 'admin@bookit.com')
@@ -38,7 +174,20 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-4">
+                {{-- 🎛️ SLIDER RECTIFICADO AL 100%: Izquierda = Sol (Claro) / Derecha = Luna (Oscuro) --}}
+                <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 transition-colors"
+                    id="slider-container">
+                    <span class="text-xs select-none">☀️</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        {{-- Desmarcado (false) = Modo Claro / Marcado (true) = Modo Oscuro --}}
+                        <input type="checkbox" id="public-theme-slider" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-300 rounded-full transition-colors after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
+                            id="slider-bg"></div>
+                    </label>
+                    <span class="text-xs select-none">🌙</span>
+                </div>
+
                 @auth
                     <div class="flex items-center space-x-4">
                         <span class="text-sm font-medium text-slate-700 hidden sm:inline">
@@ -62,10 +211,112 @@
         </div>
     </nav>
 
-    <main>
+    <main class="min-h-screen">
         @yield('content')
     </main>
 
+    <footer class="bg-white border-t border-slate-200 mt-24 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="space-y-4">
+                    <span class="text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
+                        📅 BookIt<span
+                            class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">SaaS</span>
+                    </span>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Infraestructura en la nube distribuida multi-tenant, optimizada para la gestión cronológica,
+                        asignación de personal y automatización operativa de comercios locales.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Solución SaaS</h4>
+                    <ul class="space-y-2.5 text-xs font-medium text-slate-600">
+                        <li>✓ Agendamiento Manual de Comercio</li>
+                        <li>✓ Control de Disponibilidad y Horarios</li>
+                        <li>✓ Evitación de Colisiones en Tiempo Real</li>
+                        <li>✓ Calendario Sincronizado Operativo</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Infraestructura</h4>
+                    <ul class="space-y-2.5 text-xs font-medium text-slate-600">
+                        <li><span class="font-bold">Motor DB:</span> PostgreSQL (Aiven Cloud)</li>
+                        <li><span class="font-bold">Framework:</span> Laravel 11 / PHP 8.2</li>
+                        <li><span class="font-bold">Frontend UI:</span> Tailwind CSS v4 / Blade</li>
+                        <li><span class="font-bold">Integración:</span> FullCalendar.js API</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Proyecto Académico</h4>
+                    <div class="text-xs text-slate-600 space-y-2 font-medium">
+                        <p class="font-bold text-slate-800">Desarrollado de forma integral por:</p>
+                        <p
+                            class="font-mono text-indigo-600 font-bold text-sm bg-indigo-50 px-2 py-1 rounded-lg border border-indigo-100 inline-block">
+                            Rodrigo Alejandro Avelar Mejia
+                        </p>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                            Cátedra de Programación Web / Ingeniería de Software. Proyecto de evaluación de sistemas
+                            multi-inquilino.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="mt-12 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-400">
+                <p>&copy; 2026 BookIt Plataforma SaaS. Desarrollado en El Salvador con fines estrictamente educativos.
+                </p>
+                <div class="flex items-center gap-2">
+                    <span
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Clúster PostgreSQL
+                        Activo (Aiven)
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {{-- ⚡ LÓGICA DE CONTROL ABSOLUTO DE INTERRUPTOR RECTIFICADA Y NORMALIZADA --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const themeSlider = document.getElementById('public-theme-slider');
+            const sliderBg = document.getElementById('slider-bg');
+            const container = document.getElementById('slider-container');
+            const isDark = localStorage.getItem('theme') === 'dark';
+
+            // 🚨 MAPEO FÍSICO CORREGIDO:
+            // Si es oscuro -> Marcado (true) -> Bola a la derecha (Luna 🌙)
+            // Si es claro -> Desmarcado (false) -> Bola a la izquierda (Sol ☀️)
+            if (isDark) {
+                themeSlider.checked = true;
+                sliderBg.style.backgroundColor = '#4f46e5'; // Color índigo activo
+                sliderBg.classList.add('after:left-[20px]');
+                sliderBg.classList.remove('after:left-[2px]');
+                if (container) {
+                    container.style.backgroundColor = '#1e293b';
+                    container.style.borderColor = '#334155';
+                }
+            } else {
+                themeSlider.checked = false;
+                sliderBg.style.backgroundColor = '#cbd5e1'; // Gris claro inactivo
+                sliderBg.classList.add('after:left-[2px]');
+                sliderBg.classList.remove('after:left-[20px]');
+                if (container) {
+                    container.style.backgroundColor = '#f1f5f9';
+                    container.style.borderColor = '#cbd5e1';
+                }
+            }
+
+            themeSlider.addEventListener('change', function() {
+                if (this.checked) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+                window.location.reload();
+            });
+        });
+    </script>
 </body>
 
 </html>

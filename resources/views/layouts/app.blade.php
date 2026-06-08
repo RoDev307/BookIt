@@ -11,17 +11,29 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    {{-- 🌙 Script de detección anti-parpadeo --}}
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="font-sans antialiased bg-slate-100">
+<body
+    class="font-sans antialiased bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200">
     <div class="min-h-screen">
         @include('layouts.navigation')
 
         @hasSection('header')
-            <header class="bg-white shadow-sm border-b border-slate-200">
+            <header
+                class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700 transition-colors">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-2xl font-bold text-slate-800">
+                    <h1 class="text-2xl font-bold text-slate-800 dark:text-white">
                         @yield('header')
                     </h1>
                 </div>
@@ -29,8 +41,9 @@
         @endif
 
         @if (session('success'))
-            <div class="max-w-7xl mx-auto mx-4 sm:px-6 lg:px-8 mt-4">
-                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                <div
+                    class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded-xl shadow-sm">
                     {{ session('success') }}
                 </div>
             </div>

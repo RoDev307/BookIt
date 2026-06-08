@@ -28,13 +28,12 @@
                 </div>
             @endif
 
-            {{-- 🚨 CORREGIDO: Campo editable para corregir el nombre real de la persona --}}
             <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Nombre del
                     Cliente</label>
                 <input type="text" name="client_name" required
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all text-slate-800 font-bold"
-                    value="{{ old('client_name', trim(explode('|', str_replace('Cliente Externo:', '', $appointment->notes))[0])) }}">
+                    value="{{ old('client_name', $appointment->extracted_client_name) }}">
             </div>
 
             <div>
@@ -46,17 +45,17 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Notas / Observaciones
-                    Adicionales</label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Notas / Observaciones de
+                    Reprogramación</label>
                 <textarea name="notes" rows="3"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all text-slate-800 font-medium placeholder:font-normal"
-                    placeholder="Ej. Solicitó mover la hora por inconvenientes de tráfico...">{{ old('notes', trim(explode('|', $appointment->notes)[1] ?? '')) }}</textarea>
+                    placeholder="Ej. Notas de la cita...">{{ old('notes', $appointment->extracted_notes) }}</textarea>
             </div>
 
             <div class="pt-2">
                 <button type="submit"
                     class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3 rounded-xl shadow-md shadow-indigo-600/10 transition-colors cursor-pointer uppercase tracking-wider">
-                    💾 Guardar Cambios y Notificar Agenda
+                    💾 Guardar Cambios
                 </button>
             </div>
         </form>

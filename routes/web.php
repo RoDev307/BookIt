@@ -89,6 +89,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'storeAdmin'])->name('admin.appointments.store');
     Route::get('/appointments/{id}/edit', [AppointmentController::class, 'editAdmin'])->name('admin.appointments.edit');
     Route::put('/appointments/{id}', [AppointmentController::class, 'updateAdmin'])->name('admin.appointments.update');
+    Route::get('/admin/calendario', [AppointmentController::class, 'calendarioAdmin'])->name('admin.appointments.calendar');
+    Route::get('/admin/api/appointments', [AppointmentController::class, 'apiAppointments'])->name('admin.appointments.api');
 });
 
 
@@ -108,8 +110,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin/master')->group(function 
     Route::get('/businesses', [SuperAdminBusinessController::class, 'index'])->name('master.businesses.index');
     Route::get('/businesses/{id}/edit', [SuperAdminBusinessController::class, 'edit'])->name('master.businesses.edit');
     Route::put('/businesses/{id}', [SuperAdminBusinessController::class, 'update'])->name('master.businesses.update');
-
-    // 🚨 CORREGIDO: Alta centralizada de nuevas instancias comerciales (Formulario + Guardar)
     Route::get('/businesses/create', [SuperAdminBusinessController::class, 'create'])->name('master.businesses.create');
     Route::post('/businesses', [SuperAdminBusinessController::class, 'store'])->name('master.businesses.store');
 });

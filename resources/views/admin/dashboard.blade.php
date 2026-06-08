@@ -81,7 +81,20 @@
                                 <tr class="hover:bg-slate-50/40 transition-colors">
                                     <td class="p-4 text-slate-400">#{{ $app->id }}</td>
                                     <td class="p-4 font-bold text-slate-900">{{ $app->business->name ?? 'N/A' }}</td>
-                                    <td class="p-4 font-medium text-slate-600">{{ $app->user->name ?? 'Externo' }}</td>
+
+                                    {{-- Extractor con prioridad al campo editado --}}
+                                    <td class="p-4 font-medium text-slate-600">
+                                        @if (!empty($app->client_name))
+                                            {{ $app->client_name }}
+                                        @elseif (str_contains($app->notes ?? '', 'Cliente Externo:'))
+                                            {{ trim(explode('|', str_replace('Cliente Externo:', '', $app->notes))[0]) }}
+                                        @elseif (!empty($app->user->name) && $app->user->role === 'client')
+                                            {{ $app->user->name }}
+                                        @else
+                                            <span class="text-slate-400 italic">Cliente Externo</span>
+                                        @endif
+                                    </td>
+
                                     <td class="p-4 text-slate-500 font-mono">
                                         {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}</td>
                                     <td class="p-4">
@@ -161,17 +174,20 @@
                                 <tr class="hover:bg-slate-50/40 transition-colors">
                                     <td class="p-4 text-slate-400">#{{ $app->id }}</td>
                                     <td class="p-4 font-bold text-slate-900">
-                                        @if (str_contains($app->notes, 'Cliente Externo:'))
+                                        @if (str_contains($app->notes ?? '', 'Cliente Externo:'))
                                             {{ trim(explode('|', str_replace('Cliente Externo:', '', $app->notes))[0]) }}
+                                        @elseif (!empty($app->user->name) && $app->user->role === 'client')
+                                            {{ $app->user->name }}
                                         @else
-                                            {{ $app->user->name ?? 'Cliente Externo' }}
+                                            <span class="text-slate-400 font-normal italic">Cliente Externo (Manual)</span>
                                         @endif
                                     </td>
+
                                     <td class="p-4 text-slate-600 font-mono">
                                         {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}</td>
                                     <td class="p-4">
                                         <span
-                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold {{ $app->status === 'confirmed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100' }}">
+                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold {{ $app->status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-200' }}">
                                             {{ $app->status === 'confirmed' ? 'Confirmada' : 'Cancelada' }}
                                         </span>
                                     </td>

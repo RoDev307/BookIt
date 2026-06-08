@@ -6,8 +6,244 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Panel de Administración - BookIt</title>
+
+    {{-- 🌙 Detección e inyección inmediata del tema en el DOM antes de renderizar --}}
+    <script>
+        if (!localStorage.getItem('theme')) {
+            localStorage.setItem('theme', 'light');
+        }
+
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- 🚨 BLINDAJE CSS AVANZADO: Forzado absoluto de contraste y consistencia SaaS en Formularios y Calendarios --}}
+    <style>
+        /* ==========================================================================
+           MODO DÍA (CLARO) ADMIN FORZADO
+           ========================================================================== */
+        :root[data-theme="light"],
+        :root[data-theme="light"] body {
+            background-color: #f3f4f6 !important;
+            /* bg-gray-100 */
+            color: #1e293b !important;
+        }
+
+        :root[data-theme="light"] header {
+            background-color: #ffffff !important;
+            border-color: #e5e7eb !important;
+        }
+
+        :root[data-theme="light"] header h2 {
+            color: #374151 !important;
+        }
+
+        :root[data-theme="light"] header span {
+            color: #4b5563 !important;
+        }
+
+        :root[data-theme="light"] .bg-white,
+        :root[data-theme="light"] div[class*="bg-white"] {
+            background-color: #ffffff !important;
+            border-color: #e5e7eb !important;
+        }
+
+        :root[data-theme="light"] td,
+        :root[data-theme="light"] th {
+            color: #1e293b !important;
+        }
+
+        /* ==========================================================================
+           MODO NOCHE (OSCURO) ADMIN FORZADO PREMIUM (Inmune a auto-dark)
+           ========================================================================== */
+        :root[data-theme="dark"],
+        :root[data-theme="dark"] body {
+            background-color: #0f172a !important;
+            /* bg-slate-900 oscuro profundo */
+            color: #f1f5f9 !important;
+            /* text-slate-100 claro nítido */
+        }
+
+        /* 📦 Forzar fondo Slate 800 a todas las tarjetas, contenedores y modales de la suite admin */
+        :root[data-theme="dark"] header,
+        :root[data-theme="dark"] .bg-white,
+        :root[data-theme="dark"] div[class*="bg-white"],
+        :root[data-theme="dark"] main form,
+        :root[data-theme="dark"] main div.bg-white,
+        :root[data-theme="dark"] div[class*="rounded-2xl"] {
+            background-color: #1e293b !important;
+            /* Slate 800 corporativo para las KPI cards y modales */
+            border-color: #334155 !important;
+        }
+
+        :root[data-theme="dark"] header h2 {
+            color: #ffffff !important;
+        }
+
+        :root[data-theme="dark"] header span {
+            color: #cbd5e1 !important;
+        }
+
+        /* 📋 Textos y Subtítulos de Tablas de Reservas/Servicios */
+        :root[data-theme="dark"] .bg-slate-50\/70,
+        :root[data-theme="dark"] .bg-slate-50 {
+            background-color: #1e293b !important;
+            border-bottom: 1px solid #334155 !important;
+        }
+
+        :root[data-theme="dark"] tr:hover {
+            background-color: rgba(51, 65, 85, 0.3) !important;
+        }
+
+        :root[data-theme="dark"] th {
+            color: #94a3b8 !important;
+        }
+
+        :root[data-theme="dark"] td {
+            color: #cbd5e1 !important;
+        }
+
+        /* 🚨 RECTIFICACIÓN OPERATIVA DE TÍTULOS OCULTOS MARCADOS POR EL USUARIO */
+        :root[data-theme="dark"] h1,
+        :root[data-theme="dark"] h2,
+        :root[data-theme="dark"] h3,
+        :root[data-theme="dark"] main h1,
+        :root[data-theme="dark"] main h2,
+        :root[data-theme="dark"] main h3,
+        :root[data-theme="dark"] .text-slate-900,
+        :root[data-theme="dark"] .text-gray-700 {
+            color: #ffffff !important;
+            /* Forzar blanco puro a todos los encabezados e h2/h3 de formularios */
+        }
+
+        :root[data-theme="dark"] p,
+        :root[data-theme="dark"] .text-slate-600,
+        :root[data-theme="dark"] .text-gray-600 {
+            color: #94a3b8 !important;
+            /* Slate 400 legible para las descripciones */
+        }
+
+        /* 📊 KPIs del Dashboard y Resumen Operativo */
+        :root[data-theme="dark"] h3.text-emerald-600,
+        :root[data-theme="dark"] .text-emerald-600 {
+            color: #34d399 !important;
+        }
+
+        :root[data-theme="dark"] h3.text-rose-600,
+        :root[data-theme="dark"] .text-rose-600 {
+            color: #f87171 !important;
+        }
+
+        /* Forzar visibilidad de números de contadores en el dashboard oscuro */
+        :root[data-theme="dark"] h3.text-2xl.font-black,
+        :root[data-theme="dark"] .grid h3 {
+            color: #ffffff !important;
+        }
+
+        /* Decoración de iconos en tarjetas */
+        :root[data-theme="dark"] .bg-indigo-50,
+        :root[data-theme="dark"] .bg-blue-50,
+        :root[data-theme="dark"] .bg-emerald-50,
+        :root[data-theme="dark"] .bg-rose-50,
+        :root[data-theme="dark"] div[class*="bg-indigo-50"],
+        :root[data-theme="dark"] div[class*="bg-emerald-50"] {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
+        }
+
+        /* 🛠️ BLINDAJE ESTRICTO PARA FORMULARIOS NATIVOS (RESOLUCIÓN DE LABELS VISIBLES) */
+        :root[data-theme="dark"] label,
+        :root[data-theme="dark"] .text-slate-700,
+        :root[data-theme="dark"] div[class*="text-slate-700"],
+        :root[data-theme="dark"] div[class*="text-xs"],
+        :root[data-theme="dark"] div[class*="text-[10px]"] {
+            color: #cbd5e1 !important;
+            /* Forzar visibilidad clara a labels de opacidad tapados */
+        }
+
+        :root[data-theme="dark"] input,
+        :root[data-theme="dark"] select,
+        :root[data-theme="dark"] textarea {
+            background-color: #0f172a !important;
+            /* Inputs en Slate 900 oscuro profundo */
+            border-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        :root[data-theme="dark"] input::placeholder,
+        :root[data-theme="dark"] textarea::placeholder {
+            color: #475569 !important;
+            /* Placeholder en gris discreto */
+        }
+
+        /* 🚨 RECTIFICACIÓN DE BOTONES DE ACCIONES Y SECUNDARIOS ("Editar", "Cancelar") */
+        :root[data-theme="dark"] .text-indigo-600,
+        :root[data-theme="dark"] a[href*="edit"],
+        :root[data-theme="dark"] .text-blue-600 {
+            color: #a5b4fc !important;
+            /* Forzar índigo claro brillante para enlaces de edición legibles */
+        }
+
+        :root[data-theme="dark"] button:not([type="submit"]),
+        :root[data-theme="dark"] .border-slate-200,
+        :root[data-theme="dark"] a[class*="border"],
+        :root[data-theme="dark"] button[class*="bg-slate-100"],
+        :root[data-theme="dark"] a[class*="bg-slate-100"] {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #cbd5e1 !important;
+        }
+
+        :root[data-theme="dark"] button:not([type="submit"]):hover,
+        :root[data-theme="dark"] a[class*="bg-slate-100"]:hover {
+            background-color: #475569 !important;
+            color: #ffffff !important;
+        }
+
+        /* 📅 CORRECCIÓN DE CONTRASTE EXCLUSIVA PARA FULLCALENDAR (GRILLA Y BOTONES) */
+        :root[data-theme="dark"] .fc {
+            --fc-page-bg-color: #1e293b !important;
+            --fc-border-color: #334155 !important;
+            --fc-neutral-text-color: #ffffff !important;
+        }
+
+        :root[data-theme="dark"] .fc-theme-standard td,
+        :root[data-theme="dark"] .fc-theme-standard th,
+        :root[data-theme="dark"] .fc-theme-standard .fc-scrollgrid {
+            border-color: #334155 !important;
+        }
+
+        :root[data-theme="dark"] .fc .fc-col-header-cell-cushion,
+        :root[data-theme="dark"] .fc .fc-daygrid-day-number,
+        :root[data-theme="dark"] .fc .fc-toolbar-title,
+        :root[data-theme="dark"] h2[class*="fc-toolbar-title"] {
+            color: #ffffff !important;
+            /* Título del mes e índice de días legibles */
+        }
+
+        :root[data-theme="dark"] .fc .fc-button-primary {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
+        }
+
+        :root[data-theme="dark"] .fc .fc-button-primary:hover,
+        :root[data-theme="dark"] .fc .fc-button-active {
+            background-color: #4f46e5 !important;
+            border-color: #4f46e5 !important;
+            color: #ffffff !important;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-sans flex h-screen overflow-hidden">
@@ -26,6 +262,10 @@
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                         ⚡ Agendar Cita (Interno)
                     </a>
+                    <a href="{{ route('admin.appointments.calendar') }}"
+                        class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.calendar') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+                        📆 Calendario Operativo
+                    </a>
                     <a href="{{ route('services.index') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
                         🛠️ Gestionar Servicios
@@ -36,7 +276,6 @@
                         📊 Métrica Global SaaS
                     </a>
                 @endif
-
 
                 @if (Auth::user()->email === 'admin@bookit.com')
                     <div class="mt-6 pt-4 border-t border-slate-700">
@@ -71,7 +310,8 @@
 
     <div class="flex-1 flex flex-col overflow-y-auto md:ml-64">
 
-        <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200">
+        <header
+            class="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200 transition-colors">
             <button id="menu-btn"
                 class="md:hidden text-gray-600 focus:outline-none text-xl cursor-pointer p-1 rounded hover:bg-gray-100">
                 ☰
@@ -80,7 +320,20 @@
             <h2 class="text-xl font-semibold text-gray-700">Consola de Control</h2>
 
             <div class="flex items-center space-x-4">
+                {{-- Slider Switch --}}
+                <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/50 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-600 transition-colors"
+                    id="admin-slider-container">
+                    <span class="text-xs select-none">☀️</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="admin-theme-slider" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-300 rounded-full transition-colors after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-slate-300 dark:border-slate-600 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
+                            id="admin-slider-bg"></div>
+                    </label>
+                    <span class="text-xs select-none">🌙</span>
+                </div>
+
                 <span class="text-sm text-gray-600 font-medium hidden sm:inline">Administrador</span>
+
                 @if (is_null(Auth::user()->business_id))
                     <a href="{{ route('businesses.index') }}"
                         class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
@@ -102,7 +355,6 @@
     </div>
 
     <script>
-        // 1. Control del Sidebar Responsive
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
 
@@ -120,7 +372,6 @@
             }
         });
 
-        // 2. Interceptor global para formularios de eliminación con la clase .form-eliminar
         document.addEventListener('DOMContentLoaded', function() {
             const formularios = document.querySelectorAll('.form-eliminar');
 
@@ -160,6 +411,46 @@
                         }
                     });
                 });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const adminSlider = document.getElementById('admin-theme-slider');
+            const adminSliderBg = document.getElementById('admin-slider-bg');
+            const adminContainer = document.getElementById('admin-slider-container');
+            const isDark = localStorage.getItem('theme') === 'dark';
+
+            if (isDark) {
+                adminSlider.checked = true;
+                if (adminSliderBg) {
+                    adminSliderBg.style.backgroundColor = '#4f46e5';
+                    adminSliderBg.classList.add('after:left-[20px]');
+                    adminSliderBg.classList.remove('after:left-[2px]');
+                }
+                if (adminContainer) {
+                    adminContainer.style.backgroundColor = '#1e293b';
+                    adminContainer.style.borderColor = '#334155';
+                }
+            } else {
+                adminSlider.checked = false;
+                if (adminSliderBg) {
+                    adminSliderBg.style.backgroundColor = '#cbd5e1';
+                    adminSliderBg.classList.add('after:left-[2px]');
+                    adminSliderBg.classList.remove('after:left-[20px]');
+                }
+                if (adminContainer) {
+                    adminContainer.style.backgroundColor = '#f3f4f6';
+                    adminContainer.style.borderColor = '#e5e7eb';
+                }
+            }
+
+            adminSlider.addEventListener('change', function() {
+                if (this.checked) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+                window.location.reload();
             });
         });
     </script>

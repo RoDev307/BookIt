@@ -1,7 +1,6 @@
 <div align="center" style="margin-top: 20px;">
     <h1 style="color: #4f46e5; font-size: 3rem; font-weight: 900; letter-spacing: -2px;">BookIt SaaS</h1>
     <p style="color: #64748b; font-size: 1.1rem;">Plataforma de Gestión Operativa para Establecimientos Comerciales</p>
-    
     <div style="margin: 20px 0;">
         <span style="background: #e0e7ff; color: #4338ca; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 0.8rem;">LARAVEL 11</span>
         <span style="background: #f1f5f9; color: #475569; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 0.8rem;">POSTGRESQL</span>

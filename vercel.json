@@ -8,20 +8,32 @@
     ],
     "routes": [
         {
-            "src": "/(favicon\\.ico|favicon-16x16\\.png|favicon-32x32\\.png|apple-touch-icon\\.png|site\\.webmanifest|robots\\.txt)",
-            "dest": "$1"
+            "src": "/favicon\\.ico",
+            "dest": "/public/favicon.ico"
         },
         {
-            "src": "/build/(.*)",
-            "dest": "build/$1"
+            "src": "/favicon-16x16\\.png",
+            "dest": "/public/favicon-16x16.png"
+        },
+        {
+            "src": "/favicon-32x32\\.png",
+            "dest": "/public/favicon-32x32.png"
+        },
+        {
+            "src": "/apple-touch-icon\\.png",
+            "dest": "/public/apple-touch-icon.png"
+        },
+        {
+            "src": "/site\\.webmanifest",
+            "dest": "/public/site.webmanifest"
         },
         {
             "src": "/images/(.*)",
-            "dest": "images/$1"
+            "dest": "/public/images/$1"
         },
         {
             "src": "/(.*)",
-            "dest": "public/index.php"
+            "dest": "/public/index.php"
         }
     ],
     "env": {
@@ -30,10 +42,6 @@
         "LOG_CHANNEL": "stderr",
         "VIEW_COMPILED_PATH": "/tmp",
         "CACHE_STORE": "array",
-        "SESSION_DRIVER": "cookie",
-        "APP_SERVICES_CACHE": "/tmp/services.php",
-        "APP_PACKAGES_CACHE": "/tmp/packages.php",
-        "APP_CONFIG_CACHE": "/tmp/config.php",
-        "APP_ROUTES_CACHE": "/tmp/routes.php"
+        "SESSION_DRIVER": "cookie"
     }
 }

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'BookIt - Sistema de Citas')</title>
 
-    {{-- 🌙 Detección e inyección estricta antes de renderizar el DOM --}}
     <script>
         if (!localStorage.getItem('theme')) {
             localStorage.setItem('theme', 'light');
@@ -25,9 +24,7 @@
     {{-- Script CDN de Tailwind v4 --}}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    {{-- 🚨 BLINDAJE CSS DEFINITIVO Y RESOLUCIÓN DE OPACIDAD (CONTRASTE MEJORADO) --}}
     <style>
-        /* MODO DÍA (CLARO) FORZADO */
         :root[data-theme="light"],
         :root[data-theme="light"] body {
             background-color: #f8fafc !important;
@@ -72,24 +69,25 @@
             border-color: #e2e8f0 !important;
         }
 
-        /* 🚨 Corregir opacidades en Modo Claro */
+        /* Corregir opacidades en Modo Claro */
         :root[data-theme="light"] .bg-indigo-50 {
             background-color: #e0e7ff !important;
-            /* Indigo 100 real */
             border-color: #c7d2fe !important;
         }
 
         :root[data-theme="light"] .text-indigo-700 {
             color: #4338ca !important;
-            /* Indigo 700 nítido */
         }
 
         :root[data-theme="light"] .text-indigo-600 {
             color: #4f46e5 !important;
-            /* Indigo 600 corporativo */
         }
 
-        /* MODO NOCHE (OSCURO) FORZADO */
+        :root[data-theme="light"] nav a.bg-indigo-600,
+        :root[data-theme="light"] a[class*="bg-indigo-600"] {
+            color: #ffffff !important;
+        }
+
         :root[data-theme="dark"],
         :root[data-theme="dark"] body {
             background-color: #0f172a !important;
@@ -175,12 +173,11 @@
             </div>
 
             <div class="flex items-center space-x-4">
-                {{-- 🎛️ SLIDER RECTIFICADO AL 100%: Izquierda = Sol (Claro) / Derecha = Luna (Oscuro) --}}
+                {{-- 🎛 shrink slider --}}
                 <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 transition-colors"
                     id="slider-container">
                     <span class="text-xs select-none">☀️</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        {{-- Desmarcado (false) = Modo Claro / Marcado (true) = Modo Oscuro --}}
                         <input type="checkbox" id="public-theme-slider" class="sr-only peer">
                         <div class="w-9 h-5 bg-slate-300 rounded-full transition-colors after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
                             id="slider-bg"></div>
@@ -276,7 +273,6 @@
         </div>
     </footer>
 
-    {{-- ⚡ LÓGICA DE CONTROL ABSOLUTO DE INTERRUPTOR RECTIFICADA Y NORMALIZADA --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const themeSlider = document.getElementById('public-theme-slider');
@@ -284,12 +280,9 @@
             const container = document.getElementById('slider-container');
             const isDark = localStorage.getItem('theme') === 'dark';
 
-            // 🚨 MAPEO FÍSICO CORREGIDO:
-            // Si es oscuro -> Marcado (true) -> Bola a la derecha (Luna 🌙)
-            // Si es claro -> Desmarcado (false) -> Bola a la izquierda (Sol ☀️)
             if (isDark) {
                 themeSlider.checked = true;
-                sliderBg.style.backgroundColor = '#4f46e5'; // Color índigo activo
+                sliderBg.style.backgroundColor = '#4f46e5';
                 sliderBg.classList.add('after:left-[20px]');
                 sliderBg.classList.remove('after:left-[2px]');
                 if (container) {
@@ -298,7 +291,7 @@
                 }
             } else {
                 themeSlider.checked = false;
-                sliderBg.style.backgroundColor = '#cbd5e1'; // Gris claro inactivo
+                sliderBg.style.backgroundColor = '#cbd5e1';
                 sliderBg.classList.add('after:left-[2px]');
                 sliderBg.classList.remove('after:left-[20px]');
                 if (container) {

@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Panel de Administración - BookIt</title>
 
-    {{-- 🌙 Detección e inyección inmediata del tema en el DOM antes de renderizar --}}
     <script>
         if (!localStorage.getItem('theme')) {
             localStorage.setItem('theme', 'light');
@@ -26,10 +25,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    {{-- 🚨 BLINDAJE CSS AVANZADO: Forzado absoluto de contraste y consistencia SaaS en Formularios y Calendarios --}}
     <style>
         /* ==========================================================================
-           MODO DÍA (CLARO) ADMIN FORZADO
+           MODO DÍA (CLARO)
            ========================================================================== */
         :root[data-theme="light"],
         :root[data-theme="light"] body {
@@ -63,7 +61,7 @@
         }
 
         /* ==========================================================================
-           MODO NOCHE (OSCURO) ADMIN FORZADO PREMIUM (Inmune a auto-dark)
+           MODO NOCHE (OSCURO)
            ========================================================================== */
         :root[data-theme="dark"],
         :root[data-theme="dark"] body {
@@ -73,7 +71,6 @@
             /* text-slate-100 claro nítido */
         }
 
-        /* 📦 Forzar fondo Slate 800 a todas las tarjetas, contenedores y modales de la suite admin */
         :root[data-theme="dark"] header,
         :root[data-theme="dark"] .bg-white,
         :root[data-theme="dark"] div[class*="bg-white"],
@@ -93,7 +90,6 @@
             color: #cbd5e1 !important;
         }
 
-        /* 📋 Textos y Subtítulos de Tablas de Reservas/Servicios */
         :root[data-theme="dark"] .bg-slate-50\/70,
         :root[data-theme="dark"] .bg-slate-50 {
             background-color: #1e293b !important;
@@ -112,7 +108,6 @@
             color: #cbd5e1 !important;
         }
 
-        /* 🚨 RECTIFICACIÓN OPERATIVA DE TÍTULOS OCULTOS MARCADOS POR EL USUARIO */
         :root[data-theme="dark"] h1,
         :root[data-theme="dark"] h2,
         :root[data-theme="dark"] h3,
@@ -132,7 +127,6 @@
             /* Slate 400 legible para las descripciones */
         }
 
-        /* 📊 KPIs del Dashboard y Resumen Operativo */
         :root[data-theme="dark"] h3.text-emerald-600,
         :root[data-theme="dark"] .text-emerald-600 {
             color: #34d399 !important;
@@ -161,7 +155,6 @@
             color: #ffffff !important;
         }
 
-        /* 🛠️ BLINDAJE ESTRICTO PARA FORMULARIOS NATIVOS (RESOLUCIÓN DE LABELS VISIBLES) */
         :root[data-theme="dark"] label,
         :root[data-theme="dark"] .text-slate-700,
         :root[data-theme="dark"] div[class*="text-slate-700"],
@@ -186,7 +179,6 @@
             /* Placeholder en gris discreto */
         }
 
-        /* 🚨 RECTIFICACIÓN DE BOTONES DE ACCIONES Y SECUNDARIOS ("Editar", "Cancelar") */
         :root[data-theme="dark"] .text-indigo-600,
         :root[data-theme="dark"] a[href*="edit"],
         :root[data-theme="dark"] .text-blue-600 {
@@ -210,7 +202,6 @@
             color: #ffffff !important;
         }
 
-        /* 📅 CORRECCIÓN DE CONTRASTE EXCLUSIVA PARA FULLCALENDAR (GRILLA Y BOTONES) */
         :root[data-theme="dark"] .fc {
             --fc-page-bg-color: #1e293b !important;
             --fc-border-color: #334155 !important;
@@ -260,7 +251,7 @@
                     </a>
                     <a href="{{ route('admin.appointments.create') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.create') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                        ⚡ Agendar Cita (Interno)
+                        ⚡ Agendar Cita
                     </a>
                     <a href="{{ route('admin.appointments.calendar') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.calendar') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
@@ -273,17 +264,18 @@
                 @else
                     <a href="{{ route('dashboard') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('dashboard') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                        📊 Métrica Global SaaS
+                        📊 Métricas
                     </a>
                 @endif
 
                 @if (Auth::user()->email === 'admin@bookit.com')
                     <div class="mt-6 pt-4 border-t border-slate-700">
-                        <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SaaS Global
+                        <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                            Administrador Maestro
                         </p>
                         <a href="{{ route('master.businesses.index') }}"
                             class="flex items-center justify-between py-2.5 px-4 rounded transition font-bold {{ request()->routeIs('master.businesses.*') ? 'bg-indigo-900 text-white' : 'text-indigo-300 hover:bg-slate-700 hover:text-indigo-200' }}">
-                            <span>🌐 Controlar Comercios</span>
+                            <span>Controlar Comercios</span>
                             <span
                                 class="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-wider">
                                 Root

@@ -8,7 +8,7 @@
 @section('content')
     <div class="max-w-6xl mx-auto py-2">
 
-        {{-- 📊 1. ENTORNO ADMINISTRADOR MAESTRO (SIN NEGOCIO) --}}
+        {{-- 1. ENTORNO ADMINISTRADOR MAESTRO (SIN NEGOCIO) --}}
         @if (is_null(Auth::user()->business_id) && Auth::user()->role !== 'client')
             <div class="mb-6">
                 <h1 class="text-2xl font-black text-slate-900 tracking-tight">Consola de Infraestructura SaaS</h1>
@@ -110,7 +110,7 @@
                 </div>
             </div>
 
-            {{-- 🏢 2. ENTORNO ADMINISTRADOR DE COMERCIO (TENANT LOCAL) -> MÉTRICAS DE SU LOCAL --}}
+            {{-- 2. ENTORNO ADMINISTRADOR DE COMERCIO (TENANT LOCAL) -> MÉTRICAS DE SU LOCAL --}}
         @elseif(Auth::user()->role === 'admin_business')
             <div class="mb-6">
                 <h1 class="text-2xl font-black text-slate-900 tracking-tight">Resumen Operativo del Establecimiento</h1>
@@ -224,7 +224,7 @@
                 </div>
             </div>
 
-            {{-- 👤 3. ENTORNO CLIENTE COMÚN (HISTORIAL TRADICIONAL) --}}
+            {{-- 3. ENTORNO CLIENTE COMÚN (HISTORIAL TRADICIONAL) --}}
         @else
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-6 border-b border-slate-200 bg-slate-50/70">

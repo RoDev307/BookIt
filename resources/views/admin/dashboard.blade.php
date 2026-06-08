@@ -74,6 +74,7 @@
                                 <th class="p-4">Cliente</th>
                                 <th class="p-4">Fecha / Hora</th>
                                 <th class="p-4">Estado</th>
+                                <th class="p-4 text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -82,7 +83,6 @@
                                     <td class="p-4 text-slate-400">#{{ $app->id }}</td>
                                     <td class="p-4 font-bold text-slate-900">{{ $app->business->name ?? 'N/A' }}</td>
 
-                                    {{-- Extractor con prioridad al campo editado --}}
                                     <td class="p-4 font-medium text-slate-600">
                                         @if (!empty($app->client_name))
                                             {{ $app->client_name }}
@@ -96,12 +96,20 @@
                                     </td>
 
                                     <td class="p-4 text-slate-500 font-mono">
-                                        {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}</td>
+                                        {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}
+                                    </td>
                                     <td class="p-4">
                                         <span
                                             class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold {{ $app->status === 'confirmed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100' }}">
                                             {{ $app->status === 'confirmed' ? 'Activa' : 'Cancelada' }}
                                         </span>
+                                    </td>
+                                    {{-- Acciones para el Administrador Maestro --}}
+                                    <td class="p-4 text-right">
+                                        <a href="{{ route('admin.appointments.pdf', $app->id) }}"
+                                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] px-3 py-1.5 rounded-xl transition-colors inline-block">
+                                            📄 PDF
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -118,7 +126,6 @@
                 </p>
             </div>
 
-            {{-- Métricas Locales del Comercio --}}
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
@@ -153,10 +160,28 @@
 
             {{-- Próximas Citas Programadas del Local --}}
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-5 border-b border-slate-200 bg-slate-50/70">
-                    <h3 class="text-sm font-bold text-slate-900 tracking-tight">Próximas Reservas a Atender</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Control cronológico interno de la agenda de hoy.</p>
+                <div class="p-5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between gap-4">
+                    {{-- Contenedor de título y descripción --}}
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 tracking-tight">Próximas Reservas a Atender</h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Control cronológico interno de la agenda de hoy.</p>
+                    </div>
+
+                    {{-- Botones de Reportería alineados a la derecha --}}
+                    @if (Auth::user()->role === 'admin_business')
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('admin.appointments.reporte', ['periodo' => 'semana']) }}"
+                                class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap">
+                                📥 Reporte Semanal (PDF)
+                            </a>
+                            <a href="{{ route('admin.appointments.reporte', ['periodo' => 'mes']) }}"
+                                class="bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-slate-900 transition-colors shadow-sm whitespace-nowrap">
+                                📥 Reporte Mensual (PDF)
+                            </a>
+                        </div>
+                    @endif
                 </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse whitespace-nowrap">
                         <thead>
@@ -184,7 +209,8 @@
                                     </td>
 
                                     <td class="p-4 text-slate-600 font-mono">
-                                        {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}</td>
+                                        {{ \Carbon\Carbon::parse($app->appointment_time)->format('d/m/Y - g:i A') }}
+                                    </td>
                                     <td class="p-4">
                                         <span
                                             class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold {{ $app->status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-200' }}">
@@ -193,6 +219,12 @@
                                     </td>
 
                                     <td class="p-4 text-right flex items-center justify-end gap-2">
+                                        {{-- El botón PDF está disponible siempre (incluso si está cancelada) como auditoría --}}
+                                        <a href="{{ route('admin.appointments.pdf', $app->id) }}"
+                                            class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] px-3 py-1.5 rounded-xl transition-colors inline-block">
+                                            📄 PDF
+                                        </a>
+
                                         @if ($app->status !== 'cancelled')
                                             <a href="{{ route('admin.appointments.edit', $app->id) }}"
                                                 class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] px-3 py-1.5 rounded-xl transition-colors">
@@ -209,7 +241,7 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="text-slate-400 text-xs font-normal italic">Sin acciones</span>
+                                            <span class="text-slate-400 text-xs font-normal italic">Cancelada</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -253,10 +285,17 @@
                                                 class="text-slate-900">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d/m/Y - g:i A') }}</span>
                                         </p>
                                     </div>
-                                    <div class="flex sm:flex-col items-stretch gap-2 w-full sm:w-auto">
+                                    <div
+                                        class="flex flex-row sm:flex-col items-center sm:items-stretch gap-2 w-full sm:w-auto">
+                                        {{-- Botón PDF para descarga del cliente --}}
+                                        <a href="{{ route('admin.appointments.pdf', $appointment->id) }}"
+                                            class="text-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-colors inline-block w-full sm:w-auto">
+                                            📄 Descargar PDF
+                                        </a>
+
                                         @if ($appointment->status !== 'cancelled')
                                             <form action="{{ route('appointments.cancel', $appointment->id) }}"
-                                                method="POST"
+                                                method="POST" class="w-full sm:w-auto"
                                                 onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita?')">
                                                 @csrf
                                                 @method('PATCH')

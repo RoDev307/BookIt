@@ -25,6 +25,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <style>
+        /* ==========================================================================
+           MODO DÍA (CLARO) FORZADO
+           ========================================================================== */
         :root[data-theme="light"],
         :root[data-theme="light"] body {
             background-color: #f8fafc !important;
@@ -88,6 +91,9 @@
             color: #ffffff !important;
         }
 
+        /* ==========================================================================
+           MODO NOCHE (OSCURO) FORZADO PREMIUM
+           ========================================================================== */
         :root[data-theme="dark"],
         :root[data-theme="dark"] body {
             background-color: #0f172a !important;
@@ -114,12 +120,17 @@
         }
 
         :root[data-theme="dark"] h1,
-        :root[data-theme="dark"] h3 {
+        :root[data-theme="dark"] h3,
+        :root[data-theme="dark"] footer h4 {
             color: #ffffff !important;
+            /* Forzar blanco puro a títulos del footer */
         }
 
-        :root[data-theme="dark"] p {
+        :root[data-theme="dark"] p,
+        :root[data-theme="dark"] footer p,
+        :root[data-theme="dark"] footer li {
             color: #94a3b8 !important;
+            /* Gris claro nítido para textos y viñetas del footer */
         }
 
         :root[data-theme="dark"] .bg-slate-50 {
@@ -140,6 +151,29 @@
 
         :root[data-theme="dark"] .text-indigo-700 {
             color: #a5b4fc !important;
+        }
+
+        /* 🚨 RECTIFICACIÓN DE ALTA PRIORIDAD PARA ELEMENTOS DEL FOOTER OSCURO MARCADOS EN CAPTURA */
+        :root[data-theme="dark"] footer .font-mono.text-indigo-600 {
+            background-color: #1e1b4b !important;
+            /* Fondo Indigo 950 para tu nombre */
+            border-color: #4338ca !important;
+            /* Borde Indigo 700 */
+            color: #a5b4fc !important;
+            /* Texto claro nítido */
+        }
+
+        :root[data-theme="dark"] footer div[class*="border-t"] {
+            border-color: #334155 !important;
+            /* Línea separadora divisoria nítida */
+        }
+
+        :root[data-theme="dark"] footer span[class*="bg-emerald-50"] {
+            background-color: rgba(6, 78, 59, 0.3) !important;
+            /* Fondo badge clúster */
+            border-color: rgba(16, 185, 129, 0.4) !important;
+            color: #34d399 !important;
+            /* Texto verde brillante clúster */
         }
     </style>
 </head>
@@ -216,7 +250,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="space-y-4">
-                    <span class="text-lg font-black tracking-tight text-slate-900 flex items-center gap-2">
+                    <span
+                        class="text-lg font-black dark:text-indigo-500 tracking-tight text-slate-900 flex items-center gap-2">
                         📅 BookIt<span
                             class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">SaaS</span>
                     </span>
@@ -237,7 +272,7 @@
                 <div>
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Infraestructura</h4>
                     <ul class="space-y-2.5 text-xs font-medium text-slate-600">
-                        <li><span class="font-bold">Motor DB:</span> PostgreSQL (Aiven Cloud)</li>
+                        <li><span class="font-bold">Motor DB:</span> MySQL (Aiven Cloud)</li>
                         <li><span class="font-bold">Framework:</span> Laravel 11 / PHP 8.2</li>
                         <li><span class="font-bold">Frontend UI:</span> Tailwind CSS v4 / Blade</li>
                         <li><span class="font-bold">Integración:</span> FullCalendar.js API</li>
@@ -246,13 +281,13 @@
                 <div>
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Proyecto Académico</h4>
                     <div class="text-xs text-slate-600 space-y-2 font-medium">
-                        <p class="font-bold text-slate-800">Desarrollado de forma integral por:</p>
+                        <p class="font-bold text-slate-800">Desarrollado por:</p>
                         <p
                             class="font-mono text-indigo-600 font-bold text-sm bg-indigo-50 px-2 py-1 rounded-lg border border-indigo-100 inline-block">
-                            Rodrigo Alejandro Avelar Mejia
+                            Equipo Rodrigo
                         </p>
                         <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                            Cátedra de Programación Web / Ingeniería de Software. Proyecto de evaluación de sistemas
+                            ITCA FEPADE / Desarrollo de Aplicaciones Web. Proyecto de evaluación de sistemas
                             multi-inquilino.
                         </p>
                     </div>
@@ -265,7 +300,7 @@
                 <div class="flex items-center gap-2">
                     <span
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Clúster PostgreSQL
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Clúster MySQL
                         Activo (Aiven)
                     </span>
                 </div>

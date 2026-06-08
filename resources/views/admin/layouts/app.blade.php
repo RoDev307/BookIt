@@ -61,14 +61,13 @@
         }
 
         /* ==========================================================================
-           MODO NOCHE (OSCURO)
+           MODO NOCHE (OSCURO) - VERSIÓN COLORIDA Y PREMIUM
            ========================================================================== */
         :root[data-theme="dark"],
         :root[data-theme="dark"] body {
-            background-color: #0f172a !important;
-            /* bg-slate-900 oscuro profundo */
+            background-color: #0b0f19 !important;
+            /* Un azul espacial más profundo que resalta los colores */
             color: #f1f5f9 !important;
-            /* text-slate-100 claro nítido */
         }
 
         :root[data-theme="dark"] header,
@@ -77,9 +76,9 @@
         :root[data-theme="dark"] main form,
         :root[data-theme="dark"] main div.bg-white,
         :root[data-theme="dark"] div[class*="rounded-2xl"] {
-            background-color: #1e293b !important;
-            /* Slate 800 corporativo para las KPI cards y modales */
-            border-color: #334155 !important;
+            background-color: #131c2e !important;
+            /* Slate 800 enriquecido con tono azulado */
+            border-color: #1e293b !important;
         }
 
         :root[data-theme="dark"] header h2 {
@@ -92,16 +91,17 @@
 
         :root[data-theme="dark"] .bg-slate-50\/70,
         :root[data-theme="dark"] .bg-slate-50 {
-            background-color: #1e293b !important;
-            border-bottom: 1px solid #334155 !important;
+            background-color: #172237 !important;
+            border-bottom: 1px solid #22314d !important;
         }
 
         :root[data-theme="dark"] tr:hover {
-            background-color: rgba(51, 65, 85, 0.3) !important;
+            background-color: rgba(79, 70, 229, 0.08) !important;
+            /* Efecto hover con destello índigo */
         }
 
         :root[data-theme="dark"] th {
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
 
         :root[data-theme="dark"] td {
@@ -117,73 +117,91 @@
         :root[data-theme="dark"] .text-slate-900,
         :root[data-theme="dark"] .text-gray-700 {
             color: #ffffff !important;
-            /* Forzar blanco puro a todos los encabezados e h2/h3 de formularios */
         }
 
         :root[data-theme="dark"] p,
         :root[data-theme="dark"] .text-slate-600,
         :root[data-theme="dark"] .text-gray-600 {
             color: #94a3b8 !important;
-            /* Slate 400 legible para las descripciones */
         }
 
+        /* 🟢 COLORIZACIÓN DE MÉTRICAS OPERATIVAS EN MODO OSCURO */
         :root[data-theme="dark"] h3.text-emerald-600,
         :root[data-theme="dark"] .text-emerald-600 {
-            color: #34d399 !important;
+            color: #10b981 !important;
+            /* Verde esmeralda vivo */
         }
 
         :root[data-theme="dark"] h3.text-rose-600,
         :root[data-theme="dark"] .text-rose-600 {
-            color: #f87171 !important;
+            color: #f43f5e !important;
+            /* Rosa/rojo vivo corporativo */
         }
 
-        /* Forzar visibilidad de números de contadores en el dashboard oscuro */
         :root[data-theme="dark"] h3.text-2xl.font-black,
         :root[data-theme="dark"] .grid h3 {
             color: #ffffff !important;
         }
 
-        /* Decoración de iconos en tarjetas */
-        :root[data-theme="dark"] .bg-indigo-50,
+        /* 🚨 RECTIFICACIÓN PREMIUM DE ICONOS DE MÉTRICAS (Efecto neón translúcido colorido) */
         :root[data-theme="dark"] .bg-blue-50,
-        :root[data-theme="dark"] .bg-emerald-50,
-        :root[data-theme="dark"] .bg-rose-50,
-        :root[data-theme="dark"] div[class*="bg-indigo-50"],
-        :root[data-theme="dark"] div[class*="bg-emerald-50"] {
-            background-color: #334155 !important;
-            border-color: #475569 !important;
-            color: #ffffff !important;
+        :root[data-theme="dark"] div[class*="bg-blue-50"] {
+            background-color: rgba(59, 130, 246, 0.15) !important;
+            /* Azul translúcido */
+            border: 1px solid rgba(59, 130, 246, 0.3) !important;
+            color: #60a5fa !important;
         }
 
+        :root[data-theme="dark"] .bg-indigo-50,
+        :root[data-theme="dark"] div[class*="bg-indigo-50"] {
+            background-color: rgba(99, 102, 241, 0.15) !important;
+            /* Índigo translúcido */
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+            color: #818cf8 !important;
+        }
+
+        :root[data-theme="dark"] .bg-emerald-50,
+        :root[data-theme="dark"] div[class*="bg-emerald-50"] {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            /* Esmeralda translúcido */
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+            color: #34d399 !important;
+        }
+
+        :root[data-theme="dark"] .bg-rose-50,
+        :root[data-theme="dark"] div[class*="bg-rose-50"] {
+            background-color: rgba(244, 63, 94, 0.15) !important;
+            /* Rosa translúcido */
+            border: 1px solid rgba(244, 63, 94, 0.3) !important;
+            color: #f87171 !important;
+        }
+
+        /* Estilos generales de inputs y labels */
         :root[data-theme="dark"] label,
         :root[data-theme="dark"] .text-slate-700,
         :root[data-theme="dark"] div[class*="text-slate-700"],
         :root[data-theme="dark"] div[class*="text-xs"],
         :root[data-theme="dark"] div[class*="text-[10px]"] {
             color: #cbd5e1 !important;
-            /* Forzar visibilidad clara a labels de opacidad tapados */
         }
 
         :root[data-theme="dark"] input,
         :root[data-theme="dark"] select,
         :root[data-theme="dark"] textarea {
-            background-color: #0f172a !important;
-            /* Inputs en Slate 900 oscuro profundo */
-            border-color: #334155 !important;
+            background-color: #0b0f19 !important;
+            border-color: #22314d !important;
             color: #ffffff !important;
         }
 
         :root[data-theme="dark"] input::placeholder,
         :root[data-theme="dark"] textarea::placeholder {
             color: #475569 !important;
-            /* Placeholder en gris discreto */
         }
 
         :root[data-theme="dark"] .text-indigo-600,
         :root[data-theme="dark"] a[href*="edit"],
         :root[data-theme="dark"] .text-blue-600 {
             color: #a5b4fc !important;
-            /* Forzar índigo claro brillante para enlaces de edición legibles */
         }
 
         :root[data-theme="dark"] button:not([type="submit"]),
@@ -191,27 +209,36 @@
         :root[data-theme="dark"] a[class*="border"],
         :root[data-theme="dark"] button[class*="bg-slate-100"],
         :root[data-theme="dark"] a[class*="bg-slate-100"] {
-            background-color: #334155 !important;
-            border-color: #475569 !important;
+            background-color: #172237 !important;
+            border-color: #22314d !important;
             color: #cbd5e1 !important;
         }
 
         :root[data-theme="dark"] button:not([type="submit"]):hover,
         :root[data-theme="dark"] a[class*="bg-slate-100"]:hover {
-            background-color: #475569 !important;
+            background-color: #22314d !important;
             color: #ffffff !important;
         }
 
+        :root[data-theme="dark"] label:has(input[type="radio"]:checked) {
+            background-color: #1e1b4b !important;
+            border-color: #6366f1 !important;
+        }
+
+        :root[data-theme="dark"] label:has(input[type="radio"]:checked) span {
+            color: #818cf8 !important;
+        }
+
         :root[data-theme="dark"] .fc {
-            --fc-page-bg-color: #1e293b !important;
-            --fc-border-color: #334155 !important;
+            --fc-page-bg-color: #131c2e !important;
+            --fc-border-color: #22314d !important;
             --fc-neutral-text-color: #ffffff !important;
         }
 
         :root[data-theme="dark"] .fc-theme-standard td,
         :root[data-theme="dark"] .fc-theme-standard th,
         :root[data-theme="dark"] .fc-theme-standard .fc-scrollgrid {
-            border-color: #334155 !important;
+            border-color: #22314d !important;
         }
 
         :root[data-theme="dark"] .fc .fc-col-header-cell-cushion,
@@ -219,12 +246,11 @@
         :root[data-theme="dark"] .fc .fc-toolbar-title,
         :root[data-theme="dark"] h2[class*="fc-toolbar-title"] {
             color: #ffffff !important;
-            /* Título del mes e índice de días legibles */
         }
 
         :root[data-theme="dark"] .fc .fc-button-primary {
-            background-color: #334155 !important;
-            border-color: #475569 !important;
+            background-color: #172237 !important;
+            border-color: #22314d !important;
             color: #ffffff !important;
         }
 
@@ -255,7 +281,7 @@
                     </a>
                     <a href="{{ route('admin.appointments.calendar') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('admin.appointments.calendar') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
-                        📆 Calendario Operativo
+                        |&nbsp;📆 Calendario Operativo
                     </a>
                     <a href="{{ route('services.index') }}"
                         class="block py-2.5 px-4 rounded transition {{ request()->routeIs('services.*') ? 'bg-slate-900 text-white font-medium' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
@@ -420,8 +446,8 @@
                     adminSliderBg.classList.remove('after:left-[2px]');
                 }
                 if (adminContainer) {
-                    adminContainer.style.backgroundColor = '#1e293b';
-                    adminContainer.style.borderColor = '#334155';
+                    adminContainer.style.backgroundColor = '#131c2e';
+                    adminContainer.style.borderColor = '#1e293b';
                 }
             } else {
                 adminSlider.checked = false;

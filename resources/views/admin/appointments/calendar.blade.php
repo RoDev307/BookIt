@@ -66,6 +66,10 @@
                     class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2 rounded-xl transition-colors">
                     Editar Registro
                 </a>
+                <a id="modalPdfBtn" href="#" target="_blank"
+                    class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs px-4 py-2 rounded-xl transition-colors border border-emerald-200">
+                    📄 Descargar PDF
+                </a>
                 <button onclick="closeModal()"
                     class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer">
                     Entendido
@@ -175,6 +179,8 @@
                     document.getElementById('modalEditBtn').href =
                         `/admin/appointments/${info.event.id}/edit`;
 
+                    document.getElementById('modalPdfBtn').href =
+                        `/admin/appointments/${info.event.id}/pdf`;
                     // Mostrar el modal con animación
                     const modal = document.getElementById('eventModal');
                     modal.classList.remove('hidden');

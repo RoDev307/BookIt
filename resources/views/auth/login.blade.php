@@ -59,17 +59,8 @@
             <div class="pt-2">
                 <button type="submit"
                     class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-sm transition-colors cursor-pointer text-center block">
-                    🔑 Entrar al Panel de Control
+                    Iniciar Sesión
                 </button>
-            </div>
-
-            <div class="text-center pt-4 border-t border-slate-100 mt-4 flex flex-col gap-1">
-                @if (Route::has('password.request'))
-                    <a class="text-xs text-slate-400 hover:text-indigo-600 transition-colors font-medium mb-1"
-                        href="{{ route('password.request') }}">
-                        ¿Olvidaste tus datos de suscripción?
-                    </a>
-                @endif
             </div>
         </form>
     </div>

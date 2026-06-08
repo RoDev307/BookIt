@@ -7,6 +7,7 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AppointmentController extends Controller
 {
@@ -23,7 +24,6 @@ class AppointmentController extends Controller
 
             $appointments = \App\Models\Appointment::with(['user', 'business'])
                 ->orderBy('appointment_time', 'desc')
-                ->take(5)
                 ->get();
 
             return view('admin.dashboard', compact(
@@ -62,7 +62,7 @@ class AppointmentController extends Controller
         return view('admin.dashboard', compact('appointments'));
     }
 
-    private function validarCitaSaaS($businessId, $appointmentTime, $staffName = null)
+    private function validarCitaSaaS($businessId, $appointmentTime, $staffName = null, $ignoreAppointmentId = null)
     {
         $fecha = Carbon::parse($appointmentTime);
 
@@ -76,24 +76,30 @@ class AppointmentController extends Controller
         }
 
         if ($staffName) {
-            $colisionStaff = Appointment::where('business_id', $businessId)
+            $colisionStaffQuery = Appointment::where('business_id', $businessId)
                 ->where('staff_name', $staffName)
                 ->where('appointment_time', $fecha->toDateTimeString())
-                ->where('status', 'confirmed')
-                ->exists();
+                ->where('status', 'confirmed');
 
-            if ($colisionStaff) {
+            if ($ignoreAppointmentId) {
+                $colisionStaffQuery->where('id', '!=', $ignoreAppointmentId);
+            }
+
+            if ($colisionStaffQuery->exists()) {
                 return "El colaborador '{$staffName}' ya tiene una cita agendada a esa misma hora.";
             }
         }
 
-        $colisionCliente = Appointment::where('business_id', $businessId)
+        $colisionClienteQuery = Appointment::where('business_id', $businessId)
             ->where('appointment_time', $fecha->toDateTimeString())
             ->where('status', 'confirmed')
-            ->where('user_id', Auth::id())
-            ->exists();
+            ->where('user_id', Auth::id());
 
-        if ($colisionCliente) {
+        if ($ignoreAppointmentId) {
+            $colisionClienteQuery->where('id', '!=', $ignoreAppointmentId);
+        }
+
+        if ($colisionClienteQuery->exists()) {
             return 'Ya tienes otra cita confirmada exactamente a la misma hora en este establecimiento.';
         }
 
@@ -196,7 +202,7 @@ class AppointmentController extends Controller
             'staff_name'       => $validated['staff_name'],
             'appointment_time' => $appointmentTime,
             'status'           => 'confirmed',
-            'notes'            => $structuredNotes,
+            'notes' => $structuredNotes,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'La cita ha sido agendada e introducida al sistema correctamente.');
@@ -215,7 +221,6 @@ class AppointmentController extends Controller
             $clientNameResult = trim($parts[0] ?? '');
             $cleanNotesResult = isset($parts[1]) ? trim($parts[1]) : '';
         } else {
-            // Si no tiene la estructura, el input del nombre inicia vacío para ser rellenado correctamente
             $clientNameResult = '';
             $cleanNotesResult = $rawNotes;
         }
@@ -235,6 +240,14 @@ class AppointmentController extends Controller
             'appointment_time' => ['required', 'date', 'after_or_equal:today'],
             'notes'            => ['nullable', 'string', 'max:500'],
         ]);
+
+        $appointmentTime = $request->input('appointment_time');
+
+        $error = $this->validarCitaSaaS(Auth::user()->business_id, $appointmentTime, $appointment->staff_name, $appointment->id);
+        if ($error) {
+            return redirect()->back()->withInput()->withErrors(['appointment_time' => $error]);
+        }
+
         $incomingNotes = $request->input('notes') ?? '';
 
         if (str_contains($incomingNotes, 'Cliente Externo:')) {
@@ -242,13 +255,12 @@ class AppointmentController extends Controller
             $incomingNotes = isset($parts[1]) ? trim($parts[1]) : '';
         }
 
-        // Armamos el nuevo empaquetado limpio sin acumulaciones redundantes
         $structuredNotes = 'Cliente Externo: ' . trim($request->input('client_name'));
         if (!empty($incomingNotes)) {
             $structuredNotes .= ' | ' . $incomingNotes;
         }
 
-        $appointment->appointment_time = $request->input('appointment_time');
+        $appointment->appointment_time = $appointmentTime;
         $appointment->notes            = $structuredNotes;
 
         $appointment->save();
@@ -288,7 +300,6 @@ class AppointmentController extends Controller
             $start = Carbon::parse($app->appointment_time, 'America/El_Salvador');
             $end = (clone $start)->addMinutes(45);
 
-            // Pasamos el string ISO 8601 explícito incluyendo el desfase (-06:00) para FullCalendar
             $events[] = [
                 'id' => $app->id,
                 'title' => $clientName . " (" . ($app->staff_name ?? 'Recepción') . ")",
@@ -305,5 +316,64 @@ class AppointmentController extends Controller
         }
 
         return response()->json($events);
+    }
+
+    /**
+     * Genera y descarga el flujo binario del comprobante de cita en formato PDF.
+     */
+    public function bajarPdfAdmin($id)
+    {
+        $user = Auth::user();
+
+        if (is_null($user->business_id)) {
+            $appointment = Appointment::with(['user', 'service', 'business'])->findOrFail($id);
+        } else {
+            $appointment = Appointment::where('business_id', $user->business_id)
+                ->with(['user', 'service', 'business'])
+                ->findOrFail($id);
+        }
+
+        $rawNotes = $appointment->notes ?? '';
+        $clientName = 'Cliente Externo';
+        $cleanNotes = '';
+
+        if (str_contains($rawNotes, 'Cliente Externo:')) {
+            $parts = explode('|', str_replace('Cliente Externo:', '', $rawNotes));
+            $clientName = trim($parts[0] ?? 'Cliente Externo');
+            $cleanNotes = isset($parts[1]) ? trim($parts[1]) : '';
+        } else {
+            $clientName = $appointment->user->name ?? 'Cliente Externo';
+            $cleanNotes = $rawNotes;
+        }
+
+        $pdf = Pdf::loadView('admin.appointments.pdf', compact('appointment', 'clientName', 'cleanNotes'));
+
+        return $pdf->download("comprobante-cita-BK-{$appointment->id}.pdf");
+    }
+    public function generarReportePdf(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validar el rango solicitado
+        $periodo = $request->query('periodo', 'mes'); // 'semana' o 'mes'
+
+        $query = Appointment::where('business_id', $user->business_id)
+            ->with(['user', 'service']);
+
+        if ($periodo === 'semana') {
+            $query->whereBetween('appointment_time', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+        } else {
+            $query->whereBetween('appointment_time', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+        }
+
+        $citas = $query->orderBy('appointment_time', 'asc')->get();
+
+        $pdf = Pdf::loadView('admin.appointments.reporte', [
+            'citas' => $citas,
+            'periodo' => $periodo,
+            'negocio' => $user->business->name ?? 'Establecimiento'
+        ]);
+
+        return $pdf->download("reporte-citas-{$periodo}-" . date('Y-m-d') . ".pdf");
     }
 }

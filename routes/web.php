@@ -58,8 +58,10 @@ Route::middleware('auth')->group(function () {
     })->name('appointments.success');
 
     // Descargar comprobante PDF de Databox
-    Route::get('/descargar-ticket', [AppointmentController::class, 'descargarPDF'])
-        ->name('appointments.pdf');
+    Route::get('/admin/appointments/{id}/pdf', [AppointmentController::class, 'bajarPdfAdmin'])->name('admin.appointments.pdf');
+    Route::get('/admin/appointments/reporte', [AppointmentController::class, 'generarReportePdf'])
+        ->name('admin.appointments.reporte');
+
 
     // Historial y Cancelaciones del Cliente (Esmeralda)
     Route::get('/mis-citas', [AppointmentController::class, 'misCitas'])

@@ -20,7 +20,11 @@
             "dest": "/public/index.php"
         },
         {
-            "src": "/(favicon/?.*)",
+            "src": "/(.*\\.(ico|png|json|webmanifest))$",
+            "dest": "/public/$1"
+        },
+        {
+            "src": "/(favicon/.*)",
             "dest": "/public/$1"
         },
         {

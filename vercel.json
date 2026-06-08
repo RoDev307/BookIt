@@ -7,19 +7,31 @@
         }
     ],
     "routes": [
-    {
-      "src": "/(.*)\\.(ico|png|json|webmanifest)$",
-      "dest": "/public/$1.$2"
-    },
-    {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/index.php"
-    }
-  ],
+        {
+            "src": "/favicon\\.ico",
+            "dest": "/public/favicon.ico"
+        },
+        {
+            "src": "/apple-touch-icon\\.png",
+            "dest": "/public/apple-touch-icon.png"
+        },
+        {
+            "src": "/favicon-(.*)\\.png",
+            "dest": "/public/favicon-$1.png"
+        },
+        {
+            "src": "/site\\.webmanifest",
+            "dest": "/public/site.webmanifest"
+        },
+        {
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/public/index.php"
+        }
+    ],
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",

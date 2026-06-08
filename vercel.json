@@ -8,27 +8,16 @@
     ],
     "routes": [
         {
-            "src": "/favicon\\.(.*)",
-            "dest": "/public/favicon.$1"
+            "src": "/(favicon\\.ico|favicon-16x16\\.png|favicon-32x32\\.png|apple-touch-icon\\.png|site\\.webmanifest|robots\\.txt)",
+            "dest": "/public/$1"
         },
         {
-            "src": "/apple-touch-icon\\.png",
-            "dest": "/public/apple-touch-icon.png"
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
         },
         {
-            "src": "/favicon-16x16\\.png",
-            "dest": "/public/favicon-16x16.png"
-        },
-        {
-            "src": "/favicon-32x32\\.png",
-            "dest": "/public/favicon-32x32.png"
-        },
-        {
-            "src": "/site\\.webmanifest",
-            "dest": "/public/site.webmanifest"
-        },
-        {
-            "handle": "filesystem"
+            "src": "/images/(.*)",
+            "dest": "/public/images/$1"
         },
         {
             "src": "/(.*)",

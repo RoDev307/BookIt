@@ -2,9 +2,9 @@
     <h1 style="color: #4f46e5; font-size: 3rem; font-weight: 900; letter-spacing: -2px;">BookIt SaaS</h1>
     <p style="color: #64748b; font-size: 1.1rem;">Plataforma de Gestión Operativa para Establecimientos Comerciales</p>
     <div style="margin: 20px 0;">
-        <span style="background: #e0e7ff; color: #4338ca; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 0.8rem;">LARAVEL 11</span>
-        <span style="background: #f1f5f9; color: #475569; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 0.8rem;">POSTGRESQL</span>
-        <span style="background: #dcfce7; color: #15803d; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 0.8rem;">DOMPDF</span>
+        <span style="background: #0f172a; color: #f8fafc; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; border: 1px solid #334155;">PHP 8.2</span>
+        <span style="background: #0f172a; color: #f8fafc; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; border: 1px solid #334155;">Laravel 11</span>
+        <span style="background: #0f172a; color: #f8fafc; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; border: 1px solid #334155;">MySQL</span>
     </div>
 </div>
 

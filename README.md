@@ -22,25 +22,36 @@
     <li>✅ <b>UI Híbrida:</b> Interfaz profesional con soporte nativo de modo claro y oscuro.</li>
 </ul>
 
-<h2>🛠️ Stack Tecnológico</h2>
+<h2>🛠️ Stack Tecnológico & Arquitectura</h2>
 <table style="width: 100%; border-collapse: collapse;">
     <tr style="background: #f8fafc;">
         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">Componente</th>
         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">Tecnología</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">Ubicación</th>
     </tr>
     <tr>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">Backend</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">PHP 8.2 + Laravel 11</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Backend (API SaaS)</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">PHP 8.2 + Laravel 12 + Sanctum</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;"><code>/backend</code></td>
     </tr>
     <tr>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">Frontend</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">Tailwind CSS v4 + Blade</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Frontend Móvil</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Ionic + Angular Standalone + Capacitor</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;"><code>/frontend/Ionic</code></td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Frontend Web SPA</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Vue 3 + Vite + TypeScript + Pinia</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;"><code>/frontend/Vue</code></td>
     </tr>
     <tr>
         <td style="padding: 10px; border: 1px solid #e2e8f0;">Base de Datos</td>
         <td style="padding: 10px; border: 1px solid #e2e8f0;">MySQL</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">Remota / Local</td>
     </tr>
 </table>
+
+<p>📖 Consulta la <a href="./backend/API_DOCUMENTATION.md"><b>Guía Completa de la API RESTful</b></a> para ver todos los endpoints, esquemas y autenticación.</p>
 
 <h2>👥 Equipo de Desarrollo</h2>
 <p>Proyecto desarrollado como ejercicio académico de Ingeniería de Software:</p>

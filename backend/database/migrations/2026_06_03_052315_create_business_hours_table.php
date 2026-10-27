@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function column_exists(): void
+    public function up(): void
     {
         Schema::create('business_hours', function (Blueprint $table) {
             $table->id();

@@ -46,3 +46,37 @@ pnpm build
 ```sh
 pnpm lint
 ```
+
+## Panel de superadministrador
+
+Vistas implementadas en Vue con TypeScript:
+
+- Inicio de sesión.
+- Dashboard de métricas y últimas reservas.
+- Listado de comercios.
+- Registro de comercio y administrador.
+- Edición de comercio y administrador.
+- Tema claro y oscuro con preferencia guardada.
+- Diseño adaptable a pantallas pequeñas.
+
+### Estado de la integración
+
+Las vistas utilizan datos temporales definidos en el frontend.
+
+Pendiente de integración con la API de Laravel:
+
+- Autenticación y cierre de sesión.
+- Protección de rutas y validación del rol super_admin.
+- Consulta de métricas y comercios.
+- Registro y actualización de comercios.
+- Manejo de errores del backend.
+
+El login todavía no autentica y los formularios no guardan datos.
+El enlace de vista previa permite navegar por el panel sin autenticación.
+
+El dashboard actual muestra una tabla de reservas de ejemplo.
+La API revisada de /superadmin/dashboard devuelve métricas y
+recent_businesses; falta acordar cómo obtener las últimas reservas.
+
+Al integrar el formulario, POST /superadmin/businesses espera
+business_name y PUT /superadmin/businesses/{id} espera name.

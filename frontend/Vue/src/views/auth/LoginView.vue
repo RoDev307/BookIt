@@ -59,29 +59,90 @@
             </button>
           </div>
         </div>
-
-        <p v-if="showMessage" class="form-message" role="status">
-          El inicio de sesión estará disponible al completar la integración con la API.
+          
+        <p v-if="errorMessage" class="form-message" role="alert">
+            {{ errorMessage }}
         </p>
 
-        <button type="submit" class="login-button">Iniciar sesión</button>
+        <button type="submit" class="login-button" :disabled="loading">
+  {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}</button>
       </form>
 
-      <RouterLink to="/superadmin/dashboard" class="preview-link">
-        Vista previa del panel →
-      </RouterLink>
+      
     </section>
   </main>
 </template>
 
+
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { csrfCookie, apiPost } from '../../services/api'
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
-const showMessage = ref(false)
+const loading = ref(false)
+const errorMessage = ref('')
+
+interface LoginResponse {
+  message: string
+  user: {
+    id: number
+    name: string
+    email: string
+    role: string
+    business_id: number | null
+  }
+}
+
+async function handleSubmit() {
+  if (loading.value) return
+
+  loading.value = true
+  errorMessage.value = ''
+
+  try {
+    // Obtener la cookie CSRF de Laravel
+    await csrfCookie()
+
+    // Enviar las credenciales
+    const response = await apiPost<LoginResponse>(
+      '/api/v1/auth/login',
+      {
+        email: email.value,
+        password: password.value,
+      },
+    )
+
+    // Verificar el rol
+    if (response.user.role !== 'super_admin') {
+      errorMessage.value = 'No tienes permisos para acceder al panel.'
+      password.value = ''
+      return
+    }
+
+    // Guardar los datos básicos de sesión
+    sessionStorage.setItem(
+      'bookit-user',
+      JSON.stringify(response.user),
+    )
+
+    // Entrar al dashboard
+    await router.push('/superadmin/dashboard')
+  } catch (error) {
+    errorMessage.value =
+      error instanceof Error
+        ? error.message
+        : 'No se pudo iniciar sesión. Intenta nuevamente.'
+
+    password.value = ''
+  } finally {
+    loading.value = false
+  }
+}
 
 function readSavedTheme(): boolean {
   try {
@@ -108,15 +169,9 @@ function toggleTheme() {
   }
 }
 
-function handleSubmit() {
-  // Pendiente: autenticar mediante POST /api/v1/auth/login.
-  // Validar el rol super_admin antes de permitir el acceso al panel.
-  showMessage.value = true
-  password.value = ''
-}
-
 applyTheme()
 </script>
+
 
 <style scoped>
 .login-page {

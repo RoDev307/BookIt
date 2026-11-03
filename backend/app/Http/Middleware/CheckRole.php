@@ -10,19 +10,14 @@ class CheckRole
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        // 1. Si no hay sesión activa, rechaza la petición
+        // Verificar que exista una sesión autenticada
         if (!$request->user()) {
-            abort(403);
+            abort(401);
         }
 
-        // 🚨 REGLA DE ACCESO MAESTRO: Si es tu correo root, ignora el rol y dale acceso libre
-        if ($request->user()->email === 'admin@bookit.com') {
-            return $next($request);
-        }
-
-        // 2. Validación estándar para el resto de cuentas locales
+        // Verificar que el usuario tenga el rol requerido
         if ($request->user()->role !== $role) {
-            abort(403);
+            abort(403, 'No tienes permiso para acceder a este recurso.');
         }
 
         return $next($request);

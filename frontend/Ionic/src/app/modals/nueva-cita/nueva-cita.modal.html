@@ -1,0 +1,75 @@
+<ion-content class="mc" [fullscreen]="true">
+  <header class="cab">
+    <div>
+      <h1>Nueva cita</h1>
+      <p class="muted">Para clientes que llaman, escriben por WhatsApp o llegan al local.</p>
+    </div>
+    <button type="button" class="cerrar" (click)="cerrar()" aria-label="Cerrar">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </header>
+
+  <main class="page">
+    <div class="campo">
+      <label for="nc-cliente">Nombre del cliente</label>
+      <input id="nc-cliente" class="input" type="text" maxlength="120" placeholder="Ej. Juan Pérez"
+             [value]="cliente()" (input)="texto(cliente, $event)" />
+    </div>
+
+    <div class="campo">
+      <label for="nc-servicio">Servicio</label>
+      <select id="nc-servicio" class="input" [disabled]="cargandoServicios()" (change)="elegirServicio($event)">
+        <option value="" [selected]="servicioId() === null">
+          {{ cargandoServicios() ? 'Cargando servicios…' : '— Selecciona un servicio —' }}
+        </option>
+        @for (s of servicios(); track s.id) {
+          <option [value]="s.id" [selected]="servicioId() === s.id">{{ etiquetaServicio(s) }}</option>
+        }
+      </select>
+      @if (errorServicios()) {
+        <p class="small" style="color: var(--danger); margin-top: 6px">{{ errorServicios() }}</p>
+      } @else if (!cargandoServicios() && servicios().length === 0) {
+        <p class="small muted" style="margin-top: 6px">
+          No tienes servicios activos. Crea uno en la pestaña Servicios.
+        </p>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="nc-staff">¿Quién atiende?</label>
+      <input id="nc-staff" class="input" type="text" maxlength="120" placeholder="Ej. Dr. Armando Mendoza"
+             [value]="staff()" (input)="texto(staff, $event)" />
+    </div>
+
+    <div class="campo">
+      <label for="nc-fecha">1. Fecha</label>
+      <input id="nc-fecha" class="input" type="date" [min]="hoy" [value]="fecha()" (change)="cambiarFecha($event)" />
+    </div>
+
+    <div class="campo">
+      <span class="etq">2. Hora</span>
+      <app-selector-horas [slug]="slug" [fecha]="fecha()" [staff]="staff()" [(hora)]="hora" />
+    </div>
+
+    <div class="campo">
+      <label for="nc-notas">Notas adicionales</label>
+      <textarea id="nc-notas" class="input" maxlength="400" rows="3"
+                placeholder="Ej. El cliente solicita que lo atienda un especialista en particular…"
+                [value]="notas()" (input)="texto(notas, $event)"></textarea>
+    </div>
+
+    @if (error()) {
+      <div class="alerta" role="alert">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <div class="acciones">
+      <button type="button" class="btn btn--primary" (click)="guardar()" [disabled]="!valido() || guardando()">
+        @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> Agendando… } @else { Agendar cita }
+      </button>
+      <button type="button" class="btn btn--ghost" (click)="cerrar()" [disabled]="guardando()">Cancelar</button>
+    </div>
+  </main>
+</ion-content>

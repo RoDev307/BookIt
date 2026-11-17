@@ -1,0 +1,82 @@
+<ion-content [fullscreen]="true" class="dh">
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__logo"><ion-icon name="calendar-outline"></ion-icon></span>
+      <span class="brand__name">BookIt Business Admin</span>
+    </div>
+    <div class="topbar__right">
+      <button class="icon-btn" aria-label="Notificaciones">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+      <span class="avatar avatar--sm">SN</span>
+    </div>
+  </header>
+
+  @if (cargando) {
+  <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+  } @else if (error) {
+  <div class="center center--col">
+    <p class="muted">{{ errorMsg }}</p>
+    <button class="link" (click)="cargar()">Reintentar</button>
+  </div>
+  } @else {
+  <main class="page" [class.page--loading]="cargando">
+    <!-- Título -->
+    <div class="title-row">
+      <div>
+        <h1>Disponibilidad</h1>
+        <p class="muted">{{ negocio ? negocio + ' · ' : '' }}Horario de atención</p>
+      </div>
+    </div>
+
+    <!-- Horario de apertura -->
+    <div class="section-head">
+      <h2>Horario de apertura</h2>
+      <button class="link" (click)="igualarSemana()">Igualar semana</button>
+    </div>
+    <section class="card">
+      @for (h of horario; track h.num; let last = $last) {
+      <div class="dia" [class.dia--last]="last">
+        <ion-toggle
+          [checked]="h.abierto"
+          (ionChange)="toggleDia(h, $event)"
+          [attr.aria-label]="h.etiqueta"
+        ></ion-toggle>
+        <span class="dia__nombre">{{ h.etiqueta }}</span>
+        @if (h.abierto) {
+        <div class="horas">
+          <input
+            type="time"
+            [attr.aria-label]="'Apertura ' + h.etiqueta"
+            [(ngModel)]="h.apertura"
+            (ngModelChange)="editarHoras()"
+          />
+          –
+          <input
+            type="time"
+            [attr.aria-label]="'Cierre ' + h.etiqueta"
+            [(ngModel)]="h.cierre"
+            (ngModelChange)="editarHoras()"
+          />
+        </div>
+        } @else {
+        <span class="muted cerrado">Cerrado</span>
+        }
+      </div>
+      }
+    </section>
+
+    <!-- Guardar -->
+    <button class="btn-guardar" (click)="guardar()" [disabled]="!sucio || guardando">
+      @if (guardando) {
+      <ion-spinner name="crescent"></ion-spinner> Guardando… } @else { <ion-icon name="checkmark"></ion-icon> Guardar
+      disponibilidad }
+    </button>
+    <p class="hint">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      Los cambios no afectan a las citas ya reservadas.
+    </p>
+  </main>
+  }
+</ion-content>

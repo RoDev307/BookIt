@@ -1,0 +1,456 @@
+:host {
+  --bg: var(--bookit-0a0d18);
+  --surface: var(--bookit-1a2033);
+  --surface-2: var(--bookit-232a42);
+  --line: rgba(255, 255, 255, 0.08);
+  --text: var(--bookit-f2f4fb);
+  --muted: var(--bookit-8d95ae);
+  --accent: #6c63ff;
+  --accent-soft: var(--bookit-b4afff);
+  --warn: #f2b84b;
+  --danger: #ff6f8e;
+  --ok: #4fd1a1;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    'Inter',
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+ion-content.gc {
+  --background: var(--bg);
+  --color: var(--text);
+  flex: 1;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 14px 0;
+}
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 12px;
+}
+.center {
+  display: grid;
+  place-items: center;
+  height: 60vh;
+}
+
+/* Barra superior */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top) + 12px) 16px 12px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.brand__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--bookit-2b3358);
+  color: var(--accent-soft);
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 15px;
+  &--sm {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+    background: var(--bookit-2d2f5e);
+  }
+}
+
+.icon-btn {
+  font-size: 20px;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+
+/* Página */
+.page {
+  padding: 0 16px 24px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  &--main {
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 4px;
+  }
+}
+.title-row + .title-row--main {
+  margin-top: 8px;
+}
+h1 {
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+.title-row--main .muted {
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+.more-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Tarjetas */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.label {
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+}
+
+/* Cliente */
+.cliente {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cliente__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cliente__info strong {
+  font-size: 17px;
+  font-weight: 600;
+}
+.telefono {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.telefono__num {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  &--pendiente {
+    color: var(--warn);
+    background: rgba(242, 184, 75, 0.14);
+  }
+  &--confirmada {
+    color: var(--accent-soft);
+    background: rgba(108, 99, 255, 0.18);
+  }
+  &--completada {
+    color: var(--ok);
+    background: rgba(79, 209, 161, 0.14);
+  }
+  &--cancelada {
+    color: var(--danger);
+    background: rgba(255, 111, 142, 0.14);
+  }
+}
+
+/* Servicio */
+.servicio {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 4px;
+}
+.servicio > strong {
+  font-size: 18px;
+  font-weight: 600;
+}
+.precio {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+.precio strong {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+.fila > ion-icon {
+  font-size: 18px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.fila__txt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+.fila__txt strong {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.fila--pago {
+  padding-bottom: 0;
+}
+.fila--pago .fila__txt {
+  font-size: 12.5px;
+}
+
+.link {
+  color: var(--accent-soft);
+  font-size: 12.5px;
+  font-weight: 600;
+  &:disabled {
+    opacity: 0.35;
+  }
+}
+.link--warn {
+  color: var(--warn);
+}
+.ok {
+  color: var(--ok);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* Nota */
+.nota {
+  margin-top: 20px;
+}
+.nota__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.nota .muted {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Estado */
+.estado {
+  margin-top: 20px;
+  h2 {
+    margin-bottom: 12px;
+  }
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+  &:active {
+    transform: scale(0.98);
+  }
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 2px;
+  }
+  &--primary {
+    background: var(--accent);
+    color: var(--bookit-fff);
+  }
+  &--soft {
+    background: var(--bookit-2a2c5a);
+    color: var(--accent-soft);
+  }
+  &--danger {
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: var(--text);
+    ion-icon {
+      color: var(--danger);
+    }
+  }
+}
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11.5px;
+  margin-top: 14px;
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+/* Tab bar */
+.tabbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 8px 12px calc(env(safe-area-inset-bottom) + 8px);
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 0;
+    border-radius: 14px;
+    color: var(--muted);
+    font-size: 11px;
+    text-decoration: none;
+    ion-icon {
+      font-size: 22px;
+    }
+    &.active {
+      background: var(--bookit-2a2c5a);
+      color: var(--accent-soft);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
+
+.nueva-form label {
+  display: block;
+  margin: 14px 0;
+  color: var(--bookit-c8cde0);
+  font-size: 13px;
+}
+.nueva-form input,
+.nueva-form select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px;
+  background: var(--bookit-151a2b);
+  color: var(--bookit-fff);
+  border: 1px solid var(--bookit-4b526a);
+  border-radius: 8px;
+  font: inherit;
+  color-scheme: dark;
+}
+.form-error {
+  color: var(--bookit-ffaaaa);
+}
+
+/* Títulos y controles siguen la tipografía de Nodo. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+ion-button,
+ion-title {
+  font-family: 'Geist', sans-serif;
+}
+
+.client-picker { display: grid; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid #566078; }
+.client-modes { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.client-modes button[aria-pressed="true"] { outline: 2px solid #a99fff; }
+.client-result, .client-selected { display: grid; gap: 6px; border: 1px solid #566078; border-radius: 10px; padding: 14px; color: inherit; background: transparent; text-align: left; overflow-wrap: anywhere; }
+.client-result span { font-size: 13px; }
+.client-selected p { margin: 0; }

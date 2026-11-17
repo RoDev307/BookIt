@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\V1\SuperAdmin\MasterBusinessController;
 use App\Http\Controllers\Api\V1\Tenant\AdminAppointmentController;
 use App\Http\Controllers\Api\V1\Tenant\AdminBusinessController;
 use App\Http\Controllers\Api\V1\Tenant\AdminServiceController;
+use App\Http\Controllers\Api\V1\Tenant\AdminStaffController;
+use App\Http\Controllers\Api\V1\Tenant\AdminNotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,9 +48,11 @@ Route::prefix('v1')->group(function () {
         // --- Gestión de sesión y perfil propio ---
         Route::prefix('auth')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
+            Route::get('/user', [\App\Http\Controllers\Api\AuthController::class, 'user']);
             Route::put('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/logout', [AuthController::class, 'logout']);
         });
+
 
         // --- Citas para clientes ---
         Route::get('/my-appointments', [AppointmentController::class, 'index']);
@@ -61,11 +65,18 @@ Route::prefix('v1')->group(function () {
         // =====================================================================
         Route::middleware('role:admin_business,super_admin')->prefix('tenant')->group(function () {
 
+
             // Métricas y perfil de negocio
             Route::get('/dashboard', [AdminBusinessController::class, 'dashboard']);
             Route::get('/business', [AdminBusinessController::class, 'getProfile']);
             Route::put('/business', [AdminBusinessController::class, 'updateProfile']);
             Route::put('/business/hours', [AdminBusinessController::class, 'updateHours']);
+
+            Route::get('/clients', [\App\Http\Controllers\Api\V1\Tenant\AdminClientController::class, 'index']);
+            Route::post('/clients', [\App\Http\Controllers\Api\V1\Tenant\AdminClientController::class, 'store']);
+            Route::get('/clients/{id}/appointments', [\App\Http\Controllers\Api\V1\Tenant\AdminClientController::class, 'appointments'])->whereNumber('id');
+            Route::get('/clients/{id}', [\App\Http\Controllers\Api\V1\Tenant\AdminClientController::class, 'show'])->whereNumber('id');
+            Route::put('/clients/{id}', [\App\Http\Controllers\Api\V1\Tenant\AdminClientController::class, 'update'])->whereNumber('id');
 
             // CRUD de Servicios del comercio
             Route::get('/services', [AdminServiceController::class, 'index']);
@@ -74,13 +85,18 @@ Route::prefix('v1')->group(function () {
             Route::put('/services/{id}', [AdminServiceController::class, 'update']);
             Route::delete('/services/{id}', [AdminServiceController::class, 'destroy']);
 
+            Route::apiResource('staff', AdminStaffController::class);
+            Route::get('/notifications', [AdminNotificationController::class, 'index']);
+            Route::patch('/notifications/{id}/read', [AdminNotificationController::class, 'read']);
+
             // Gestión de Citas y Calendario del comercio
             Route::get('/appointments', [AdminAppointmentController::class, 'index']);
             Route::get('/appointments/calendar', [AdminAppointmentController::class, 'calendar']);
             Route::post('/appointments', [AdminAppointmentController::class, 'store']);
+            Route::get('/appointments/{id}', [AdminAppointmentController::class, 'show'])->whereNumber('id');
             Route::put('/appointments/{id}', [AdminAppointmentController::class, 'update']);
             Route::patch('/appointments/{id}/status', [AdminAppointmentController::class, 'updateStatus']);
-            Route::get('/appointments/{id}/pdf', [AdminAppointmentController::class, 'downloadPdf']);
+            Route::get('/appointments/{id}/pdf', [AdminAppointmentController::class, 'downloadPdf'])->whereNumber('id');
             Route::get('/appointments/report/pdf', [AdminAppointmentController::class, 'generateReportPdf']);
         });
 

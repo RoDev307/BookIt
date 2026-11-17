@@ -105,7 +105,7 @@ class BusinessController extends BaseApiController
             return $this->sendError('Comercio no encontrado.', [], 404);
         }
 
-        $date = Carbon::parse($request->date);
+        $date = Carbon::parse($request->date, 'America/El_Salvador');
         $dayOfWeek = $date->dayOfWeek; // 0 = Domingo, 6 = Sábado
 
         // Buscar horario configurado
@@ -143,7 +143,7 @@ class BusinessController extends BaseApiController
         // Consultar citas existentes confirmadas en esa fecha
         $citasQuery = Appointment::where('business_id', $business->id)
             ->whereDate('appointment_time', $request->date)
-            ->where('status', 'confirmed');
+            ->whereIn('status', ['confirmed', 'pending']);
 
         if ($request->filled('staff_name') && $request->staff_name !== 'Asignado por Recepción') {
             $citasQuery->where('staff_name', $request->staff_name);
@@ -155,11 +155,11 @@ class BusinessController extends BaseApiController
 
         // Generar intervalos de 1 hora
         $slots = [];
-        $now = Carbon::now();
+        $now = Carbon::now('America/El_Salvador');
 
         for ($h = $openHour; $h < $closeHour; $h++) {
             $slotTime = sprintf('%02d:00', $h);
-            $slotDateTime = Carbon::parse("{$request->date} {$slotTime}");
+            $slotDateTime = Carbon::parse("{$request->date} {$slotTime}", 'America/El_Salvador');
 
             $isPast = $slotDateTime->isPast();
             $isBooked = in_array($slotTime, $ocupadas, true);

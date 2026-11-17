@@ -33,6 +33,11 @@ class MasterBusinessController extends BaseApiController
             ->limit(5)
             ->get();
 
+        $recentAppointments = Appointment::with(['business:id,name', 'user:id,name,email', 'service:id,name'])
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
+
         return $this->sendResponse([
             'metrics' => [
                 'total_businesses'       => $totalComercios,
@@ -44,7 +49,8 @@ class MasterBusinessController extends BaseApiController
                 'total_clients'          => $totalClientes,
                 'total_business_admins'  => $totalAdmins,
             ],
-            'recent_businesses' => $recentBusinesses,
+            'recent_businesses'   => $recentBusinesses,
+            'recent_appointments' => $recentAppointments,
         ]);
     }
 

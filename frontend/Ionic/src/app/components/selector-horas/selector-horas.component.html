@@ -1,0 +1,33 @@
+@if (!fecha()) {
+  <p class="msg">Elige una fecha para ver los horarios disponibles.</p>
+} @else if (cargando()) {
+  <div class="msg"><ion-spinner name="dots"></ion-spinner></div>
+} @else if (!abierto()) {
+  <p class="msg msg--warn">{{ motivo() || 'El establecimiento está cerrado este día.' }}</p>
+} @else {
+  @if (errorCarga()) {
+    <p class="msg msg--warn">{{ errorCarga() }} Puedes escribir la hora manualmente.</p>
+  }
+
+  <div class="grid">
+    @for (s of slots(); track s.time) {
+      <button type="button" class="slot" [class.sel]="hora() === s.time && !otraHora()"
+              [disabled]="!s.available" [attr.title]="s.reason" (click)="elegir(s.time)">
+        {{ etiqueta(s.time) }}
+      </button>
+    }
+    <button type="button" class="slot slot--otra" [class.sel]="otraHora()" (click)="activarOtra()">
+      + Otra hora…
+    </button>
+  </div>
+
+  @if (otraHora()) {
+    <div class="libre">
+      <div class="libre__cab">
+        <span>Hora exacta</span>
+        <button type="button" class="link" (click)="volverABloques()">Ver bloques</button>
+      </div>
+      <input type="time" class="libre__input" [value]="hora()" (change)="onHoraLibre($event)" />
+    </div>
+  }
+}

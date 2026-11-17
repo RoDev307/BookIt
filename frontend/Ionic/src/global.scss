@@ -10,20 +10,20 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+@import '@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
 /**
  * Ionic Dark Mode
@@ -35,3 +35,166 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Tipografía compartida con Nodo. Las fuentes se distribuyen con la app. */
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/assets/fonts/geist-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+:root {
+  --ion-font-family: 'Inter', sans-serif;
+}
+html,
+body,
+ion-app {
+  font-family: 'Inter', sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+ion-button,
+ion-title {
+  font-family: 'Geist', sans-serif;
+}
+
+/* Paleta compartida para las dos apariencias. */
+:root {
+  --bookit-0a0d18: #0a0d18;
+  --bookit-151a2b: #151a2b;
+  --bookit-151a2c: #151a2c;
+  --bookit-1a2033: #1a2033;
+  --bookit-1c2238: #1c2238;
+  --bookit-232a42: #232a42;
+  --bookit-252a4d: #252a4d;
+  --bookit-292d4e: #292d4e;
+  --bookit-2a3048: #2a3048;
+  --bookit-2a2c5a: #2a2c5a;
+  --bookit-2b3358: #2b3358;
+  --bookit-2d2f5e: #2d2f5e;
+  --bookit-34365f: #34365f;
+  --bookit-262a57: #262a57;
+  --bookit-1e2335: #1e2335;
+  --bookit-f2f4fb: #f2f4fb;
+  --bookit-f5f6ff: #f5f6ff;
+  --bookit-fff: #fff;
+  --bookit-ffffff: #ffffff;
+  --bookit-d8dced: #d8dced;
+  --bookit-d1ceff: #d1ceff;
+  --bookit-d2ceff: #d2ceff;
+  --bookit-cfcbff: #cfcbff;
+  --bookit-b4afff: #b4afff;
+  --bookit-c7c9ff: #c7c9ff;
+  --bookit-a5a8ff: #a5a8ff;
+  --bookit-d7d9ff: #d7d9ff;
+  --bookit-c8cde0: #c8cde0;
+  --bookit-bdc4db: #bdc4db;
+  --bookit-b7bed4: #b7bed4;
+  --bookit-c6cbe0: #c6cbe0;
+  --bookit-bfc5d9: #bfc5d9;
+  --bookit-d3d8e8: #d3d8e8;
+  --bookit-d3d7e6: #d3d7e6;
+  --bookit-c3c8dd: #c3c8dd;
+  --bookit-a4acc3: #a4acc3;
+  --bookit-8d95ae: #8d95ae;
+  --bookit-8d95b3: #8d95b3;
+  --bookit-7e88a3: #7e88a3;
+  --bookit-8c8c8c: #8c8c8c;
+  --bookit-343b53: #343b53;
+  --bookit-39405b: #39405b;
+  --bookit-555d7c: #555d7c;
+  --bookit-262d46: #262d46;
+  --bookit-3a415c: #3a415c;
+  --bookit-4b526a: #4b526a;
+  --bookit-3b425c: #3b425c;
+  --bookit-464c70: #464c70;
+  --bookit-434b66: #434b66;
+  --bookit-444d68: #444d68;
+  --bookit-44486e: #44486e;
+  --bookit-49477c: #49477c;
+  --bookit-525a72: #525a72;
+  --bookit-ffffff14: #ffffff14;
+  --bookit-ffffff18: #ffffff18;
+  --bookit-ffffff05: #ffffff05;
+  --bookit-ffaaaa: #ffaaaa;
+  --bookit-8ee5b3: #8ee5b3;
+  --ion-background-color: #0a0d18;
+  --ion-text-color: #f2f4fb;
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  --bookit-0a0d18: #f4f5fa;
+  --bookit-151a2b: #ffffff;
+  --bookit-151a2c: #ffffff;
+  --bookit-1a2033: #ffffff;
+  --bookit-1c2238: #ffffff;
+  --bookit-232a42: #eef0f7;
+  --bookit-252a4d: #e9e8fa;
+  --bookit-292d4e: #ecebfa;
+  --bookit-2a3048: #e1e4ee;
+  --bookit-2a2c5a: #e7e5fb;
+  --bookit-2b3358: #e8eaf5;
+  --bookit-2d2f5e: #e5e3fa;
+  --bookit-34365f: #e7e5fa;
+  --bookit-262a57: #e8e7fc;
+  --bookit-1e2335: #f2f3f8;
+  --bookit-f2f4fb: #182039;
+  --bookit-f5f6ff: #182039;
+  --bookit-fff: #182039;
+  --bookit-ffffff: #182039;
+  --bookit-d8dced: #25304a;
+  --bookit-d1ceff: #4540a0;
+  --bookit-d2ceff: #4540a0;
+  --bookit-cfcbff: #4540a0;
+  --bookit-b4afff: #5149b4;
+  --bookit-c7c9ff: #5149b4;
+  --bookit-a5a8ff: #5149b4;
+  --bookit-d7d9ff: #4540a0;
+  --bookit-c8cde0: #3c4962;
+  --bookit-bdc4db: #4c5870;
+  --bookit-b7bed4: #4c5870;
+  --bookit-c6cbe0: #4c5870;
+  --bookit-bfc5d9: #4c5870;
+  --bookit-d3d8e8: #3c4962;
+  --bookit-d3d7e6: #3c4962;
+  --bookit-c3c8dd: #4c5870;
+  --bookit-a4acc3: #59677e;
+  --bookit-8d95ae: #5e6b81;
+  --bookit-8d95b3: #5e6b81;
+  --bookit-7e88a3: #69778e;
+  --bookit-8c8c8c: #637188;
+  --bookit-343b53: #d5d9e5;
+  --bookit-39405b: #c8cfdd;
+  --bookit-555d7c: #bcc5d5;
+  --bookit-262d46: #d6dbe6;
+  --bookit-3a415c: #c4cbda;
+  --bookit-4b526a: #bdc5d6;
+  --bookit-3b425c: #d0d7e3;
+  --bookit-464c70: #bfc8d9;
+  --bookit-434b66: #c5ccdb;
+  --bookit-444d68: #bbc5d5;
+  --bookit-44486e: #c4c9dc;
+  --bookit-49477c: #c6c4e0;
+  --bookit-525a72: #bbc5d5;
+  --bookit-ffffff14: #00000014;
+  --bookit-ffffff18: #00000018;
+  --bookit-ffffff05: #00000005;
+  --bookit-ffaaaa: #a42a3c;
+  --bookit-8ee5b3: #177547;
+  --ion-background-color: #f4f5fa;
+  --ion-text-color: #182039;
+  color-scheme: light;
+}

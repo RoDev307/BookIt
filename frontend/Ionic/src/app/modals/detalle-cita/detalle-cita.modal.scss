@@ -1,0 +1,52 @@
+@use '../modal-base';
+
+.avatar {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  background: #2b3358; color: var(--accent-soft);
+  display: grid; place-items: center; font-weight: 600; font-size: 15px;
+}
+
+.cliente { display: flex; align-items: center; gap: 12px; }
+.cliente__info {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 17px; font-weight: 600; }
+  .muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  font-size: 12px; padding: 4px 10px; border-radius: 8px;
+  i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  &--pendiente  { color: var(--warn);   background: rgba(242, 184, 75, 0.14); }
+  &--confirmada { color: var(--accent-soft); background: rgba(108, 99, 255, 0.18); }
+  &--completada { color: var(--ok);     background: rgba(79, 209, 161, 0.14); }
+  &--cancelada  { color: var(--danger); background: rgba(255, 111, 142, 0.14); }
+}
+
+.servicio { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; gap: 12px; }
+.servicio > strong { font-size: 18px; font-weight: 600; }
+.servicio .precio { font-size: 22px; }
+
+.fila { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.fila > ion-icon { font-size: 18px; color: var(--muted); flex-shrink: 0; }
+.fila__txt {
+  flex: 1; display: flex; flex-direction: column; gap: 2px; font-size: 13px;
+  strong { font-weight: 600; font-size: 13.5px; }
+}
+
+.reprog {
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+}
+.error-linea { color: var(--danger); font-size: 12.5px; margin-top: 12px; line-height: 1.4; }
+
+.nota { margin-top: 20px; }
+.nota__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+h2 { font-size: 16px; font-weight: 600; }
+.nota .muted { font-size: 13px; line-height: 1.45; }
+
+.estado { margin-top: 20px; h2 { margin-bottom: 12px; } }
+.hint {
+  display: flex; align-items: center; gap: 8px; color: var(--muted);
+  font-size: 11.5px; margin-top: 14px;
+  ion-icon { font-size: 14px; }
+}

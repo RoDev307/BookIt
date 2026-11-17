@@ -1,0 +1,48 @@
+<ion-content class="content"
+  ><header class="topbar"><span class="logo">▦</span><strong>BookIt Business Admin</strong></header>
+  <main class="page">
+    <h1>Mi cuenta y configuración</h1>
+    <p class="muted">Consulta tu cuenta y ajusta tu experiencia en este dispositivo</p>
+    @if (error) {
+    <p class="error" role="alert">
+      {{ error }} @if (!usuario && !cargando) {
+      <button type="button" class="link" (click)="cargar()">Reintentar</button> }
+    </p>
+    } @if (cargando) {
+    <p class="muted">Cargando tu cuenta…</p>
+    } @else if (usuario) {
+    <section class="card">
+      <h2>Mi cuenta</h2>
+      <p class="muted">Usuario con sesión iniciada</p>
+      <p><strong>Nombre:</strong> {{ usuario.name }}</p>
+      <p><strong>Correo:</strong> {{ usuario.email }}</p>
+      @if (usuario.business?.name) {
+      <p><strong>Negocio:</strong> {{ usuario.business.name }}</p>
+      }
+    </section>
+    <section class="card">
+      <h2>Apariencia</h2>
+      <p class="muted">Elige el aspecto de la aplicación en este dispositivo.</p>
+      <label class="tema-label" for="tema">Modo de pantalla</label
+      ><select id="tema" [(ngModel)]="tema" (ngModelChange)="cambiarTema()">
+        <option value="dark">Oscuro</option>
+        <option value="light">Claro</option>
+      </select>
+    </section>
+    <section class="card">
+      <h2>Configuración de notificaciones</h2>
+      <p class="muted">Esta preferencia se guarda únicamente en este dispositivo.</p>
+      <label class="preference"
+        ><input type="checkbox" [(ngModel)]="soloNoLeidas" (ngModelChange)="guardarPreferencia()" /> Mostrar solo
+        notificaciones no leídas</label
+      ><a class="action-link" routerLink="/tabs/notificaciones">Ver notificaciones ›</a>
+    </section>
+    <section class="card">
+      <h2>Sesión</h2>
+      <button class="secondary" type="button" (click)="cerrarSesion()" [disabled]="cerrando">
+        {{ cerrando ? 'Cerrando sesión…' : 'Cerrar sesión' }}
+      </button>
+    </section>
+    }
+  </main></ion-content
+>

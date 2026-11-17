@@ -1,0 +1,220 @@
+<ion-content [fullscreen]="true" class="gc">
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__logo"><ion-icon name="calendar-outline"></ion-icon></span>
+      <span class="brand__name">BookIt Business Admin</span>
+    </div>
+    <div class="topbar__right">
+      <button class="icon-btn" aria-label="Notificaciones">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+      <span class="avatar avatar--sm">SN</span>
+    </div>
+  </header>
+
+  @if (cargando) {
+  <div class="center"><ion-spinner name="crescent"></ion-spinner></div>
+  } @else if (error) {
+  <div class="center center--col">
+    <p class="muted">{{ errorMsg }}</p>
+    <button class="link" (click)="cargar()">Reintentar</button>
+    <button class="link" (click)="volver()">Volver a citas</button>
+  </div>
+  } @else if (!citaId) {
+  <main class="page">
+    <div class="title-row"><button class="link" (click)="volver()">‹ Volver</button></div>
+    <h1>Nueva cita</h1>
+    <form class="card nueva-form" (ngSubmit)="crear()" #form="ngForm">
+      @if (errorMsg) {
+      <p class="form-error" role="alert">{{ errorMsg }}</p>
+      }
+      <section class="client-picker" aria-label="Cliente de la cita">
+        <div class="client-modes">
+          <button type="button" class="btn btn--soft" [attr.aria-pressed]="modoCliente === 'buscar'" (click)="cambiarModoCliente('buscar')" [disabled]="guardando">Buscar cliente</button>
+          <button type="button" class="btn btn--soft" [attr.aria-pressed]="modoCliente === 'nuevo'" (click)="cambiarModoCliente('nuevo')" [disabled]="guardando">Nuevo cliente</button>
+        </div>
+        @if (modoCliente === 'buscar') {
+          <label>Nombre o teléfono<input name="buscar-cliente" [(ngModel)]="busquedaCliente" maxlength="255" /></label>
+          <button type="button" class="btn btn--soft" (click)="buscarClientes()" [disabled]="buscandoClientes || guardando">{{ buscandoClientes ? 'Buscando…' : 'Buscar' }}</button>
+          @if (errorClientes) { <p class="form-error" role="alert">{{ errorClientes }}</p> }
+          @for (cliente of resultadosClientes; track cliente.id) {
+            <button type="button" class="client-result" (click)="seleccionarCliente(cliente)" [disabled]="guardando">
+              <strong>{{ cliente.name }}</strong><span>{{ cliente.phone || 'Sin teléfono' }} · {{ cliente.email || 'Sin correo' }}</span>
+            </button>
+          }
+          @if (busquedaRealizada && !buscandoClientes && !resultadosClientes.length && !clienteSeleccionado) {
+            <p role="status">No encontramos clientes. Puedes elegir Nuevo cliente para registrarlo.</p>
+          }
+          @if (resultadosClientes.length) {
+            <div class="client-modes">
+              <button type="button" class="link" [disabled]="clientesPaginaActual <= 1 || buscandoClientes" (click)="buscarClientes(clientesPaginaActual - 1)">Anterior</button>
+              <span>{{ clientesPaginaActual }} / {{ clientesUltimaPagina }}</span>
+              <button type="button" class="link" [disabled]="clientesPaginaActual >= clientesUltimaPagina || buscandoClientes" (click)="buscarClientes(clientesPaginaActual + 1)">Siguiente</button>
+            </div>
+          }
+          @if (clienteSeleccionado; as cliente) {
+            <div class="client-selected" role="status"><strong>{{ cliente.name }}</strong><p>{{ cliente.phone || 'Sin teléfono' }}</p><p>{{ cliente.email || 'Sin correo' }}</p></div>
+          } @else { <p class="muted">Busca y selecciona una ficha. Si es la primera visita, pulsa Nuevo cliente.</p> }
+        } @else {
+          <label>Nombre del cliente *<input name="cliente" [(ngModel)]="nueva.client_name" required maxlength="255" /></label>
+          <label>Teléfono<input name="telefono-cliente" [(ngModel)]="nuevoContacto.phone" type="tel" maxlength="40" /></label>
+          <label>Correo electrónico<input name="correo-cliente" [(ngModel)]="nuevoContacto.email" type="email" email maxlength="255" /></label>
+          <p class="muted">Se creará su ficha al guardar la cita. Antes de registrarlo, puedes buscarlo para evitar duplicados. No se crea una cuenta de acceso.</p>
+        }
+      </section>
+      <label
+        >Servicio *<select name="servicio" [(ngModel)]="nueva.service_id" required>
+          <option [ngValue]="null">Selecciona un servicio</option>
+          @for (s of servicios; track s.id) {
+          <option [ngValue]="s.id">{{ s.name }}</option>
+          }
+        </select></label
+      >
+      @if (!servicios.length) {
+      <p class="muted">Necesitas registrar o activar un servicio antes de crear una cita.</p>
+      }
+      <label
+        >Profesional *<select name="profesional" [(ngModel)]="nueva.staff_name" required>
+          <option value="">Selecciona un profesional</option>
+          @for (p of personal; track p.id) {
+          <option [value]="p.name">{{ p.name }}{{ p.position ? ' · ' + p.position : '' }}</option>
+          }
+        </select></label
+      >
+      @if (!personal.length) {
+      <p class="muted">No hay personal registrado. Añade un empleado en la vista Personal para asignarlo a una cita.</p>
+      } <label>Fecha *<input name="fecha" [(ngModel)]="nueva.fecha" type="date" required /></label
+      ><label>Hora *<input name="hora" [(ngModel)]="nueva.hora" type="time" required /></label
+      ><label>Nota<input name="nota" [(ngModel)]="nueva.notes" maxlength="500" /></label>
+      <button
+        class="btn btn--primary"
+        type="submit"
+        [disabled]="form.invalid || guardando || !nueva.client_name.trim() || !nueva.staff_name.trim() || (modoCliente === 'buscar' && !clienteSeleccionado)"
+      >
+        {{ guardando ? 'Guardando…' : 'Crear cita' }}
+      </button>
+    </form>
+  </main>
+  } @else if (cita) {
+  <main class="page">
+    <!-- Título -->
+    <div class="title-row">
+      <button class="icon-btn" (click)="volver()" aria-label="Volver">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </div>
+    <div class="title-row title-row--main">
+      <div>
+        <h1>Detalle de la cita</h1>
+        <p class="muted">Reserva #{{ cita.codigo }}{{ cita.local ? ' · ' + cita.local : '' }}</p>
+      </div>
+    </div>
+
+    <!-- Cliente -->
+    <section class="card">
+      <div class="cliente">
+        <span class="avatar">{{ iniciales }}</span>
+        <div class="cliente__info">
+          <strong>{{ cita.cliente.nombre }}</strong>
+          <span class="muted small">{{ cita.cliente.email || 'Cliente' }}</span>
+        </div>
+        @if (cita.cliente.telefono) {
+        <button class="icon-btn" (click)="escribir()" aria-label="Enviar mensaje">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+        </button>
+        }
+      </div>
+      <hr />
+      <div class="telefono">
+        @if (cita.cliente.telefono) {
+        <button class="telefono__num" (click)="llamar()">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>{{ cita.cliente.telefono }}</span>
+        </button>
+        } @else {
+        <span class="telefono__num muted"> <ion-icon name="call-outline"></ion-icon><span>Sin teléfono</span> </span>
+        }
+        <span [class]="'badge badge--' + cita.estado"><i></i>{{ etiquetaEstado }}</span>
+      </div>
+    </section>
+
+    <!-- Servicio -->
+    <section class="card">
+      <span class="label">Servicio</span>
+      <div class="servicio">
+        <strong>{{ cita.servicio.nombre }}</strong>
+        <div class="precio">
+          <strong>${{ precio }}</strong>
+        </div>
+      </div>
+      <hr />
+
+      <div class="fila">
+        <ion-icon name="calendar-clear-outline"></ion-icon>
+        <div class="fila__txt">
+          <span class="label">Fecha y hora</span>
+          <strong>{{ fechaHora }}</strong>
+        </div>
+        <button class="link" (click)="editarFecha()" [disabled]="cerrada || guardando">Editar</button>
+      </div>
+
+      @if (cita.profesional) {
+      <div class="fila">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="fila__txt">
+          <span class="label">Profesional · {{ cita.duracion }} min</span>
+          <strong>{{ cita.profesional.nombre }}</strong>
+        </div>
+      </div>
+      } @else {
+      <div class="fila">
+        <ion-icon name="time-outline"></ion-icon>
+        <div class="fila__txt">
+          <span class="label">Duración</span>
+          <strong>{{ cita.duracion }} min</strong>
+        </div>
+      </div>
+      }
+    </section>
+
+    <!-- Nota -->
+    <section class="nota">
+      <div class="nota__head">
+        <h2>Nota</h2>
+        <button class="link" (click)="editarNota()" [disabled]="guardando">Editar</button>
+      </div>
+      <p class="muted">{{ cita.notas || 'Sin notas' }}</p>
+    </section>
+
+    <!-- Estado -->
+    <section class="estado">
+      <h2>Gestionar estado</h2>
+
+      <button class="btn btn--primary" (click)="confirmar()" [disabled]="guardando || cita.estado !== 'pendiente'">
+        <ion-icon name="checkmark"></ion-icon> Confirmar cita
+      </button>
+
+      <div class="btn-row">
+        <button class="btn btn--soft" (click)="completar()" [disabled]="guardando || cerrada">
+          <ion-icon name="checkmark-done"></ion-icon> Completar
+        </button>
+        <button class="btn btn--danger" (click)="cancelar()" [disabled]="guardando || cerrada">
+          <ion-icon name="close"></ion-icon> Cancelar
+        </button>
+      </div>
+
+      <p class="hint">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        El estado se actualizará en la agenda.
+      </p>
+      @if (creadaEn) {
+      <p class="hint">
+        <ion-icon name="time-outline"></ion-icon>
+        {{ creadaEn }}
+      </p>
+      }
+    </section>
+  </main>
+  }
+</ion-content>

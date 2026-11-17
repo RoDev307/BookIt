@@ -1,0 +1,104 @@
+/* Estilos compartidos por los modales (misma paleta que las pantallas). */
+:host {
+  --bg: #0a0d18;
+  --surface: #1a2033;
+  --surface-2: #232a42;
+  --line: rgba(255, 255, 255, 0.08);
+  --text: #f2f4fb;
+  --muted: #8d95ae;
+  --accent: #6c63ff;
+  --accent-soft: #b4afff;
+  --warn: #f2b84b;
+  --danger: #ff6f8e;
+  --ok: #4fd1a1;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+ion-content.mc {
+  --background: var(--bg);
+  --color: var(--text);
+  flex: 1;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+h1, h2, p { margin: 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+.cab {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: calc(env(safe-area-inset-top) + 18px) 16px 6px;
+  h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.3px; }
+  .muted { font-size: 12.5px; margin-top: 4px; }
+}
+.cerrar {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--surface-2);
+  display: grid; place-items: center; font-size: 20px; flex-shrink: 0;
+}
+
+.page { padding: 0 16px calc(env(safe-area-inset-bottom) + 24px); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px; padding: 16px; margin-top: 14px;
+}
+.label { font-size: 11px; color: var(--muted); display: block; }
+
+/* Formularios */
+.campo { margin-top: 16px; }
+.campo > label, .campo > .etq {
+  display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+.input, select.input, textarea.input {
+  width: 100%; box-sizing: border-box; padding: 12px 14px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--line); color: var(--text);
+  font: inherit; font-size: 14px; outline: 0; appearance: none; -webkit-appearance: none;
+  color-scheme: dark;
+  &::placeholder { color: var(--muted); }
+  &:focus { border-color: var(--accent); }
+}
+textarea.input { min-height: 84px; resize: vertical; }
+select.input {
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+  background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 36px;
+}
+.fila2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.alerta {
+  display: flex; gap: 8px; align-items: flex-start; margin-top: 16px; padding: 12px 14px;
+  border-radius: 12px; font-size: 13px; line-height: 1.4;
+  background: rgba(255, 111, 142, 0.12); border: 1px solid rgba(255, 111, 142, 0.35); color: #ffb3c4;
+  ion-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+}
+
+.link { color: var(--accent-soft); font-size: 12.5px; font-weight: 600; &:disabled { opacity: 0.35; } }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; border-radius: 12px; font-size: 15px; font-weight: 600; width: 100%;
+  transition: opacity 0.15s, transform 0.1s;
+  &:active { transform: scale(0.98); }
+  &:disabled { opacity: 0.4; pointer-events: none; }
+  &:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
+  &--primary { background: var(--accent); color: #fff; }
+  &--soft { background: #2a2c5a; color: var(--accent-soft); }
+  &--danger { border: 1px solid rgba(255, 255, 255, 0.28); color: var(--text); ion-icon { color: var(--danger); } }
+  &--ghost { border: 1px solid var(--line); color: var(--muted); }
+  ion-spinner { width: 18px; height: 18px; }
+}
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.acciones { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+
+.center { display: grid; place-items: center; padding: 60px 0; }
+
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }

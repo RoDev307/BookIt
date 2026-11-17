@@ -1,0 +1,179 @@
+:host {
+  color: var(--bookit-f2f4fb);
+  font-family:
+    Inter,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+}
+ion-content.content {
+  --background: var(--bookit-0a0d18);
+  --color: var(--bookit-f2f4fb);
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  font-size: 14px;
+}
+.logo,
+.avatar {
+  display: grid;
+  place-items: center;
+  background: #6c63ff;
+  border-radius: 9px;
+  width: 30px;
+  height: 30px;
+}
+.page {
+  padding: 0 16px 32px;
+  max-width: 760px;
+  margin: auto;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 500;
+  margin: 8px 0 6px;
+}
+p {
+  margin: 5px 0;
+  color: var(--bookit-a4acc3);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+h2 {
+  font-size: 16px;
+  margin: 0;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+.add {
+  color: white;
+  background: #6c63ff;
+  border: 0;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  font-size: 26px;
+}
+.search {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bookit-1a2033);
+  border: 1px solid var(--bookit-ffffff14);
+  border-radius: 12px;
+  padding: 0 14px;
+}
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  color: var(--bookit-f2f4fb);
+  background: var(--bookit-151a2b);
+  border: 1px solid var(--bookit-39405b);
+  border-radius: 8px;
+  font: inherit;
+}
+.search input {
+  border: 0;
+  background: none;
+  outline: none;
+}
+.section {
+  margin: 24px 0 12px;
+}
+.card,
+.form {
+  background: var(--bookit-1a2033);
+  border: 1px solid var(--bookit-ffffff14);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.avatar {
+  width: 42px;
+  height: 42px;
+  background: var(--bookit-34365f);
+  color: var(--bookit-c7c9ff);
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+.primary,
+.secondary,
+.delete {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--bookit-555d7c);
+  color: var(--bookit-f2f4fb);
+  background: var(--bookit-232a42);
+}
+.primary {
+  background: #6c63ff;
+  border-color: #6c63ff;
+}
+.delete {
+  color: var(--bookit-ffaaaa);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.form {
+  margin-top: 18px;
+}
+.form label {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--bookit-c8cde0);
+}
+.form input {
+  display: block;
+  margin-top: 6px;
+}
+.error {
+  color: var(--bookit-ffaaaa);
+  margin: 14px 0;
+}
+.link {
+  color: var(--bookit-c7c9ff);
+  border: 0;
+  background: none;
+}
+.empty {
+  text-align: center;
+  padding: 24px;
+}
+/* Títulos y controles siguen la tipografía de Nodo. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+ion-button,
+ion-title {
+  font-family: 'Geist', sans-serif;
+}

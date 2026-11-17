@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api\V1\Tenant;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Models\Appointment;
 use App\Models\Service;
+use App\Models\Client;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use App\Services\AppointmentValidationService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -31,7 +35,7 @@ class AdminAppointmentController extends BaseApiController
         }
 
         $query = Appointment::where('business_id', $businessId)
-            ->with(['service:id,name,price,duration_minutes', 'user:id,name,email'])
+            ->with(['service:id,name,price,duration_minutes', 'user:id,name,email', 'client'])
             ->orderBy('appointment_time', 'desc');
 
         if ($request->has('status') && !empty($request->status)) {
@@ -51,6 +55,22 @@ class AdminAppointmentController extends BaseApiController
         return $this->sendResponse($appointments);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $businessId = Auth::user()->business_id;
+        if (!$businessId) {
+            return $this->sendError('Tu cuenta no tiene un comercio asignado.', [], 403);
+        }
+
+        $appointment = Appointment::where('business_id', $businessId)
+            ->with(['service', 'user', 'business', 'client'])
+            ->find($id);
+
+        return $appointment
+            ? $this->sendResponse($appointment)
+            : $this->sendError('Cita no encontrada.', [], 404);
+    }
+
     /**
      * Formato optimizado para calendarios (FullCalendar / Vue / Ionic).
      */
@@ -63,7 +83,7 @@ class AdminAppointmentController extends BaseApiController
         }
 
         $appointments = Appointment::where('business_id', $businessId)
-            ->with(['user:id,name,email', 'service:id,name,duration_minutes'])
+            ->with(['user:id,name,email', 'client', 'service:id,name,duration_minutes'])
             ->get();
 
         $events = [];
@@ -81,6 +101,8 @@ class AdminAppointmentController extends BaseApiController
                 $clientName = $app->user->name ?? 'Cliente Registrado';
                 $cleanNotes = $rawNotes;
             }
+
+            $clientName = $app->client_name;
 
             $duration = $app->service->duration_minutes ?? 45;
             $start = Carbon::parse($app->appointment_time, 'America/El_Salvador');
@@ -132,7 +154,12 @@ class AdminAppointmentController extends BaseApiController
             'appointment_time' => ['nullable', 'date_format:Y-m-d H:i:s'],
             'fecha_cita'       => ['nullable', 'date_format:Y-m-d'],
             'hora_cita'        => ['nullable', 'string'],
-            'client_name'      => ['required', 'string', 'max:255'],
+            'client_name'      => ['required_without_all:client_id,new_client', 'nullable', 'string', 'max:255'],
+            'client_id' => ['nullable', 'integer', Rule::exists('clients', 'id')->where('business_id', $businessId)],
+            'new_client' => ['nullable', 'array:name,phone,email'],
+            'new_client.name' => ['required_with:new_client', 'string', 'max:255', 'regex:/\S/'],
+            'new_client.phone' => ['nullable', 'string', 'max:40'],
+            'new_client.email' => ['nullable', 'email', 'max:255'],
             'staff_name'       => ['required', 'string', 'max:255'],
             'notes'            => ['nullable', 'string', 'max:500'],
         ]);
@@ -164,24 +191,37 @@ class AdminAppointmentController extends BaseApiController
             return $this->sendError($error, ['appointment_time' => [$error]], 422);
         }
 
-        $structuredNotes = 'Cliente Externo: ' . trim($validated['client_name']);
-        if (!empty($validated['notes'])) {
-            $structuredNotes .= ' | ' . trim($validated['notes']);
+        if (!empty($validated['client_id']) && !empty($validated['new_client'])) {
+            throw ValidationException::withMessages(['client_id' => ['Selecciona un cliente o crea uno nuevo.']]);
         }
-
-        $parsed = Carbon::parse($appointmentTime);
-
-        $appointment = Appointment::create([
-            'user_id'          => $user->id,
-            'business_id'      => $businessId,
-            'service_id'       => $service->id,
-            'staff_name'       => trim($validated['staff_name']),
-            'appointment_time' => $appointmentTime,
-            'status'           => 'confirmed',
-            'notes'            => $structuredNotes,
-        ]);
-
-        $appointment->load(['service', 'user']);
+        $appointment = DB::transaction(function () use ($validated, $businessId, $user, $service, $appointmentTime) {
+            $client = null;
+            if (!empty($validated['client_id'])) {
+                $client = Client::where('business_id', $businessId)->lockForUpdate()->findOrFail($validated['client_id']);
+                if (Appointment::where('business_id', $businessId)->where('client_id', $client->id)
+                    ->where('appointment_time', $appointmentTime)->whereIn('status', ['confirmed', 'pending'])->exists()) {
+                    throw ValidationException::withMessages(['client_id' => ['Este cliente ya tiene una cita a esa hora.']]);
+                }
+            } elseif (!empty($validated['new_client'])) {
+                $data = $validated['new_client'];
+                $client = Client::create([
+                    'business_id' => $businessId, 'name' => trim($data['name']),
+                    'phone' => !empty($data['phone']) ? trim($data['phone']) : null,
+                    'email' => !empty($data['email']) ? trim($data['email']) : null,
+                ]);
+            }
+            // Conservar el formato anterior para los consumidores que todavía leen las notas.
+            $name = $client?->name ?? trim($validated['client_name']);
+            $notes = 'Cliente Externo: '.$name;
+            if (!empty($validated['notes'])) $notes .= ' | '.trim($validated['notes']);
+            $appointment = Appointment::create([
+                'user_id' => $user->id, 'client_id' => $client?->id,
+                'business_id' => $businessId, 'service_id' => $service->id,
+                'staff_name' => trim($validated['staff_name']), 'appointment_time' => $appointmentTime,
+                'status' => 'confirmed', 'notes' => $notes,
+            ]);
+            return $appointment->load(['service', 'user', 'client']);
+        });
 
         return $this->sendResponse($appointment, 'Cita agendada manualmente con éxito.', 201);
     }
@@ -227,8 +267,18 @@ class AdminAppointmentController extends BaseApiController
             }
         }
 
+        if (!empty($validated['service_id'])) {
+            Service::where('business_id', $businessId)->findOrFail($validated['service_id']);
+        }
+        if ($appointment->client_id && in_array($validated['status'] ?? $appointment->status, ['confirmed', 'pending'])) {
+            if (Appointment::where('business_id', $businessId)->where('client_id', $appointment->client_id)
+                ->where('appointment_time', $newTime)->where('id', '!=', $appointment->id)
+                ->whereIn('status', ['confirmed', 'pending'])->exists()) {
+                throw ValidationException::withMessages(['appointment_time' => ['Este cliente ya tiene una cita a esa hora.']]);
+            }
+        }
         $appointment->update($validated);
-        $appointment->load(['service', 'user']);
+        $appointment->load(['service', 'user', 'client']);
 
         return $this->sendResponse($appointment, 'Cita actualizada exitosamente.');
     }
@@ -265,10 +315,10 @@ class AdminAppointmentController extends BaseApiController
         $user = Auth::user();
 
         if (is_null($user->business_id)) {
-            $appointment = Appointment::with(['user', 'service', 'business'])->findOrFail($id);
+            $appointment = Appointment::with(['user', 'service', 'business', 'client'])->findOrFail($id);
         } else {
             $appointment = Appointment::where('business_id', $user->business_id)
-                ->with(['user', 'service', 'business'])
+                ->with(['user', 'service', 'business', 'client'])
                 ->findOrFail($id);
         }
 
@@ -285,6 +335,7 @@ class AdminAppointmentController extends BaseApiController
             $cleanNotes = $rawNotes;
         }
 
+        $clientName = $appointment->client_name;
         $pdf = Pdf::loadView('admin.appointments.pdf', compact('appointment', 'clientName', 'cleanNotes'));
 
         return $pdf->download("comprobante-cita-BK-{$appointment->id}.pdf");
@@ -299,7 +350,7 @@ class AdminAppointmentController extends BaseApiController
         $periodo = $request->query('periodo', 'mes');
 
         $query = Appointment::where('business_id', $user->business_id)
-            ->with(['user', 'service']);
+            ->with(['user', 'service', 'client']);
 
         if ($periodo === 'semana') {
             $query->whereBetween('appointment_time', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);

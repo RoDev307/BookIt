@@ -1,0 +1,136 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="marca" slot="start">
+      <span class="marca-icono"><ion-icon name="calendar-outline"></ion-icon></span>
+      <span class="marca-nombre">BookIt Business Admin</span>
+    </div>
+    <div slot="end" style="display: flex; align-items: center; gap: 8px;">
+      <ion-button fill="clear" size="small" (click)="cerrarSesion()" aria-label="Cerrar sesión"
+        style="--color: #f87171;">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+      <ion-avatar class="avatar" (click)="cerrarSesion()" style="cursor: pointer;" title="Cerrar sesión">
+        <span>{{ iniciales }}</span>
+      </ion-avatar>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="recargar()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="pagina">
+    <!-- Título -->
+    <div class="titulo-bloque">
+      <div>
+        <h1>Tu agenda, al día</h1>
+        <p class="subtitulo">{{ estudio }} · {{ fechaLarga() }}</p>
+      </div>
+      <ion-button class="btn-nueva" (click)="nuevaCita()" aria-label="Nueva cita">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Calendario semanal -->
+    <section class="semana" aria-label="Calendario semanal">
+      <div class="semana-cabecera">
+        <h2>{{ mesAnio() }}</h2>
+        <div class="semana-nav">
+          <ion-button fill="clear" size="small" (click)="irAHoy()">Hoy</ion-button>
+          <ion-button fill="clear" size="small" (click)="cambiarSemana(-1)" aria-label="Semana anterior">
+            <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="cambiarSemana(1)" aria-label="Semana siguiente">
+            <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="dias">
+        @for (dia of semana(); track dia.clave) {
+        <button type="button" class="dia" [class.activo]="dia.clave === claveSeleccionada()"
+          [attr.aria-pressed]="dia.clave === claveSeleccionada()" (click)="seleccionarDia(dia.fecha)">
+          <span class="dia-letra">{{ dia.letra }}</span>
+          <span class="dia-numero">{{ dia.numero }}</span>
+          <span class="dia-punto" [class.visible]="diasConCitas().has(dia.clave)"></span>
+        </button>
+        }
+      </div>
+    </section>
+
+    <!-- Resumen -->
+    <section class="resumen" aria-label="Resumen del día">
+      <div class="dato">
+        <strong>{{ citas().length }}</strong>
+        <span>{{ etiquetaDia() }}</span>
+      </div>
+      <div class="dato">
+        <strong class="acento">{{ porConfirmar() }}</strong>
+        <span>Por confirmar</span>
+      </div>
+      <div class="dato">
+        <strong class="dinero">{{ ingresos() }}</strong>
+        <span>Ingresos previstos</span>
+      </div>
+    </section>
+
+    <!-- Cabecera de la lista -->
+    <div class="lista-cabecera">
+      <h2>{{ etiquetaDia() }}</h2>
+    </div>
+
+    @if (cargando()) {
+    <div class="esqueleto" aria-busy="true">
+      @for (i of [1, 2, 3]; track i) {
+      <ion-skeleton-text [animated]="true" class="esqueleto-fila"></ion-skeleton-text>
+      }
+    </div>
+    } @else if (error()) {
+    <div class="mensaje">
+      <p>No se pudieron cargar las citas.</p>
+      <ion-button fill="clear" size="small" (click)="recargar()">Reintentar</ion-button>
+    </div>
+    } @else if (citasOrdenadas().length === 0) {
+    <div class="mensaje">
+      <p>No hay citas para este día.</p>
+      <ion-button fill="clear" size="small" (click)="nuevaCita()">Crear una cita</ion-button>
+    </div>
+    } @else {
+    <ul class="citas">
+      @for (cita of citasOrdenadas(); track cita.id) {
+      <li class="fila">
+        <div class="horas">
+          <time class="hora-inicio">{{ cita.inicio | date: 'HH:mm' }}</time>
+          <time class="hora-fin">{{ cita.fin | date: 'HH:mm' }}</time>
+        </div>
+
+        <ion-card button class="cita" [class.seleccionada]="cita.id === citaSeleccionadaId()" (click)="abrirCita(cita)">
+          <div class="cita-cuerpo">
+            <div class="cita-cabecera">
+              <span class="cita-cliente">{{ cita.cliente }}</span>
+              <ion-badge class="estado" [class]="cita.estado">
+                <span class="estado-punto"></span>{{ etiquetasEstado[cita.estado] }}
+              </ion-badge>
+            </div>
+            <span class="cita-servicio">{{ cita.servicio }}</span>
+            <span class="cita-meta">{{ cita.profesional }} · {{ cita.duracionMin }} min</span>
+            <ion-icon class="cita-flecha" name="chevron-forward" aria-hidden="true"></ion-icon>
+          </div>
+        </ion-card>
+      </li>
+      }
+    </ul>
+    }
+  </div>
+</ion-content>
+
+@if (proxima(); as p) {
+<ion-footer class="ion-no-border">
+  <div class="proxima">
+    <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+    <span>Próxima cita en {{ p.tiempo }} · {{ p.cliente }}</span>
+  </div>
+</ion-footer>
+}

@@ -1,0 +1,129 @@
+<ion-content class="mc" [fullscreen]="true">
+  @if (c(); as cita) {
+    <header class="cab">
+      <div>
+        <h1>Detalle de la cita</h1>
+        <p class="muted">Reserva #BK-{{ cita.id }} · {{ negocio }}</p>
+      </div>
+      <button type="button" class="cerrar" (click)="cerrar()" aria-label="Cerrar">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </header>
+
+    <main class="page">
+      <!-- Cliente -->
+      <section class="card">
+        <div class="cliente">
+          <span class="avatar">{{ iniciales() }}</span>
+          <div class="cliente__info">
+            <strong>{{ cita.cliente }}</strong>
+            <span class="muted small">{{ cita.clienteDetalle }}</span>
+          </div>
+          <span [class]="'badge badge--' + cita.estado"><i></i>{{ etiquetas[cita.estado] }}</span>
+        </div>
+      </section>
+
+      <!-- Servicio -->
+      <section class="card">
+        <span class="label">Servicio</span>
+        <div class="servicio">
+          <strong>{{ cita.servicio }}</strong>
+          <strong class="precio">{{ precio() }}</strong>
+        </div>
+        <hr />
+
+        <div class="fila">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          <div class="fila__txt">
+            <span class="label">Fecha y hora</span>
+            <strong>{{ fechaLarga() }}</strong>
+            <span class="muted">{{ rangoHoras() }}</span>
+          </div>
+          <button type="button" class="link" (click)="empezarReprogramar()"
+                  [disabled]="cerrada() || reprogramando()">Reprogramar</button>
+        </div>
+
+        <div class="fila">
+          <ion-icon name="person-outline"></ion-icon>
+          <div class="fila__txt">
+            <span class="label">Atiende · {{ cita.duracionMin }} min</span>
+            <strong>{{ cita.profesional }}</strong>
+          </div>
+        </div>
+
+        @if (reprogramando()) {
+          <div class="reprog">
+            <div class="campo" style="margin-top: 4px">
+              <label for="dc-fecha">Nueva fecha</label>
+              <input id="dc-fecha" class="input" type="date" [min]="hoy" [value]="nuevaFecha()"
+                     (change)="cambiarNuevaFecha($event)" />
+            </div>
+            <div class="campo">
+              <span class="etq">Nueva hora</span>
+              <app-selector-horas [slug]="slug" [fecha]="nuevaFecha()" [staff]="staffParaDisponibilidad()"
+                                  [(hora)]="nuevaHora" />
+            </div>
+            @if (errorReprogramar()) {
+              <p class="error-linea">{{ errorReprogramar() }}</p>
+            }
+            <div class="btn-row">
+              <button type="button" class="btn btn--ghost" (click)="reprogramando.set(false)"
+                      [disabled]="guardando()">Descartar</button>
+              <button type="button" class="btn btn--primary" (click)="guardarReprogramacion()"
+                      [disabled]="guardando() || !nuevaHora()">
+                @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> } @else { Guardar }
+              </button>
+            </div>
+          </div>
+        }
+      </section>
+
+      <!-- Nota -->
+      <section class="nota">
+        <div class="nota__head">
+          <h2>Nota</h2>
+          @if (!editandoNota()) {
+            <button type="button" class="link" (click)="empezarNota()">Editar</button>
+          }
+        </div>
+        @if (editandoNota()) {
+          <textarea class="input" rows="3" maxlength="400" [value]="borradorNota()"
+                    (input)="borradorNota.set($any($event.target).value)"
+                    placeholder="Escribe una nota para esta cita…"></textarea>
+          <div class="btn-row">
+            <button type="button" class="btn btn--ghost" (click)="editandoNota.set(false)"
+                    [disabled]="guardando()">Descartar</button>
+            <button type="button" class="btn btn--primary" (click)="guardarNota()" [disabled]="guardando()">
+              Guardar nota
+            </button>
+          </div>
+        } @else {
+          <p class="muted">{{ cita.notas || 'Sin notas' }}</p>
+        }
+      </section>
+
+      <!-- Estado -->
+      <section class="estado">
+        <h2>Gestionar estado</h2>
+
+        <button type="button" class="btn btn--primary" (click)="confirmar()"
+                [disabled]="guardando() || cita.estado !== 'pendiente'">
+          <ion-icon name="checkmark"></ion-icon> Confirmar cita
+        </button>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn--soft" (click)="completar()" [disabled]="guardando() || cerrada()">
+            <ion-icon name="checkmark-done"></ion-icon> Completar
+          </button>
+          <button type="button" class="btn btn--danger" (click)="cancelar()" [disabled]="guardando() || cerrada()">
+            <ion-icon name="close"></ion-icon> Cancelar
+          </button>
+        </div>
+
+        @if (creadaEn()) {
+          <p class="hint"><ion-icon name="time-outline"></ion-icon> {{ creadaEn() }}</p>
+        }
+      </section>
+    </main>
+  }
+</ion-content>

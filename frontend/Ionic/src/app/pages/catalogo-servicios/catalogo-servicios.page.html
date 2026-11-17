@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true" class="cs"
+  ><header class="topbar">
+    <div class="brand">
+      <span class="brand__logo"><ion-icon name="calendar-outline"></ion-icon></span
+      ><span class="brand__name">BookIt Business Admin</span>
+    </div>
+  </header>
+  <main class="page">
+    <div class="title-row">
+      <div>
+        <h1>Servicios</h1>
+        <p class="muted">Gestiona el catálogo de tu negocio</p>
+      </div>
+      <button class="add-btn" (click)="nuevo()" aria-label="Añadir servicio"><ion-icon name="add"></ion-icon></button>
+    </div>
+    <label class="search"
+      ><ion-icon name="search-outline"></ion-icon
+      ><input type="search" placeholder="Buscar servicio" [(ngModel)]="busqueda" aria-label="Buscar servicio"
+    /></label>
+    @if (error) {
+    <p class="hint" role="alert">
+      {{ error }} @if (!formulario) { <button class="link" (click)="cargar()">Reintentar</button> }
+    </p>
+    } @if (exito) {
+    <p class="hint" role="status">{{ exito }}</p>
+    } @if (formulario) {
+    <form class="svc service-form" (ngSubmit)="guardar()" #form="ngForm">
+      <h2>{{ editando === null ? 'Nuevo servicio' : 'Editar servicio' }}</h2>
+      <label>Nombre *<input name="name" [(ngModel)]="datos.name" required maxlength="255" /></label
+      ><label>Descripción<input name="description" [(ngModel)]="datos.description" /></label
+      ><label
+        >Precio (USD) *<input
+          name="price"
+          [(ngModel)]="datos.price"
+          type="number"
+          min="0"
+          step="0.01"
+          required /></label
+      ><label
+        >Duración en minutos *<input
+          name="duration"
+          [(ngModel)]="datos.duration_minutes"
+          type="number"
+          min="1"
+          step="1"
+          required
+      /></label>
+      <div class="form-actions">
+        <button type="button" (click)="formulario=false" [disabled]="guardando">Cancelar</button
+        ><button class="save" type="submit" [disabled]="form.invalid || !datos.name.trim() || guardando">
+          {{ guardando ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+    }
+    <div class="section-head">
+      <h2>Todos los servicios ({{ cargando ? '…' : visibles.length }})</h2>
+      <button class="link" (click)="ordenado=!ordenado">{{ ordenado ? 'Orden original' : 'Ordenar' }}</button>
+    </div>
+    @if (cargando) {
+    <p class="muted">Cargando servicios…</p>
+    } @else { @for (s of visibles; track s.id) {
+    <article class="svc">
+      <div class="svc__top">
+        <span class="svc__icon"><ion-icon name="sparkles-outline"></ion-icon></span>
+        <div class="svc__txt">
+          <strong>{{ s.name }}</strong><span class="muted small">{{ s.description || 'Sin descripción' }}</span>
+        </div>
+        <ion-toggle
+          [checked]="!!s.is_active"
+          (ionChange)="toggleActivo(s,$event)"
+          [attr.aria-label]="'Activar ' + s.name"
+        ></ion-toggle>
+      </div>
+      <div class="svc__bottom">
+        <strong class="precio">{{ precio(+s.price) }}</strong
+        ><span class="duracion"><ion-icon name="time-outline"></ion-icon>{{ s.duration_minutes }} min</span
+        ><span class="estado">{{ s.is_active ? 'Activo' : 'Desactivado' }}</span
+        ><button class="link" (click)="abrir(s)">Editar</button>
+      </div>
+    </article>
+    } @empty { @if (!error) {
+    <p class="vacio muted">
+      {{ busqueda ? 'No hay servicios que coincidan con la búsqueda.' : 'Aún no hay servicios registrados.' }}
+    </p>
+    } } }
+  </main></ion-content
+>

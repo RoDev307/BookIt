@@ -1,0 +1,126 @@
+<ion-content class="dashboard"
+  ><main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">RESUMEN GENERAL</p>
+        <h1>Panel del negocio</h1>
+        <p class="subtitle">{{ negocio }} · Vista general</p>
+      </div>
+      <a class="hero-link" routerLink="/tabs/agenda-diaria">Ver agenda</a>
+    </header>
+    @if (cargando) {
+    <div class="message" aria-live="polite">Preparando tu resumen…</div>
+    } @else if (error) {
+    <div class="message" role="alert">
+      <p>{{ error }}</p>
+      <button (click)="cargar()">Reintentar</button>
+    </div>
+    } @else {
+    <section class="metrics" aria-label="Indicadores del negocio">
+      <article class="metric money">
+        <div class="metric-top"><span>Valor de citas de hoy</span><span class="metric-icon">$</span></div>
+        <strong>{{ dinero(ingresosPrevistos) }}</strong>
+        <p>Precios de citas no canceladas · no son pagos registrados</p>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span>Citas de hoy</span><span class="metric-icon">01</span></div>
+        <strong>{{ citasHoy.length }}</strong>
+        <p>Excluye las canceladas</p>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span>Tiempo reservado hoy</span><span class="metric-icon">02</span></div>
+        <strong>{{ tiempo(minutosHoy) }}</strong>
+        <p>Suma de la duración de los servicios</p>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span>Equipo</span><span class="metric-icon">03</span></div>
+        <strong>{{ personalDisponible ? personal.length : '—' }}</strong>
+        <p>{{ personalDisponible ? 'Empleados registrados' : 'No se pudo cargar el personal' }}</p>
+      </article>
+    </section>
+    <section class="charts">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="overline">MOVIMIENTO</p>
+            <h2>Próximos 7 días</h2>
+          </div>
+          <span class="chip">Citas</span>
+        </div>
+        <p class="description">Citas programadas por día, sin cancelaciones</p>
+        <div class="chart-wrap">
+          <div class="axis" aria-hidden="true">
+            <span>{{ escala }}</span><span>{{ escala / 2 | number:'1.0-1' }}</span><span>0</span>
+          </div>
+          <div class="bar-chart" role="img" aria-label="Cantidad de citas por día durante los próximos siete días">
+            <div class="bar-col" *ngFor="let dia of dias">
+              <span class="bar-value">{{ dia.total }}</span>
+              <div class="bar-track"><div class="bar" [style.height.%]="dia.altura"></div></div>
+              <span class="bar-day">{{ dia.nombre }}</span><span class="bar-date">{{ dia.numero }}</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="overline">ESTADO GENERAL</p>
+            <h2>Estado de citas</h2>
+          </div>
+          <span class="chip">Histórico</span>
+        </div>
+        <p class="description">Distribución de todas las citas del negocio</p>
+        <div class="status-total"><strong>{{ citas.length }}</strong><span>citas en total</span></div>
+        <div class="stack" aria-hidden="true">
+          @for (e of estados; track e.nombre) {
+          <span [style.width.%]="citas.length ? e.valor * 100 / citas.length : 0" [style.background]="e.color"></span> }
+        </div>
+        <div class="status-list">
+          @for (e of estados; track e.nombre) {
+          <div>
+            <span class="status-name"><i [style.background]="e.color"></i>{{ e.nombre }}</span
+            ><strong>{{ e.valor }}</strong>
+          </div>
+          }
+        </div>
+      </article>
+    </section>
+    <section class="lower">
+      <article class="panel upcoming">
+        <div class="panel-heading">
+          <div>
+            <p class="overline">LO QUE SIGUE</p>
+            <h2>Próximas citas</h2>
+          </div>
+          <a routerLink="/tabs/agenda-diaria">Ver todas</a>
+        </div>
+        @for (c of proximas; track c.id) {
+        <a class="appointment" [routerLink]="['/gestion-citas',c.id]"
+          ><span class="initial">{{ cliente(c).charAt(0).toUpperCase() }}</span
+          ><span class="appointment-main"
+            ><strong>{{ cliente(c) }}</strong
+            ><small>{{ c.service?.name || 'Servicio' }} · {{ c.staff_name || 'Sin asignar' }}</small></span
+          ><span class="appointment-date"
+            >{{ fecha(c) }}<small>{{ c.status === 'pending' ? 'Pendiente' : 'Confirmada' }}</small></span
+          ></a
+        >
+        } @empty {
+        <p class="empty">No hay citas próximas pendientes o confirmadas.</p>
+        }
+      </article>
+      <article class="panel overview">
+        <p class="overline">TU NEGOCIO</p>
+        <h2>En resumen</h2>
+        <div class="overview-row">
+          <span>Servicios activos</span><strong>{{ serviciosActivos }} <small>/ {{ servicios.length }}</small></strong>
+        </div>
+        <div class="overview-row"><span>Citas pendientes</span><strong>{{ pendientes }}</strong></div>
+        <div class="overview-row"><span>Citas completadas</span><strong>{{ completadas }}</strong></div>
+        <div class="quick">
+          <a routerLink="/tabs/servicios">Servicios</a><a routerLink="/tabs/personal">Personal</a>
+        </div>
+      </article>
+    </section>
+    }
+  </main></ion-content
+>

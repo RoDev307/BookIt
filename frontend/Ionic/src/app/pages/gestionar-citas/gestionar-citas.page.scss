@@ -1,0 +1,40 @@
+:host { font-family: Inter, Arial, sans-serif; color: #f1f5f9; }
+ion-content.content { --background: #0b101b; --color: #f1f5f9; }
+.page { max-width: 1440px; margin: auto; padding: 30px 20px 40px; }
+h1 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; margin: 0; letter-spacing: -.7px; } h2 { font-size: 20px; font-weight: 750; margin: 0; } h3 { margin: 0; font-size: 15px; font-weight: 750; }
+p { color: #94a3b8; line-height: 1.5; margin: 8px 0 0; }
+.heading, .actions, .report-actions, .pagination { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.heading { justify-content: space-between; margin-bottom: 26px; }
+.eyebrow { font-size: 11px; letter-spacing: 1.8px; color: #a5b4fc; margin: 0 0 8px; font-weight: 700; }
+.primary, .secondary, .pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 14px; padding: 12px 18px; border: 1px solid transparent; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.primary { background: #5033f5; color: white; box-shadow: 0 3px 8px #0002; } .primary:hover { background: #654cff; }
+.secondary, .pill { background: #1d293e; color: #e2e8f0; } .secondary:hover, .pill:hover { background: #2b3951; }
+button:disabled { opacity: .5; cursor: default; } button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }
+.metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.metric { background: #141d2e; border: 1px solid #26334a; border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.metric p { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: .7px; } .metric strong { font-size: 32px; }
+.metric-icon { width: 52px; height: 52px; border-radius: 15px; display: grid; place-items: center; flex-shrink: 0; background: #26234e; border: 1px solid #494196; color: #a7a1ff; font-size: 30px; }
+.metric-icon.success { color: #31d7a3; background: #123c39; border-color: #16685b; } .metric-icon.danger { color: #fa7188; background: #422337; border-color: #8d3652; }
+.summary-note { font-size: 12px; margin: 12px 0 26px; }
+.reservations { border: 1px solid #253149; border-radius: 20px; overflow: hidden; background: #141c2d; }
+.list-heading { padding: 24px; background: #19243a; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; } .list-heading p { font-size: 13px; }
+.report-actions button { font-size: 13px; } .report-actions button span { font-size: 19px; }
+.report-info { padding: 0 24px 16px; background: #19243a; } .report-info p { margin: 0; font-size: 12px; } .report-info .actions { margin-top: 12px; } .report-info .secondary { font-size: 12px; padding: 8px 12px; }
+.filters { display: grid; grid-template-columns: 1fr 1fr 1.5fr auto auto; gap: 12px; padding: 20px 24px; align-items: end; border-bottom: 1px solid #2e3c54; }
+label { display: flex; flex-direction: column; gap: 7px; font-size: 13px; color: #cbd5e1; }
+input, select, textarea { width: 100%; min-width: 0; padding: 11px; font: inherit; background: #0e1727; color: #f1f5f9; border: 1px solid #3c4c66; border-radius: 10px; color-scheme: dark; }
+.table-head, .appointment { display: grid; grid-template-columns: .45fr 1.2fr 1.3fr .8fr 2fr; align-items: center; gap: 16px; padding: 22px 24px; }
+.table-head { background: #202d43; color: #94a3b8; font-size: 11px; font-weight: 800; letter-spacing: .8px; } .table-head span:last-child { text-align: right; }
+.appointment { border-top: 1px solid #344158; } .appointment-id { color: #cbd5e1; font-weight: 700; text-decoration: none; } .appointment p { font-size: 12px; margin-top: 5px; }
+.schedule time { font-size: 13px; font-variant-numeric: tabular-nums; }
+.status { padding: 4px 9px; border-radius: 20px; border: 1px solid #6a586e; background: #302637; color: #ddcbe5; font-size: 12px; font-weight: 700; justify-self: start; }
+.status[data-state=confirmed] { color: #36d6a1; background: #123c35; border-color: #226c58; } .status[data-state=cancelled] { color: #fb7185; background: #422435; border-color: #8e3c53; } .status[data-state=pending] { color: #fbd38d; background: #423622; }
+.row-actions { display: flex; justify-content: flex-end; gap: 8px; align-items: center; flex-wrap: wrap; } .pill { padding: 9px 13px; font-size: 12px; border-radius: 20px; min-height: 40px; }
+.pill.cancel { color: #fb7185; background: #422435; border-color: #8e3c53; } .closed { color: #94a3b8; font-size: 13px; font-style: italic; }
+.results { margin: 0; padding: 12px 24px; font-size: 12px; } .feedback { margin: 16px 24px; }
+.pagination { padding: 20px 24px; justify-content: space-between; border-top: 1px solid #344158; }
+.calendar-link { display: inline-block; color: #a5b4fc; margin-top: 24px; text-decoration: none; } .error { color: #ffacbd; } .notice { color: #7ee4b3; }
+ion-modal { --height: auto; --max-height: 90%; --border-radius: 20px; --background: #141d2e; --color: #f1f5f9; }
+.edit-sheet { padding: 24px; overflow-y: auto; } .edit-sheet form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; } .edit-sheet .actions { justify-content: flex-end; }
+@media(max-width:1000px) { .filters { grid-template-columns: 1fr 1fr 1fr; } .table-head { display: none; } .appointment { grid-template-columns: auto 1fr auto; } .client { grid-column: 2; } .schedule { grid-column: 2; } .status { grid-column: 3; grid-row: 1; } .row-actions { grid-column: 1/-1; justify-content: flex-start; } }
+@media(max-width:600px) { .page { padding: 22px 14px 30px; } .heading > a { width: 100%; } .metrics { gap: 8px; } .metric { padding: 14px 10px; border-radius: 14px; flex-direction: column-reverse; align-items: flex-start; gap: 12px; } .metric p { font-size: 9px; min-height: 28px; letter-spacing: .2px; margin-bottom: 4px; } .metric strong { font-size: 27px; } .metric-icon { width: 35px; height: 35px; font-size: 22px; border-radius: 10px; } .filters { grid-template-columns: 1fr 1fr; padding: 16px; } .filters label:nth-child(3) { grid-column: 1/-1; } .list-heading { padding: 20px 16px; } .report-info { padding: 0 16px 16px; } .report-actions { width: 100%; gap: 8px; } .report-actions button { width: 100%; } .appointment { padding: 20px 16px; gap: 12px; } .schedule { grid-column: 1/-1; } .client { min-width: 0; } .client h3 { overflow-wrap: anywhere; } .status { font-size: 10px; } .pill { min-height: 44px; padding: 10px 14px; } .results { padding: 12px 16px; } }

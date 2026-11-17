@@ -1,0 +1,66 @@
+<ion-content class="content">
+  <main class="page">
+    <header class="heading"><div><p class="eyebrow">GESTIONAR CITAS</p><h1>Resumen operativo del establecimiento</h1><p>Estadísticas y control de las reservas de tu negocio.</p></div><a class="primary" routerLink="/gestion-citas">＋ Agendar cita</a></header>
+    <section class="metrics" aria-label="Resumen de todas las citas del negocio">
+      <article class="metric"><div><p>CITAS RECIBIDAS</p><strong>{{ loading() || error() ? '—' : received }}</strong></div><span class="metric-icon" aria-hidden="true">▥</span></article>
+      <article class="metric"><div><p>CITAS CONFIRMADAS</p><strong>{{ loading() || error() ? '—' : confirmed }}</strong></div><span class="metric-icon success" aria-hidden="true">✓</span></article>
+      <article class="metric"><div><p>CITAS CANCELADAS</p><strong>{{ loading() || error() ? '—' : cancelled }}</strong></div><span class="metric-icon danger" aria-hidden="true">✕</span></article>
+    </section>
+    <p class="summary-note">Totales del negocio. Los filtros siguientes solo afectan al listado.</p>
+    <section class="reservations" aria-labelledby="list-title">
+      <header class="list-heading"><div><h2 id="list-title">Reservas del establecimiento</h2><p>Citas numeradas, comprobantes y control de la agenda.</p></div>
+        <div class="report-actions"><button class="primary" [disabled]="!!downloading() || !!receiptId()" (click)="download('semana')"><span aria-hidden="true">⇩</span> {{ downloading() === 'semana' ? 'Generando…' : 'Reporte semanal (PDF)' }}</button><button class="secondary" [disabled]="!!downloading() || !!receiptId()" (click)="download('mes')"><span aria-hidden="true">⇩</span> {{ downloading() === 'mes' ? 'Generando…' : 'Reporte mensual (PDF)' }}</button></div>
+      </header>
+      <div class="report-info"><p>Los reportes corresponden a la semana o mes actual, con todos los estados.</p>
+        @if (reportError()) { <p class="error" role="alert">{{ reportError() }}</p> }
+        @if (reportNotice()) { <p class="notice" role="status">{{ reportNotice() }}</p> }
+        @if (pdfUrl(); as url) { <div class="actions"><a class="secondary" [href]="url" target="_blank" rel="noopener noreferrer">Abrir PDF generado ↗</a><a class="secondary" [href]="url" [download]="pdfName()">Guardar PDF ⇩</a></div> }
+      </div>
+      <form class="filters" (ngSubmit)="load(true)">
+        <label>Fecha<input type="date" name="date" [(ngModel)]="date" /></label>
+        <label>Estado<select name="status" [(ngModel)]="status"><option value="">Todos los estados</option><option value="pending">Pendiente</option><option value="confirmed">Confirmada</option><option value="completed">Completada</option><option value="cancelled">Cancelada</option></select></label>
+        <label>Orden<select name="order" [(ngModel)]="order" (ngModelChange)="page.set(1)"><option value="id-desc">Número de cita: mayor a menor</option><option value="date-asc">Fecha: más próxima primero</option></select></label>
+        <button class="primary" type="submit" [disabled]="loading()">Filtrar</button><button class="secondary" type="button" (click)="clear()" [disabled]="loading()">Limpiar</button>
+      </form>
+      @if (actionNotice()) { <p class="notice feedback" role="status">{{ actionNotice() }}</p> }
+      @if (actionError() && !editing()) { <p class="error feedback" role="alert">{{ actionError() }}</p> }
+      @if (loading()) { <p class="feedback" role="status">Cargando citas…</p> }
+      @else if (error()) { <p class="error feedback" role="alert">{{ error() }}</p><button class="secondary" (click)="load()">Reintentar</button> }
+      @else {
+        <p class="results" role="status">{{ rows().length }} citas encontradas</p>
+        <div class="table-head" aria-hidden="true"><span>ID</span><span>CLIENTE</span><span>FECHA Y HORA</span><span>ESTADO</span><span>ACCIONES</span></div>
+        <div class="appointments">
+          @for (row of visibleRows; track row.id) {
+            <article class="appointment" [attr.aria-label]="'Cita ' + row.id">
+              <a class="appointment-id" [routerLink]="['/gestion-citas',row.id]">#{{ row.id }}</a>
+              <div class="client"><h3>{{ clientName(row) }}</h3><p>{{ row.service?.name || 'Servicio' }}</p></div>
+              <div class="schedule"><time>{{ row.appointment_time.replace(' ', 'T') | date:'dd/MM/yyyy — HH:mm' }}</time><p>{{ row.staff_name || 'Sin asignar' }}</p></div>
+              <span class="status" [attr.data-state]="row.status">{{ states[row.status] || row.status }}</span>
+              <div class="row-actions"><button class="pill" [disabled]="!!receiptId() || !!downloading()" (click)="receipt(row)" [attr.aria-label]="'PDF de cita ' + row.id">▤ {{ receiptId() === row.id ? '…' : 'PDF' }}</button>
+                @if (row.status !== 'cancelled' && row.status !== 'completed') {
+                  <button class="pill" (click)="openEdit(row)" [disabled]="!!cancelling()" [attr.aria-label]="'Editar cita ' + row.id">Editar</button>
+                  <button class="pill cancel" (click)="askCancel(row)" [disabled]="!!cancelling()" [attr.aria-label]="'Cancelar cita ' + row.id">{{ cancelling() === row.id ? 'Cancelando…' : 'Cancelar cita' }}</button>
+                } @else { <span class="closed">{{ states[row.status] }}</span> }
+              </div>
+            </article>
+          } @empty { <p class="feedback">No hay citas que coincidan con los filtros.</p> }
+        </div>
+        @if (rows().length > pageSize) { <nav class="pagination" aria-label="Páginas de citas"><button class="secondary" (click)="move(-1)" [disabled]="page() <= 1">Anterior</button><span>{{ page() }} / {{ lastPage }}</span><button class="secondary" (click)="move(1)" [disabled]="page() >= lastPage">Siguiente</button></nav> }
+      }
+    </section>
+    <a class="calendar-link" routerLink="/tabs/agenda-diaria">Ver calendario operativo →</a>
+  </main>
+</ion-content>
+<ion-modal [isOpen]="!!editing()" [backdropDismiss]="!saving()" (didDismiss)="closeEdit()">
+  <ng-template><section class="edit-sheet">
+    <h2>Editar cita #{{ editing()?.id }}</h2><p>{{ editing() ? clientName(editing()!) : '' }}</p>
+    <form #editForm="ngForm" (ngSubmit)="saveEdit()">
+      <label>Fecha<input type="date" name="editDate" [(ngModel)]="edit.date" required /></label>
+      <label>Hora<input type="time" name="editTime" [(ngModel)]="edit.time" required /></label>
+      <label>Profesional<input name="staff" [(ngModel)]="edit.staff" required maxlength="255" /></label>
+      <label>Nota<textarea name="notes" [(ngModel)]="edit.notes" maxlength="500" rows="3"></textarea></label>
+      @if (actionError()) { <p class="error" role="alert">{{ actionError() }}</p> }
+      <div class="actions"><button class="secondary" type="button" [disabled]="saving()" (click)="closeEdit()">Volver</button><button class="primary" type="submit" [disabled]="editForm.invalid || saving() || !edit.staff.trim()">{{ saving() ? 'Guardando…' : 'Guardar cambios' }}</button></div>
+    </form>
+  </section></ng-template>
+</ion-modal>

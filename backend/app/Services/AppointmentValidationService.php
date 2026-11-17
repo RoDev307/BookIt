@@ -19,7 +19,8 @@ class AppointmentValidationService
         ?int $userId = null,
         ?int $ignoreAppointmentId = null
     ): ?string {
-        $fecha = Carbon::parse($appointmentTime);
+        // Las horas de las citas se registran como hora local del negocio en El Salvador.
+        $fecha = Carbon::parse($appointmentTime, 'America/El_Salvador');
 
         // 1. No permitir fechas en el pasado
         if ($fecha->isPast()) {

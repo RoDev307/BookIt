@@ -1,0 +1,71 @@
+<ion-content class="content">
+  <main class="page">
+    <a routerLink="/tabs/dashboard" class="back">‹ Inicio</a>
+    <header class="heading"><div><h1>Clientes</h1><p>Fichas e historial de tu negocio.</p></div>
+      @if (view() === 'list') { <button class="primary" (click)="create()">+ Nuevo cliente</button> }
+    </header>
+    @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+    @if (notice()) { <p class="notice" role="status">{{ notice() }}</p> }
+    @if (view() === 'list') {
+      <form class="search" (ngSubmit)="load(1, true)">
+        <label>Buscar por nombre o teléfono<input name="search" [(ngModel)]="search" maxlength="255" placeholder="Nombre o teléfono" /></label>
+        <button class="primary" type="submit" [disabled]="busy()">Buscar</button>
+      </form>
+      @if (busy()) { <p role="status">Cargando clientes…</p> }
+      @else if (error()) { <button class="secondary" (click)="load()">Reintentar</button> }
+      @else {
+        <p>{{ total() }} clientes encontrados</p>
+        @for (client of clients(); track client.id) {
+          <button class="client-card" (click)="detail(client)">
+            <strong>{{ client.name }}</strong><span>{{ client.phone || 'Sin teléfono' }}</span>
+            <span>{{ client.email || 'Sin correo' }}</span>
+            <small>{{ client.appointments_count || 0 }} citas vinculadas</small>
+            <span class="link">Ver ficha e historial →</span>
+          </button>
+        } @empty { <div class="card">No hay clientes para esta búsqueda. Puedes registrar uno nuevo.</div> }
+        <div class="pagination">
+          <button class="secondary" (click)="load(page() - 1)" [disabled]="page() <= 1">Anterior</button>
+          <span>{{ page() }} / {{ lastPage() }}</span>
+          <button class="secondary" (click)="load(page() + 1)" [disabled]="page() >= lastPage()">Siguiente</button>
+        </div>
+      }
+    } @else if (view() === 'form') {
+      <h2>{{ selected() ? 'Editar ficha' : 'Registrar cliente' }}</h2>
+      <form class="card fields" #clientForm="ngForm" (ngSubmit)="save()">
+        <label>Nombre *<input name="name" [(ngModel)]="form.name" maxlength="255" required /></label>
+        <label>Teléfono<input name="phone" [(ngModel)]="form.phone" type="tel" maxlength="40" /></label>
+        <label>Correo electrónico<input name="email" [(ngModel)]="form.email" type="email" email maxlength="255" /></label>
+        <p>Esta ficha pertenece a tu negocio. No crea una cuenta de acceso.</p>
+        <button class="primary" type="submit" [disabled]="clientForm.invalid || !form.name.trim() || saving()">{{ saving() ? 'Guardando…' : 'Guardar cliente' }}</button>
+        <button class="secondary" type="button" [disabled]="saving()" (click)="back()">Cancelar</button>
+      </form>
+    } @else {
+      @if (selected(); as client) {
+        <section class="card fields"><h2>{{ client.name }}</h2><p>{{ client.phone || 'Sin teléfono' }}</p><p>{{ client.email || 'Sin correo' }}</p>
+          <button class="secondary" (click)="edit(client)">Editar datos</button>
+          <a class="primary" routerLink="/gestion-citas" [queryParams]="{ client_id: client.id }">Agendar cita</a>
+        </section>
+        <h2>Historial de citas</h2>
+        <p>Incluye citas vinculadas a esta ficha. Las citas antiguas sin ficha conservan sus datos en la agenda.</p>
+        @if (historyBusy()) { <p role="status">Cargando historial…</p> }
+        @else if (historyError()) { <p class="error" role="alert">{{ historyError() }}</p><button class="secondary" (click)="loadHistory()">Reintentar</button> }
+        @else {
+          @for (appointment of history(); track appointment.id) {
+            <a class="client-card" [routerLink]="['/gestion-citas', appointment.id]">
+              <strong>{{ appointment.service?.name || 'Servicio' }}</strong>
+              <span>{{ appointment.appointment_time.replace(' ', 'T') | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span>{{ states[appointment.status] || appointment.status }} · {{ appointment.staff_name || 'Sin asignar' }}</span>
+              <span class="link">Ver cita #{{ appointment.id }} →</span>
+            </a>
+          } @empty { <p>Aún no tiene citas vinculadas.</p> }
+          <div class="pagination">
+            <button class="secondary" (click)="loadHistory(historyPage() - 1)" [disabled]="historyPage() <= 1">Anterior</button>
+            <span>{{ historyPage() }} / {{ historyLastPage() }}</span>
+            <button class="secondary" (click)="loadHistory(historyPage() + 1)" [disabled]="historyPage() >= historyLastPage()">Siguiente</button>
+          </div>
+        }
+        <button class="secondary" (click)="back()">Volver al listado</button>
+      }
+    }
+  </main>
+</ion-content>

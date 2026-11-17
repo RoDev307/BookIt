@@ -1,0 +1,68 @@
+<ion-content class="mc" [fullscreen]="true">
+  <header class="cab">
+    <div>
+      <h1>{{ esEdicion() ? 'Editar servicio' : 'Nuevo servicio' }}</h1>
+      <p class="muted">
+        {{ esEdicion() ? 'Los cambios se reflejan al instante en tus reservas.' : 'Se publicará en tu página de reservas.' }}
+      </p>
+    </div>
+    <button type="button" class="cerrar" (click)="cerrar()" aria-label="Cerrar">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </header>
+
+  <main class="page">
+    <div class="campo">
+      <label for="sf-nombre">Nombre</label>
+      <input id="sf-nombre" class="input" type="text" maxlength="255" placeholder="Ej. Limpieza dental"
+             [value]="nombre()" (input)="texto(nombre, $event)" />
+    </div>
+
+    <div class="campo">
+      <label for="sf-desc">Descripción (opcional)</label>
+      <textarea id="sf-desc" class="input" rows="3" placeholder="Breve detalle de lo que incluye…"
+                [value]="descripcion()" (input)="texto(descripcion, $event)"></textarea>
+    </div>
+
+    <div class="fila2">
+      <div class="campo">
+        <label for="sf-precio">Precio (USD)</label>
+        <input id="sf-precio" class="input" type="number" inputmode="decimal" min="0" step="0.01"
+               placeholder="25.00" [value]="precio()" (input)="texto(precio, $event)" />
+      </div>
+      <div class="campo">
+        <label for="sf-dur">Duración (min)</label>
+        <input id="sf-dur" class="input" type="number" inputmode="numeric" min="1" step="1"
+               placeholder="30" [value]="duracion()" (input)="texto(duracion, $event)" />
+      </div>
+    </div>
+
+    <div class="activo">
+      <div>
+        <strong>Servicio activo</strong>
+        <span class="muted small">Los inactivos no aparecen en las reservas de tus clientes.</span>
+      </div>
+      <ion-toggle [checked]="activo()" (ionChange)="activo.set($event.detail.checked)"
+                  aria-label="Servicio activo"></ion-toggle>
+    </div>
+
+    @if (error()) {
+      <div class="alerta" role="alert">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <div class="acciones">
+      <button type="button" class="btn btn--primary" (click)="guardar()" [disabled]="!valido() || guardando()">
+        @if (guardando()) { <ion-spinner name="crescent"></ion-spinner> Guardando… }
+        @else { {{ esEdicion() ? 'Guardar cambios' : 'Crear servicio' }} }
+      </button>
+      @if (esEdicion()) {
+        <button type="button" class="btn btn--danger" (click)="eliminar()" [disabled]="guardando()">
+          <ion-icon name="trash-outline"></ion-icon> Eliminar servicio
+        </button>
+      }
+    </div>
+  </main>
+</ion-content>

@@ -1,0 +1,19 @@
+@use '../modal-base';
+
+.activo {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin-top: 20px; padding: 14px 16px; border-radius: 14px;
+  background: var(--surface); border: 1px solid var(--line);
+  div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  strong { font-size: 14px; font-weight: 600; }
+}
+
+ion-toggle {
+  --track-background: #3a415c;
+  --track-background-checked: var(--accent);
+  --handle-background: #fff;
+  --handle-background-checked: #fff;
+  --handle-width: 22px;
+  --handle-height: 22px;
+  width: 46px; height: 28px; padding: 0; flex-shrink: 0;
+}

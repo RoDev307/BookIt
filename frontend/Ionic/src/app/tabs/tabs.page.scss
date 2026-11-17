@@ -1,0 +1,106 @@
+:host,
+.shell {
+  display: block;
+  height: 100%;
+}
+.shell {
+  display: flex;
+  flex-direction: column;
+  background: var(--bookit-0a0d18);
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(env(safe-area-inset-top) + 7px) 16px 7px;
+  background: var(--bookit-0a0d18);
+  border-bottom: 1px solid var(--bookit-262d46);
+  color: var(--bookit-f2f4fb);
+  font-weight: 600;
+}
+.menu-button,
+.sidebar-head button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: var(--bookit-f2f4fb);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.menu-button:focus-visible,
+.sidebar a:focus-visible,
+.sidebar-head button:focus-visible {
+  outline: 2px solid var(--bookit-b4afff);
+}
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0009;
+  border: 0;
+  z-index: 19;
+}
+.sidebar {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(300px, 85vw);
+  background: var(--bookit-151a2b);
+  box-shadow: 8px 0 32px #0008;
+  transform: translateX(-105%);
+  transition: transform 0.2s ease;
+  overflow-y: auto;
+  color: var(--bookit-f2f4fb);
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar-head {
+  padding: calc(env(safe-area-inset-top) + 14px) 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--bookit-ffffff18);
+}
+.sidebar nav {
+  padding: 12px;
+}
+.sidebar a {
+  display: block;
+  padding: 14px;
+  color: var(--bookit-d8dced);
+  text-decoration: none;
+  border-radius: 10px;
+}
+.sidebar a:hover,
+.sidebar a.active {
+  background: var(--bookit-34365f);
+  color: var(--bookit-d1ceff);
+}
+.outlet {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
+}
+/* Títulos y controles siguen la tipografía de Nodo. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+ion-button,
+ion-title {
+  font-family: 'Geist', sans-serif;
+}

@@ -87,12 +87,9 @@ class AdminBusinessController extends BaseApiController
         $validated = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'email'       => ['nullable', 'email', 'max:255'],
             'image_url'   => ['nullable', 'url', 'max:255'],
         ]);
-
-        if ($business->name !== $validated['name']) {
-            $validated['slug'] = Str::slug($validated['name']) . '-' . time();
-        }
 
         $business->update($validated);
 
@@ -114,10 +111,16 @@ class AdminBusinessController extends BaseApiController
         $validated = $request->validate([
             'hours'                  => ['required', 'array'],
             'hours.*.day_of_week'    => ['required', 'integer', 'between:0,6'],
-            'hours.*.opening_time'   => ['nullable', 'string'],
-            'hours.*.closing_time'   => ['nullable', 'string'],
+            'hours.*.opening_time'   => ['nullable', 'date_format:H:i:s'],
+            'hours.*.closing_time'   => ['nullable', 'date_format:H:i:s'],
             'hours.*.is_closed'      => ['required', 'boolean'],
         ]);
+
+        foreach ($validated['hours'] as $item) {
+            if (!$item['is_closed'] && (empty($item['opening_time']) || empty($item['closing_time']) || $item['opening_time'] >= $item['closing_time'])) {
+                return $this->sendError('Indica una hora de apertura y una hora de cierre posterior para cada día abierto.', [], 422);
+            }
+        }
 
         foreach ($validated['hours'] as $item) {
             BusinessHour::updateOrCreate(

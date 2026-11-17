@@ -1,0 +1,72 @@
+<ion-content [fullscreen]="true" class="content"
+  ><header class="topbar"><span class="logo">▦</span><strong>BookIt Business Admin</strong></header>
+  <main class="page">
+    <div class="heading">
+      <div>
+        <h1>Personal</h1>
+        <p>Gestiona los empleados de tu negocio</p>
+      </div>
+      <button class="add" (click)="nuevo()" aria-label="Añadir empleado">+</button>
+    </div>
+    <label class="search"
+      ><span>⌕</span
+      ><input type="search" placeholder="Buscar empleado" [(ngModel)]="busqueda" aria-label="Buscar empleado"
+    /></label>
+    @if (error) {
+    <p class="error" role="alert">
+      {{ error }} @if (!formulario) { <button class="link" (click)="cargar()">Reintentar</button> }
+    </p>
+    } @if (formulario) {
+    <form class="form" (ngSubmit)="guardar()" #empleadoForm="ngForm">
+      <h2>{{ editando === null ? 'Nuevo empleado' : 'Editar empleado' }}</h2>
+      <label>Nombre *<input name="name" [(ngModel)]="datos.name" required maxlength="255" autocomplete="name" /></label
+      ><label>Cargo<input name="position" [(ngModel)]="datos.position" maxlength="255" /></label
+      ><label>Teléfono<input name="phone" [(ngModel)]="datos.phone" type="tel" maxlength="50" /></label
+      ><label
+        >Correo electrónico<input
+          name="email"
+          [(ngModel)]="datos.email"
+          type="email"
+          email
+          maxlength="255"
+          #correo="ngModel" /></label
+      >@if (correo.invalid && correo.touched) {
+      <p class="error">Introduce un correo válido.</p>
+      }
+      <div class="actions">
+        <button type="button" class="secondary" (click)="formulario = false" [disabled]="guardando">Cancelar</button
+        ><button class="primary" type="submit" [disabled]="empleadoForm.invalid || !datos.name.trim() || guardando">
+          {{ guardando ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+    }
+    <div class="section"><h2>Todos los empleados ({{ cargando ? '…' : visibles.length }})</h2></div>
+    @if (cargando) {
+    <p>Cargando personal…</p>
+    } @else { @for (e of visibles; track e.id) {
+    <article class="card">
+      <div class="card-top">
+        <span class="avatar">{{ e.name.charAt(0).toUpperCase() }}</span>
+        <div>
+          <strong>{{ e.name }}</strong>
+          <p>{{ e.position || 'Sin cargo especificado' }}</p>
+        </div>
+      </div>
+      @if (e.phone) {
+      <p>{{ e.phone }}</p>
+      } @if (e.email) {
+      <p>{{ e.email }}</p>
+      }
+      <div class="actions">
+        <button class="secondary" (click)="editar(e)">Editar</button
+        ><button class="delete" (click)="eliminar(e)">Eliminar</button>
+      </div>
+    </article>
+    } @empty { @if (!error) {
+    <p class="empty">
+      {{ busqueda ? 'No hay empleados que coincidan con la búsqueda.' : 'Aún no has registrado empleados.' }}
+    </p>
+    } } }
+  </main></ion-content
+>

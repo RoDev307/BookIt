@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+	// Middleware para permitir la autenticación SPA mediante Sanctum
+	$middleware->statefulApi();
+
+	// Middleware personalizado para validar roles
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);

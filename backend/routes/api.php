@@ -48,6 +48,7 @@ Route::prefix('v1')->group(function () {
         // --- Gestión de sesión y perfil propio ---
         Route::prefix('auth')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
+            Route::get('/user', [\App\Http\Controllers\Api\AuthController::class, 'user']);
             Route::put('/profile', [AuthController::class, 'updateProfile']);
             Route::post('/logout', [AuthController::class, 'logout']);
         });

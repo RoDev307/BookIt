@@ -50,6 +50,11 @@ class AuthController extends BaseApiController
      */
     public function login(Request $request): JsonResponse
     {
+        // Vue uses a first-party Sanctum session; Ionic keeps its Bearer contract.
+        if ($request->hasSession() && !$request->bearerToken()) {
+            return app(\App\Http\Controllers\Api\AuthController::class)->login($request);
+        }
+
         $request->validate([
             'email'    => ['required', 'email'],
             'password' => ['required', 'string'],
@@ -148,7 +153,14 @@ class AuthController extends BaseApiController
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        if ($request->hasSession() && !$request->bearerToken()) {
+            return app(\App\Http\Controllers\Api\AuthController::class)->logout($request);
+        }
+
+        $token = $request->user()->currentAccessToken();
+        if ($token instanceof \Laravel\Sanctum\PersonalAccessToken) {
+            $token->delete();
+        }
 
         return $this->sendResponse(null, 'Sesión cerrada exitosamente.');
     }
